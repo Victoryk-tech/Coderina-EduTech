@@ -47,8 +47,12 @@ const News = () => {
           </CustomButton>
         </Stack>
         <Grid container className="news__cards">
-          {newsCard.map((cardInfo, i) => (
-            <SolutionCards key={i} {...cardInfo} childern={"Sep 2, 2023"} />
+          {newsCard.map((cardInfo, index) => (
+            <SolutionCards
+              key={`${cardInfo}-${index}`}
+              {...cardInfo}
+              childern={"Sep 2, 2023"}
+            />
           ))}
         </Grid>
       </Stack>

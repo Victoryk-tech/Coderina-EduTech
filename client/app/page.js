@@ -65,8 +65,8 @@ export default function Home() {
         <Box bgcolor={headerBackground}>
           <Header />
         </Box>
-        {homeContents1.map(({ color, section }) => (
-          <Box p={4} key={section} bgcolor={color}>
+        {homeContents1.map(({ color, section }, index) => (
+          <Box p={4} key={`${section}-${index}`} bgcolor={color}>
             <Container maxWidth="xl">{section}</Container>
           </Box>
         ))}

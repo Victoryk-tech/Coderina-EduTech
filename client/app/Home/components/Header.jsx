@@ -39,11 +39,11 @@ const Header = () => {
         <Stack gap={3}>
           <Stack>
             <Typography className="header__tags" width={["default", "65%"]}>
-              {tags.map(({ tag, color }) => (
+              {tags.map(({ tag, color }, index) => (
                 <Typography
                   fontSize={{ xs: "24px", md: "50px" }}
                   component={"span"}
-                  key={tag}
+                  key={`${tag}-${index}`}
                   color={color}
                 >
                   {tag}

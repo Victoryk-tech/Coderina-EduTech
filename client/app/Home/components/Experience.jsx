@@ -47,20 +47,24 @@ const Experience = () => {
   return (
     <Box className="exp__container">
       <Grid container>
-        {expCard.map((card, i) => (
-          <Grid key={i} bgcolor={card.color} size={{ xs: 12, md: 5.9 }}>
+        {expCard.map((card, index) => (
+          <Grid
+            key={`${card}-${index}`}
+            bgcolor={card.color}
+            size={{ xs: 12, md: 5.9 }}
+          >
             <Container maxWidth={"sm"} className="exp__card">
               <Stack>
                 <Typography variant="h4" fontSize={{ xs: "20px", md: "29px" }}>
                   {card.title}
                 </Typography>
                 <Stack component={card.divType}>
-                  {card.text.map((t, i) => (
+                  {card.text.map((t, index) => (
                     <Typography
                       fontSize={{ xs: "14px", md: "17px" }}
                       component={card.textType}
                       color={textColor}
-                      key={i}
+                      key={`${t}-${index}`}
                     >
                       {t}
                     </Typography>

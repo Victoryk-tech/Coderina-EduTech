@@ -53,10 +53,10 @@ const Activity = () => {
               <CardContent>
                 <Stack gap={2}>
                   <Typography variant="h6">Other Programs</Typography>
-                  {textContent1.map((text1) => (
+                  {textContent1.map((text1, index) => (
                     <Typography
                       fontSize={{ xs: "18px", md: "20px" }}
-                      key={text1}
+                      key={`${text1}-${index}`}
                     >
                       {text1}
                     </Typography>
@@ -70,10 +70,10 @@ const Activity = () => {
               <CardContent>
                 <Stack gap={2}>
                   <Typography variant="h6">Projects</Typography>
-                  {textContent2.map((text2) => (
+                  {textContent2.map((text2, index) => (
                     <Typography
                       fontSize={{ xs: "18px", md: "20px" }}
-                      key={text2}
+                      key={`${text2}-${index}`}
                     >
                       {text2}
                     </Typography>
@@ -85,10 +85,10 @@ const Activity = () => {
               <CardContent>
                 <Stack gap={1}>
                   <Typography variant="h6">Initiatives</Typography>
-                  {textContent3.map((text3) => (
+                  {textContent3.map((text3, index) => (
                     <Typography
                       fontSize={{ xs: "18px", md: "20px" }}
-                      key={text3}
+                      key={`${text3}-${index}`}
                     >
                       {text3}
                     </Typography>

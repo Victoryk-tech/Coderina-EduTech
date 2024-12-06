@@ -56,7 +56,7 @@ const ImgSlider = () => {
     <Box>
       <Slider className="header__carousel" {...settings}>
         {slideImg.map((slide, index) => (
-          <Stack key={index}>
+          <Stack key={`${slide}-${index}`}>
             <Image
               src={slide.image}
               alt={`slide-${index}`}

@@ -38,8 +38,8 @@ const AboutSection = () => {
           <CustomButton>Learn About Us</CustomButton>
         </Stack>
         <Grid container className="aboutSec__grid">
-          {aboutCard.map(({ title, description, img }) => (
-            <Grid size={{ xs: 12, md: 6 }} key={title}>
+          {aboutCard.map(({ title, description, img }, index) => (
+            <Grid size={{ xs: 12, md: 6 }} key={`${title}-${index}`}>
               <Stack>
                 <Typography fontSize={{ xs: "16px", md: "20px" }}>
                   {title}
