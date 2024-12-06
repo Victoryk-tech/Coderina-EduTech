@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import ImpactSlider from "../../";
+import ImpactSlider from "../../About/components/ImpactSlider";
 
 const LegoImpact = () => {
   return (
