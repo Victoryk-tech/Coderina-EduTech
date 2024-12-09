@@ -51,7 +51,7 @@ const Navbar = () => {
         </Link>
 
         <nav className="hidden md:flex items-center justify-center space-x-8 text-[16px] font-normal">
-          <Link href="/about">About us</Link>
+          <Link href="/About">About us</Link>
           <Link href="/what">What we do</Link>
           <Link href="/Events">Events</Link>
           <Link href="/Media">Media</Link>
