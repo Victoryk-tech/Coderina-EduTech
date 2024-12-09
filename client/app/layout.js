@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
       <head>
         <link
           rel="icon"
-          href="/coderinaBgLogo.png" // Ensure the favicon path is correct
+          href="/codelogo.png" // Ensure the favicon path is correct
           type="image/png"
           className="w-48"
         />
