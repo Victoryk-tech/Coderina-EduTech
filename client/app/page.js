@@ -11,6 +11,7 @@ import Footer from "./Home/Footer";
 import Experience from "./Home/Experience";
 import News from "./Home/News";
 import Activities from "./Home/Activities";
+import Subscribers from "./Home/Subscribers";
 
 const page = () => {
   return (
@@ -24,7 +25,7 @@ const page = () => {
       <Activities />
       <News />
       <Experience />
-      <Partners />
+      <Subscribers />
       <Footer />
     </div>
   );
