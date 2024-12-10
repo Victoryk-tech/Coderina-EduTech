@@ -59,7 +59,7 @@ const Footer = () => {
         <div className="space-y-16">
           <Image
             src={Logo}
-            alt=""
+            alt="logoCoderina"
             className="object-cover w-[180px] h-10"
             priority
           />

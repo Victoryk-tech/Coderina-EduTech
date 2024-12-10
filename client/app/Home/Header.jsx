@@ -37,9 +37,8 @@ const Header = () => {
         <CustomButton isLarge>
           Get Started <FaArrowRightLong />
         </CustomButton>
-
-        <ImgSlider />
       </div>
+      <ImgSlider />
     </div>
   );
 };

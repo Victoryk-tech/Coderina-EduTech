@@ -39,7 +39,21 @@ const ImgSlider = () => {
     ],
   };
 
-  return <div>slider</div>;
+  return (
+    <div>
+      <Slider className="header__carousel" {...settings}>
+        {slideImg.map((slide, index) => (
+          <div key={index} className="w-full md:w-[98%]">
+            <Image
+              src={slide}
+              alt="slideImage"
+              className="w-full object-contain"
+            />
+          </div>
+        ))}
+      </Slider>
+    </div>
+  );
 };
 
 export default ImgSlider;
