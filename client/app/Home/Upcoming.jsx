@@ -16,34 +16,27 @@ const Upcoming = () => {
   };
 
   return (
-    <Box className="flex flex-col gap-[5rem] text-white sec__container bg-black">
-      <Stack className="flex flex-row items-center justify-between">
-        <Typography variant="h5" fontSize={{ xs: "22px", md: "32px" }}>
-          Upcoming Events
-        </Typography>
-        <Stack>
-          <IconButton
-            className="text-white"
-            sx={{ padding: { xs: "default", md: "12px" } }}
+    <div className="flex flex-col gap-[5rem] text-white sec__container bg-black px-2 md:px-4 lg:px-16">
+      <div className="flex flex-row items-center justify-between">
+        <h5 className="text-[22px] md:text-[32px]">Upcoming Events</h5>
+        <div className="space-y-2">
+          <div
+            className="bg-white p-3 text-black rounded-2xl"
             onClick={previous}
           >
             <RiArrowLeftLine />
-          </IconButton>
-          <IconButton
-            className="text-white"
-            sx={{ padding: { xs: "default", md: "12px" } }}
-            onClick={next}
-          >
+          </div>
+          <div className="bg-white p-3 text-black rounded-2xl" onClick={next}>
             <RiArrowRightLine />
-          </IconButton>
-        </Stack>
-      </Stack>
+          </div>
+        </div>
+      </div>
       <UpSlider
         slider={(slider) => {
           sliderRef = slider;
         }}
       />
-    </Box>
+    </div>
   );
 };
 

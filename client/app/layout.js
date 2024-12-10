@@ -5,6 +5,8 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 
 import { SessionProvider } from "next-auth/react";
+import Navbar from "./Home/Navbar";
+import Footer from "./Home/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,8 +31,9 @@ export default function RootLayout({ children }) {
       </head>
       <body className="font-Inter">
         <div>
-         
+          <Navbar className="bg-[#FFF5E5]" />
           <SessionProvider>{children}</SessionProvider>
+          <Footer />
         </div>
       </body>
     </html>

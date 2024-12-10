@@ -248,12 +248,12 @@ button {
 }
 
 .upcomingSec__grid {
-  display: flex;
+  /* display: flex;
   flex-direction: row !important;
   color: #ffffff;
   padding-left: 10px;
   gap: 2em;
-  position: relative;
+  position: relative; */
 
   > div:first-child {
     content: "";
@@ -284,9 +284,9 @@ button {
 /* Activity */
 
 .activity__container {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  gap: 2em;
+  gap: 2em; */
 
   h5 {
     /* color: #FFFFFF; */

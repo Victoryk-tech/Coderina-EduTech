@@ -98,9 +98,9 @@ const Footer = () => {
         </div>
       </div>
       <div className="border-[1px] border-t-white mt-8 md:mt-10"></div>
-      <div className="text-[14px] w-full flex  items-center justify-between px-2 md:px-6 lg:px-16 py-8">
+      <div className="text-[12px] md:text-[14px] w-full flex  items-center justify-between px-2 md:px-6 lg:px-16 py-8">
         <p>Coderina-Copyright 2024</p>
-        <div className="flex  space-x-4">
+        <div className="flex items-center  md:space-x-4">
           <p> Privacy Policy</p>
           <p>Accessibility Statement</p>
           <p>Information</p>

@@ -5,6 +5,7 @@ import AboutMV from "./components/AboutMV";
 import Impact from "./components/Impact";
 import Navbar from "../Home/Navbar";
 import Team from "./components/Team";
+import CoreValues from "./components/CoreValues";
 
 const page = () => {
   return (
@@ -12,6 +13,7 @@ const page = () => {
       <Navbar />
       <AboutHeader />
       <AboutMV />
+      <CoreValues />
       <Impact />
       <Team />
     </div>

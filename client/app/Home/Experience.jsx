@@ -2,7 +2,12 @@ import React from "react";
 import CustomButton from "./CustomButton";
 import expCard1 from "../../public/experience-card1.png";
 import expCard2 from "../../public/experience-card2.png";
-import { greenBg2, pinkBgR, textColor } from "../utils/constants";
+import {
+  greenBg2,
+  pinkBgR,
+  textColor,
+  headerBackground,
+} from "../utils/constants";
 import Image from "next/image";
 const Experience = () => {
   const expCard = [
@@ -20,6 +25,7 @@ const Experience = () => {
       button: "Register",
       color: greenBg2,
       image: expCard2,
+      bg: greenBg2,
     },
     {
       title: "Bring the STEAM Experience to Your Next Celebration!",
@@ -30,17 +36,25 @@ const Experience = () => {
       button: "Contact us",
       color: pinkBgR,
       image: expCard1,
+      bg: headerBackground,
     },
   ];
 
   return (
-    <div className="px-2 md:px-6 lg:px-16 lg:py-16">
+    <div className="px-2 md:px-6 lg:px-16 lg:py-20">
       <div className="w-full">
-        <div className="grid md:grid-cols-2 items-center justify-between">
+        <div className="grid md:grid-cols-2 items-center justify-between gap-5">
           {expCard.map((card, i) => (
-            <div key={i} bgcolor={card.color} size={{ xs: 12, md: 5.9 }}>
-              <div>
-                <p>{card.title}</p>
+            <div
+              key={i}
+              className="space-y-10 rounded-2xl p-7 md:w-[530px] h-[660px]"
+              style={{ backgroundColor: card.bg }}
+              bgcolor={card.color}
+            >
+              <div className="space-y-4">
+                <h1 className="text-[25px] font-semibold leading-[37.6px]">
+                  {card.title}
+                </h1>
                 <div>
                   {card.text.map((t, index) => (
                     <div key={index}>
@@ -56,10 +70,10 @@ const Experience = () => {
                 </div>
                 <CustomButton>{card.button}</CustomButton>
               </div>
-              <div>
+              <div className="h-full w-full md:w-[430px] md:h-[320px]">
                 <Image
                   src={card.image}
-                  className="w-full h-full object-contain"
+                  className="w-full object-cover h-full rounded-3xl"
                   alt=""
                 />
               </div>

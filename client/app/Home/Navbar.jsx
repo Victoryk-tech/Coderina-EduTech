@@ -38,7 +38,7 @@ const Navbar = () => {
 
   return (
     <div
-      className=" flex items-center justify-center px-5 lg:py-8 w-full sticky top-0 bottom-0 bg-white z-[999]"
+      className="sticky top-0 z-50  flex items-center justify-center px-2 md:px-4 py-6 lg:py-8 w-full   "
       style={{ backgroundColor: noBg }}
     >
       <div className="flex items-center justify-between w-full">

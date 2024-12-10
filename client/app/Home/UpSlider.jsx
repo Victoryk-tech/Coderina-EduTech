@@ -34,50 +34,48 @@ const UpSlider = ({ slider }) => {
     dots: true,
     infinite: true,
     speed: 400,
-    slidesToShow: 1,
+    slidesToShow: 2,
     slidesToScroll: 1,
     autoplay: true,
   };
 
   return (
-    <Box overflow={"hidden"}>
-      <Slider
-        ref={slider}
-        className="   gap-[20rem] max-w-[530px]"
-        {...settings}
-      >
+    <div className="overflow-hidden">
+      <Slider ref={slider} className=" gap-[2rem] max-w-full" {...settings}>
         {upCard.map((card, i) => (
-          <Card key={i} className=" bg-[#201e1e] rounded-2xl max-w-[510px]">
-            <CardContent>
-              <Stack className="flex flex-row text-white pl-5 gap-[2rem] relative">
-                <Stack bgcolor={card.color}></Stack>
-                <Stack className="upcomingSec__grid">
-                  <Stack color={card.color}>
-                    <Typography>
-                      <AiOutlineCalendar />
-                      {card.date}
-                    </Typography>
-                    <Typography>
-                      <TbClockHour3 />
-                      {card.time}
-                    </Typography>
-                  </Stack>
-                  <Stack>
-                    <Typography
-                      variant="h6"
-                      fontSize={{ xs: "24px", md: "30px" }}
-                    >
-                      {card.title}
-                    </Typography>
-                    <Typography>{card.location}</Typography>
-                  </Stack>
-                </Stack>
-              </Stack>
-            </CardContent>
-          </Card>
+          <div
+            key={i}
+            className=" bg-[#201e1e] rounded-2xl max-w-[500px] h-[200px]"
+          >
+            <div className="flex flex-row text-white">
+              <div
+                style={{ borderColor: card.color, backgroundColor: card.color }}
+                className=" border-4 h-[200px] min-w-[2.5%]  rounded-xl "
+              ></div>
+              <div className=" flex flex-col items-start justify-start text-white pl-10 gap-y-4 py-4">
+                <div
+                  style={{ color: card.color }}
+                  className="flex flex-col items-start justify-start "
+                >
+                  <div className="flex items-center justify-center gap-x-2">
+                    <AiOutlineCalendar />
+                    {card.date}
+                  </div>
+                  <div className="flex items-center justify-center gap-x-2">
+                    <TbClockHour3 />
+                    {card.time}
+                  </div>
+                </div>
+                <div>
+                  <h6 className="text-[20px] md:text-[24px]">{card.title}</h6>
+                  <h3>{card.location}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
         ))}
       </Slider>
-    </Box>
+    </div>
   );
 };
 
