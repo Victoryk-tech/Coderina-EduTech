@@ -48,8 +48,8 @@ const News = () => {
         <div className=" grid md:grid-cols-4 items-center justify-between md:gap-x-3 mt-10">
           {newsCard.map((cardInfo, i) => {
             return (
-              <div className="">
-                <SolutionCards key={i} {...cardInfo} childern={"Sep 2, 2023"} />
+              <div key={i} className="">
+                <SolutionCards {...cardInfo} childern={"Sep 2, 2023"} />
               </div>
             );
           })}
