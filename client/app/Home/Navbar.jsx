@@ -17,7 +17,7 @@ const Navbar = () => {
     { label: "About us", path: "/About" },
     { label: "What we do", path: "/what" },
     { label: "Events", path: "/Events" },
-    { label: "Media", path: "/Media" },
+    { label: "Media", path: "/Form" },
   ];
 
   const [noBg, setNoBg] = useState("transparent");
@@ -25,7 +25,7 @@ const Navbar = () => {
   useEffect(() => {
     const addBgColor = () => {
       if (window.scrollY >= 10) {
-        setNoBg("#ffffff");
+        setNoBg(whiteBg);
       } else {
         setNoBg("transparent");
       }
