@@ -5,6 +5,7 @@ import pic from "../../../public/pic.png";
 import set from "../../../public/setting.png";
 import { BsArrowRight } from "react-icons/bs";
 import { Link } from "next/link";
+import Image from "next/image";
 
 const Resources = () => {
   const cardContent = [
@@ -37,7 +38,7 @@ const Resources = () => {
         {cardContent.map((content, i) => (
           <Stack key={i} gap={content.gap}>
             <Stack>
-              <img src={content.img} alt="" />
+              <Image src={content.img} alt="content" />
               <Typography fontSize={{ xs: "14px", md: "18px" }}>
                 {content.description}
               </Typography>

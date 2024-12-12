@@ -20,7 +20,7 @@ const LegoCard1 = () => {
           teamwork skills along the way.
         </Typography>
         <CustomButton orange bold>
-          Let's go!
+          Let`s go!
         </CustomButton>
       </Grid>
       <Grid size={{ xs: 12, md: 5.4 }}>
