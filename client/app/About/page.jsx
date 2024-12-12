@@ -10,10 +10,9 @@ import CoreValues from "./components/CoreValues";
 const page = () => {
   return (
     <div>
-      <Navbar />
       <AboutHeader />
       <AboutMV />
-      <CoreValues />
+
       <Impact />
       <Team />
     </div>

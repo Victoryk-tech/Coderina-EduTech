@@ -14,7 +14,7 @@ const Header = () => {
     backgroundImage: Vector,
   };
   return (
-    <div className="bg-[#FFF5E5]">
+    <div className="">
       {/* <Navbar /> */}
       <div
         className="flex flex-col items-center justify-center space-y-9 "
