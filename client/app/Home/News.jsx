@@ -37,7 +37,7 @@ const News = () => {
     },
   ];
   return (
-    <div className="px-2 lg:px-8 py-10 w-full font-Geist">
+    <div className="w-full px-2 md:px-4 lg:px-16 py-10 font-Geist">
       <div>
         <div className="flex items-center justify-between">
           <h5>News & Updates</h5>
@@ -46,10 +46,13 @@ const News = () => {
           </CustomButton>
         </div>
 
-        <div className=" grid md:grid-cols-4 items-center justify-between gap-y-6 md:gap-x-3 mt-10">
+        <div className="w-full grid md:grid-cols-4 items-center justify-between gap-y-6 md:gap-y-0 mt-10">
           {newsCard.map((cardInfo, i) => {
             return (
-              <div key={i} className="space-y-3 md:w-[240px] md:h-[240px]">
+              <div
+                key={i}
+                className="space-y-2 w-full md:w-[270px] h-full md:h-[330px]"
+              >
                 <div className="w-full md:w-[260px] h-[200px]">
                   <Image
                     src={cardInfo.img}

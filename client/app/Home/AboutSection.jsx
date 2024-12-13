@@ -22,9 +22,9 @@ const AboutSection = () => {
     },
   ];
   return (
-    <div className="w-full font-Geist px-2 lg:px-8 py-16">
+    <div className="w-full font-Geist px-2 md:px-4 lg:px-16 py-10 md:py-16">
       <div className="flex flex-col  md:flex-row items-start justify-start gap-y-7 md:gap-x-3 md:justify-between">
-        <h2 className="font-medium text-[26px] md:text-[32px] leading-8 md:leading-[48px] w-full md:w-[70%]">
+        <h2 className="font-medium text-[16px] md:text-[32px] leading-9 md:leading-[48px] w-full md:w-[70%]">
           Coderina is an independent Non-profit organisation Ed-Tech that works
           to promote ICT development, Youth Innovation and Entrepreneurship in
           Africa

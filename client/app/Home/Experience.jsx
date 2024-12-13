@@ -41,9 +41,9 @@ const Experience = () => {
   ];
 
   return (
-    <div className="w-full px-2 lg:px-8 lg:py-20">
+    <div className="w-full px-2 md:px-4 lg:px-16 lg:py-20">
       <div className="w-full">
-        <div className="grid md:grid-cols-2 items-center justify-between space-y-5 md:space-y-0 lg:gap-10">
+        <div className="grid md:grid-cols-2 items-center justify-between space-y-5 md:space-y-0 lg:gap-3">
           {expCard.map((card, i) => (
             <div
               key={i}

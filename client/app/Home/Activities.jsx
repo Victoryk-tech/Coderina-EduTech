@@ -32,17 +32,20 @@ const Activities = () => {
   ];
 
   return (
-    <Box className="activity__container px-2 md:px-4 lg:px-16 flex flex-col gap-[5rem] sec__container">
+    <Box className="activity__container px-2 md:px-4 lg:px-16 flex flex-col space-y-5 mt-5 sec__container">
       <Typography variant="h5" fontSize={{ xs: "20px", md: "40px" }}>
         Our Programs, Projects and Initiatives
       </Typography>
       <Stack>
         <Grid container className="activity__cards">
-          <Grid size={{ xs: 12, sm: 5.8, md: 5.9 }} className="activity__grid">
-            <Image className="" src={activeImg} alt="" />
-            <Stack>
-              <Typography>FIRST LEGO League Programs</Typography>
-            </Stack>
+          <Grid size={{ xs: 12, sm: 5.8, md: 5.9 }} className="activity__grid ">
+            <Card className="relative w-full">
+              <Image className="w-full" src={activeImg} alt="name" />
+
+              <h1 className="absolute bottom-4 px-2 font-bold text-[16px]">
+                FIRST LEGO League Programs
+              </h1>
+            </Card>
 
             <Card>
               <CardContent>

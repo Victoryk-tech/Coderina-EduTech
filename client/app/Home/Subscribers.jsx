@@ -39,7 +39,7 @@ const Subscribers = ({ sponsor }) => {
       <Box className="partner__container sec__container">
         <Stack className="partner__card">
           <Grid container sx={{ p: "0 8em" }}>
-            {legoLogos.map((logo, index) => (
+            {legoLogos.map((logo, i) => (
               <Grid key={i} size={{ xs: 12, md: 2 }}>
                 <Image src={logo} alt="Partner logo" />
               </Grid>
@@ -50,11 +50,13 @@ const Subscribers = ({ sponsor }) => {
     );
   else
     return (
-      <div className="w-full px-2  lg:px-8 py-6 bg-[#FFF5E5] ">
+      <div className="w-full font-Geist px-4 md:px-4 lg:px-16 py-6 bg-[#FFF5E5] ">
         <div className="flex flex-col items-center justify-center space-y-10">
-          <p>In collaboration with our valued partners</p>
+          <p className="text-[16px] md:text-[24px] text-center font-normal">
+            In collaboration with our valued partners
+          </p>
 
-          <div className="flex items-center justify-center space-x-5 ">
+          <div className="flex flex-col md:flex-row items-center justify-center space-x-5 ">
             {partnerLogos.map((logos, index) => (
               <div key={index} className="w-[6rem] h-[6rem]">
                 <Image
@@ -66,7 +68,7 @@ const Subscribers = ({ sponsor }) => {
             ))}
           </div>
 
-          <div className="flex items-center space-x-6">
+          <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
             <CustomButton bold disabled>
               Partner with Us
             </CustomButton>
@@ -77,12 +79,12 @@ const Subscribers = ({ sponsor }) => {
         </div>
         <div className="flex flex-col md:flex-row items-start justify-between space-y-8 md:space-y-0 rounded-2xl mt-16 px-5 lg:px-16 py-8 bg-white">
           <div>
-            <h2>
+            <h2 className="text-[20px] font-semibold md:text-[24px] leading-8">
               Looking for a co-working space or where to host your meeting or
               training?
             </h2>
 
-            <ul className="space-y-3 mt-4">
+            <ul className="space-y-2 mt-4">
               <li> Opening Hours: Monday to Friday 9:00 AM - 5:00 PM</li>
               <li> High-Speed Internet Service</li>
               <li> Co office space / Co-working space</li>
@@ -90,7 +92,7 @@ const Subscribers = ({ sponsor }) => {
               <li>Venue / Seminar / Workshop</li>
             </ul>
 
-            <div className="flex items-center space-x-6 mt-8">
+            <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6 mt-8">
               <CustomButton bold disabled>
                 Book Space
               </CustomButton>
@@ -99,7 +101,7 @@ const Subscribers = ({ sponsor }) => {
               </CustomButton>
             </div>
           </div>
-          <div className="w-full md:w-[500px] h-[380px]">
+          <div className="hidden md:block md:w-[500px] h-[380px]">
             <Image
               src={newsLgImg}
               alt="image"

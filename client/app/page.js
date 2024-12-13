@@ -56,16 +56,16 @@ const page = () => {
   ];
 
   return (
-    <Box overflow={"hidden"}>
-      <Box bgcolor={headerBackground}>
+    <div overflow={"hidden"}>
+      <div bgcolor={headerBackground}>
         <Header />
-      </Box>
+      </div>
       {homeContents1.map(({ color, section }, index) => (
-        <Box p={4} key={`${section}-${index}`} bgcolor={color}>
-          <Container maxWidth="xl">{section}</Container>
-        </Box>
+        <div key={`${section}-${index}`} bgcolor={color}>
+          <div>{section}</div>
+        </div>
       ))}
-    </Box>
+    </div>
     // <div className="overflow-hidden font-Geist w-full">
     //   <div className="bg-[#FFF5E5]">
     //     <Navbar />

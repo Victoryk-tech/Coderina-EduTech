@@ -55,8 +55,8 @@ const Footer = () => {
   ];
   return (
     <div className="bg-[#1a1a1a] text-white pt-[16px] md:pt-24 ">
-      <div className=" flex flex-col  md:flex-row items-center justify-between gap-y-6 md:gap-y-0 py-10 px-10 md:px-4 lg:px-8">
-        <div className=" flex flex-row md:flex-col md:items-center md:justify-between space-x-5 md:space-x-0 md:space-y-16">
+      <div className=" flex flex-col  md:flex-row items-start justify-between gap-y-6 md:gap-y-0 py-10 px-10 md:px-4 lg:px-16">
+        <div className=" flex flex-col items-start md:justify-between space-y-6 md:space-y-16">
           <Image
             src={Logo}
             alt="logoCoderina"
@@ -98,9 +98,9 @@ const Footer = () => {
         </div>
       </div>
       <div className="border-[1px] border-t-white mt-8 md:mt-10"></div>
-      <div className="text-[8px] md:text-[14px] w-full flex  items-center justify-between px-2  lg:px-8 py-8">
+      <div className="text-[14px] md:text-[15px] text-[#E6E6E6] space-y-2 md:space-y-0 w-full flex flex-col md:flex-row items-star md:justify-between px-10 md:px-2  lg:px-8 py-8 md:py-8">
         <p>Coderina-Copyright 2024</p>
-        <div className="flex items-center space-x-2  md:space-x-4">
+        <div className="flex flex-col md:flex-row items-start space-y-2 md:space-y-0   md:space-x-4">
           <p> Privacy Policy</p>
           <p>Accessibility Statement</p>
           <p>Information</p>

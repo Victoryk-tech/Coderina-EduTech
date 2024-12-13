@@ -21,21 +21,31 @@ const SubscribeForm = ({ register, link }) => {
     );
   else
     return (
-      <Grid container className="partner__signup mt-4" p={5}>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Typography variant="h4" fontSize={{ xs: "18px", md: "26px" }}>
+      <div
+        container
+        className=" w-full  bg-[#00a859] font-Geist p-5 text-[#fff] flex flex-col md:flex-row items-center justify-between mb-8 rounded-2xl gap-y-4 md:gap-y-0 md:gap-x-8 mt-4"
+      >
+        <div className="w-full md:w-[40%]">
+          <h4 className="text-[26px] md:text-[26px]">
             Sign up for our Newsletter to receive news and updates.
-          </Typography>
-        </Grid>
-        <Grid size={{ xs: 12, md: 4.8 }}>
-          <form action="submit">
-            <Input type="email" placeholder="Enter email address" />
-            <CustomButton orange bold>
+          </h4>
+        </div>
+        <div className="w-full">
+          <form
+            action="submit"
+            className="w-full flex flex-col md:flex-row items-center justify-start md:justify-center gap-y-3 md:gap-y-0 md:gap-x-4 "
+          >
+            <Input
+              type="email"
+              placeholder="Enter email address"
+              className="w-full py-2 md:w-[50%] placeholder:text-[#727272]"
+            />
+            <button className=" bg-[#FBB12F] text-black w-full py-2  rounded-3xl md:w-[20%] md:py-2 text-[16px]">
               Subscribe
-            </CustomButton>
+            </button>
           </form>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
     );
 };
 

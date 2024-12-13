@@ -41,9 +41,9 @@ const ImgSlider = () => {
 
   return (
     <div>
-      <Slider className="header__carousel" {...settings}>
+      <Slider className="mt-[20px] " {...settings}>
         {slideImg.map((slide, index) => (
-          <div key={index} className="w-full  md:w-[98%]">
+          <div key={index} className="w-full flex gap-x-4 md:w-[98%]">
             <Image
               src={slide}
               alt="slideImage"

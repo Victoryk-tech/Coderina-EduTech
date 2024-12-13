@@ -56,7 +56,7 @@ const UpSlider = ({ slider }) => {
   };
 
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden px-2">
       <Slider ref={slider} className="gap-[2rem] max-w-full" {...settings}>
         {upCard.map((card, i) => (
           <div key={i} className="">
