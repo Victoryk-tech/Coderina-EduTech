@@ -78,7 +78,7 @@ const Navbar = () => {
         </CustomButton>
 
         <div className="md:hidden">
-          <div onClick={() => setIsDrawerOpen(true)}>
+          <div className="text-2xl" onClick={() => setIsDrawerOpen(true)}>
             <GiHamburgerMenu />
           </div>
 

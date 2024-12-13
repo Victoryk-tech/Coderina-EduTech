@@ -16,6 +16,7 @@ import newsImg2 from "../../public/newsImg2.png";
 import newsImg3 from "../../public/newsImg3.png";
 import newsImg4 from "../../public/newsImg4.png";
 import SolutionCards from "./SolutionCards";
+import Image from "next/image";
 const News = () => {
   const newsCard = [
     {
@@ -36,7 +37,7 @@ const News = () => {
     },
   ];
   return (
-    <div className="px-2 md:px-4 lg:px-12 py-10 w-full">
+    <div className="px-2 lg:px-8 py-10 w-full font-Geist">
       <div>
         <div className="flex items-center justify-between">
           <h5>News & Updates</h5>
@@ -45,11 +46,23 @@ const News = () => {
           </CustomButton>
         </div>
 
-        <div className=" grid md:grid-cols-4 items-center justify-between md:gap-x-3 mt-10">
+        <div className=" grid md:grid-cols-4 items-center justify-between gap-y-6 md:gap-x-3 mt-10">
           {newsCard.map((cardInfo, i) => {
             return (
-              <div key={i} className="">
-                <SolutionCards {...cardInfo} childern={"Sep 2, 2023"} />
+              <div key={i} className="space-y-3 md:w-[240px] md:h-[240px]">
+                <div className="w-full md:w-[260px] h-[200px]">
+                  <Image
+                    src={cardInfo.img}
+                    alt="news"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-[14px] ">sept.2023</p>
+                  <h3 className="font-normal text-[15px] md:text-[16px] leading-6">
+                    {cardInfo.text}
+                  </h3>
+                </div>
               </div>
             );
           })}

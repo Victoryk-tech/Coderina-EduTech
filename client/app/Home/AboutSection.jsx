@@ -22,25 +22,27 @@ const AboutSection = () => {
     },
   ];
   return (
-    <div className="w-full px-2 md:px-4 lg:px-16 py-16">
-      <div className="flex flex-col  md:flex-row items-start justify-start gap-5 md:justify-between">
-        <h2 className="font-medium text-[26px] md:text-[32px] leading-9 md:leading-[48px] md:w-[70%]">
+    <div className="w-full font-Geist px-2 lg:px-8 py-16">
+      <div className="flex flex-col  md:flex-row items-start justify-start gap-y-7 md:gap-x-3 md:justify-between">
+        <h2 className="font-medium text-[26px] md:text-[32px] leading-8 md:leading-[48px] w-full md:w-[70%]">
           Coderina is an independent Non-profit organisation Ed-Tech that works
           to promote ICT development, Youth Innovation and Entrepreneurship in
           Africa
         </h2>
 
-        <CustomButton>Learn About Us</CustomButton>
+        <div className="flex items-end justify-end">
+          <CustomButton className="">Learn About Us</CustomButton>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 items-center justify-center md:space-x-4 mt-10 bg-[#fff5e5] p-10 rounded-2xl">
+      <div className="grid md:grid-cols-2 items-center justify-center space-y-4 md:space-x-4 mt-10 bg-[#fff5e5] md:p-10 rounded-2xl">
         {aboutCard.map(({ title, description, img }, index) => {
           return (
             <div
               key={`${title}-${index}`}
               className="space-y-6  gap-4 p-8 md:px-5 md:py-5"
             >
-              <div className="space-y-3x">
+              <div className="gap-y-3">
                 <h2 className="text-[16px] font-medium leading-5 md:[20px]">
                   {title}
                 </h2>
@@ -48,7 +50,9 @@ const AboutSection = () => {
                   {description}
                 </h2>
               </div>
-              <Image src={img} alt="image" />
+              <div>
+                <Image src={img} alt="image" />
+              </div>
             </div>
           );
         })}

@@ -50,7 +50,7 @@ const Subscribers = ({ sponsor }) => {
     );
   else
     return (
-      <div className="w-full px-2 md:px-6 lg:px-16 py-6 bg-[#FFF5E5] ">
+      <div className="w-full px-2  lg:px-8 py-6 bg-[#FFF5E5] ">
         <div className="flex flex-col items-center justify-center space-y-10">
           <p>In collaboration with our valued partners</p>
 
@@ -75,7 +75,7 @@ const Subscribers = ({ sponsor }) => {
             </CustomButton>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row items-start justify-between rounded-2xl md:mt-16 lg:px-10 py-8 bg-white">
+        <div className="flex flex-col md:flex-row items-start justify-between space-y-8 md:space-y-0 rounded-2xl mt-16 px-5 lg:px-16 py-8 bg-white">
           <div>
             <h2>
               Looking for a co-working space or where to host your meeting or

@@ -41,13 +41,13 @@ const Experience = () => {
   ];
 
   return (
-    <div className="px-2 md:px-6 lg:px-16 lg:py-20">
+    <div className="w-full px-2 lg:px-8 lg:py-20">
       <div className="w-full">
-        <div className="grid md:grid-cols-2 items-center justify-between gap-5">
+        <div className="grid md:grid-cols-2 items-center justify-between space-y-5 md:space-y-0 lg:gap-10">
           {expCard.map((card, i) => (
             <div
               key={i}
-              className="space-y-10 rounded-2xl p-7 md:w-[530px] h-[660px]"
+              className="space-y-10 rounded-2xl p-7 w-full md:w-[540px] md:h-[660px]"
               style={{ backgroundColor: card.bg }}
               bgcolor={card.color}
             >
@@ -70,11 +70,11 @@ const Experience = () => {
                 </div>
                 <CustomButton>{card.button}</CustomButton>
               </div>
-              <div className="h-full w-full md:w-[430px] md:h-[320px]">
+              <div className="h-full w-full md:w-[450px] md:h-[340px]">
                 <Image
                   src={card.image}
                   className="w-full object-cover h-full rounded-3xl"
-                  alt=""
+                  alt="card"
                 />
               </div>
             </div>

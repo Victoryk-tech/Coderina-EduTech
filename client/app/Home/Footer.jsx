@@ -54,23 +54,23 @@ const Footer = () => {
     "Contact Us",
   ];
   return (
-    <div className="bg-[#1a1a1a] text-white  md:pt-24 ">
-      <div className=" flex items-center justify-between  px-2 md:px-6 lg:px-16">
-        <div className="space-y-16">
+    <div className="bg-[#1a1a1a] text-white pt-[16px] md:pt-24 ">
+      <div className=" flex flex-col  md:flex-row items-center justify-between gap-y-6 md:gap-y-0 py-10 px-10 md:px-4 lg:px-8">
+        <div className=" flex flex-row md:flex-col md:items-center md:justify-between space-x-5 md:space-x-0 md:space-y-16">
           <Image
             src={Logo}
             alt="logoCoderina"
-            className="object-cover w-[180px] h-10"
+            className="object-cover w-[150px] h-8 md:w-[180px] md:h-10"
             priority
           />
           <div className="flex items-center justify-center space-x-4">
-            <FaFacebookF size={24} />
-            <AiFillInstagram size={24} />
-            <FaYoutube size={24} />
-            <FaXTwitter size={24} />
+            <FaFacebookF className="text-[16px] md:text-[24px]" />
+            <AiFillInstagram className="text-[16px] md:text-[24px]" />
+            <FaYoutube className="text-[16px] md:text-[24px]" />
+            <FaXTwitter className="text-[16px] md:text-[24px]" />
           </div>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-3 text-[14px] md:text-[17px]">
           <h3>Address</h3>
           <div className="flex space-x-2">
             <RiMapPin3Fill color={redColor} />
@@ -85,7 +85,7 @@ const Footer = () => {
             <p> Mon - Fri 9.00 - 5.00</p>
           </div>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-3 text-[14px] md:text-[17px]">
           <h3>Email & Phone Number</h3>
           <div className="flex space-x-2">
             <FaPhoneAlt color={darkGreenColor} />
@@ -98,9 +98,9 @@ const Footer = () => {
         </div>
       </div>
       <div className="border-[1px] border-t-white mt-8 md:mt-10"></div>
-      <div className="text-[12px] md:text-[14px] w-full flex  items-center justify-between px-2 md:px-6 lg:px-16 py-8">
+      <div className="text-[8px] md:text-[14px] w-full flex  items-center justify-between px-2  lg:px-8 py-8">
         <p>Coderina-Copyright 2024</p>
-        <div className="flex items-center  md:space-x-4">
+        <div className="flex items-center space-x-2  md:space-x-4">
           <p> Privacy Policy</p>
           <p>Accessibility Statement</p>
           <p>Information</p>
