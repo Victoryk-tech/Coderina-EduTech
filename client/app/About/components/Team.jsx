@@ -42,7 +42,7 @@ const Team = () => {
     },
   ];
   return (
-    <div className="px-4 md:px-4 lg:px-16 py-12">
+    <div className="px-4 md:px-4 lg:px-16 py-12 bg-white">
       {" "}
       <div className="team__container">
         <div className="flex items-center justify-between">

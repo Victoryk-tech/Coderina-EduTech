@@ -10,6 +10,7 @@ import Tool from "../../../public/tool.png";
 
 import Image from "next/image";
 import Scope from "./Scope";
+import { gradient2 } from "@/app/utils/constants";
 const AboutMV = () => {
   const mCard = [
     {
@@ -68,7 +69,10 @@ const AboutMV = () => {
     },
   ];
   return (
-    <div className="py-10 lg:px-16 font-Geist">
+    <div
+      className="py-10 lg:px-16 font-Geist bg-white "
+      // style={{ backgroundColor: gradient2 }}
+    >
       <div>
         {mCard.map((m, ind) => {
           return (

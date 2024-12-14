@@ -31,8 +31,10 @@ export default function RootLayout({ children }) {
       </head>
       <body className="font-Inter bg-[#FFF5E5]">
         <div>
-          <Navbar />
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <Navbar />
+            {children}
+          </SessionProvider>
           <Footer />
         </div>
       </body>

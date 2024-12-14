@@ -15,6 +15,8 @@ import SolutionCards from "../../Home/SolutionCards";
 import { CiHeart } from "react-icons/ci";
 import { LuMessageCircle } from "react-icons/lu";
 import contentful from "contentful";
+import Subscribers from "@/app/Home/Subscribers";
+import SubscribeForm from "@/app/Home/SubscribeForm";
 const MediaBody = () => {
   const [mediaOption, setMediaOption] = useState("News Articles");
 
@@ -117,7 +119,7 @@ const MediaBody = () => {
   // contentful
 
   return (
-    <Box mt={13} className="media__container">
+    <Box mt={6} className="media__container">
       <Stack justifyContent={["center", "space-between"]}>
         <Typography variant="h4">Media</Typography>
         <Stack>
@@ -167,6 +169,8 @@ const MediaBody = () => {
           </div> */}
         </Grid>
       )}
+
+      <SubscribeForm />
     </Box>
   );
 };

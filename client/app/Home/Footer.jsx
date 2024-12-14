@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { RiMapPin3Fill } from "react-icons/ri";
 import { TbClockHour3Filled } from "react-icons/tb";
 import { FaFacebookF } from "react-icons/fa";
@@ -16,6 +17,27 @@ import {
 } from "../utils/constants";
 import Image from "next/image";
 const Footer = () => {
+  const router = useRouter();
+  const [display, setDisplay] = useState(false);
+
+  useEffect(() => {
+    if (!router.isReady) return; // Wait until the router is ready
+
+    const hiddenPaths = [
+      "/",
+      "/Media",
+      "/Form",
+      "/Couch",
+      "/About",
+      "/what",
+      "/Events",
+      "/Firstlego",
+      "*",
+    ];
+
+    setDisplay(!hiddenPaths.includes(router.pathname));
+  }, [router.isReady, router.pathname]);
+
   const footerInfo = [
     {
       title: "Address",
@@ -53,7 +75,7 @@ const Footer = () => {
     "Information",
     "Contact Us",
   ];
-  return (
+  return display ? (
     <div className="bg-[#1a1a1a] text-white pt-[16px] md:pt-24 ">
       <div className=" flex flex-col  md:flex-row items-start justify-between gap-y-6 md:gap-y-0 py-10 px-10 md:px-4 lg:px-16">
         <div className=" flex flex-col items-start md:justify-between space-y-6 md:space-y-16">
@@ -108,7 +130,7 @@ const Footer = () => {
         </div>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default Footer;

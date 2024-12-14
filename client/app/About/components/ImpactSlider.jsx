@@ -107,68 +107,74 @@ const ImpactSlider = ({ lego }) => {
     ],
   };
 
-  // if (lego)
-  //   return (
-  //     <div>
-  //       {/* <div className="impact__carousel overflow-hidden">
-  //         <Slider {...settings} slidesToShow={4}>
-  //           {legoImpact.map((slide, index) => (
-  //             <div
-  //               key={index}
-  //               className="impact__card"
-  //               sx={{
-  //                 bgcolor: "#FFF9F0",
-  //                 borderRight: "1px solid #E69F22",
-  //                 height: { xs: "26vh", md: "34vh" },
-  //               }}
-  //             >
-  //               <Image
-  //                 src={slide.img}
-  //                 alt="image"
-  //                 className="w-[12px] md:w-24px"
-  //               />
-  //               <Stack>
-  //                 <Typography
-  //                   variant="h4"
-  //                   fontSize={{ xs: "40px", md: "50px" }}
-  //                 >
-  //                   {slide.number}
-  //                 </Typography>
-  //                 <Typography fontSize={{ xs: "14px", md: "16px" }}>
-  //                   {slide.text}
-  //                 </Typography>
-  //               </Stack>
-  //             </div>
-  //           ))}
-  //         </Slider>
-  //       </div> */}
-  //     </div>
-  //   );
+  if (lego)
+    return (
+      <Container maxWidth="lg">
+        <Box overflow={"hidden"} className="impact__carousel">
+          <Slider {...settings} slidesToShow={4}>
+            {legoImpact.map((slide, index) => (
+              <CardContent
+                key={index}
+                className="impact__card"
+                sx={{
+                  bgcolor: "#FFF9F0",
+                  borderRight: "1px solid #E69F22",
+                  height: { xs: "26vh", md: "34vh" },
+                }}
+              >
+                <Image src={slide.img} alt="slide" />
+                <Stack>
+                  <Typography
+                    variant="h4"
+                    fontSize={{ xs: "40px", md: "50px" }}
+                  >
+                    {slide.number}
+                  </Typography>
+                  <Typography fontSize={{ xs: "14px", md: "16px" }}>
+                    {slide.text}
+                  </Typography>
+                </Stack>
+              </CardContent>
+            ))}
+          </Slider>
+        </Box>
+      </Container>
+    );
   return (
-    <div className=" overflow-hidden border-[#3D3D3D] border-[1px]">
-      <div className=" rounded-[1em] grid grid-cols-5 space-x-2">
-        {impactNums.map((slide, indexio) => (
-          <div
-            key={indexio}
-            className="p-3 bg-[#343232] border-r-[#3D3D3D] h-[26vh] md:h-[36vh]"
+    <Box
+      overflow={"hidden"}
+      className="impact__carousel"
+      border={"1px solid #3D3D3D"}
+    >
+      <Slider {...settings} slidesToShow={5}>
+        {impactNums.map((slide, index) => (
+          <CardContent
+            key={index}
+            className="impact__card"
+            sx={{
+              bgcolor: "#343232",
+              borderRight: "1px solid #3D3D3D",
+              height: { xs: "26vh", md: "36vh" },
+            }}
           >
             <Image
+              width={{ xs: "16px", md: "24px" }}
+              className="w-[20px] h-[24px]"
               src={slide.img}
-              className="w-[16px] md:w-[24px]"
-              alt="cardsl"
+              alt="slider"
             />
-            <div>
-              <h4 className="text-[40px] md:text-[48px] font-semibold">
+            <Stack>
+              <Typography variant="h4" fontSize={{ xs: "40px", md: "48px" }}>
                 {slide.number}
-              </h4>
-              <p className="text-[14px] md:text-[16px] font-normal">
+              </Typography>
+              <Typography fontSize={{ xs: "14px", md: "16px" }}>
                 {slide.text}
-              </p>
-            </div>
-          </div>
+              </Typography>
+            </Stack>
+          </CardContent>
         ))}
-      </div>
-    </div>
+      </Slider>
+    </Box>
   );
 };
 

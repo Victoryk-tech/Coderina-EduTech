@@ -31,7 +31,7 @@ const Alignment = () => {
           Alignment with the SDGs
         </h1>
       </div>
-      <div className="grid grid-cols-4 items-center justify-center  space-x-3 ">
+      <div className="w-full grid md:grid-cols-4 items-center justify-center  md:space-x-3 ">
         {align.map((sec, index) => {
           return (
             <div key={index} className="space-y-3">

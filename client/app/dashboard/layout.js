@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="h-full">
       <Layout>
-        <main className="p-6">{children}</main>
+        <main className="p-6 bg-white">{children}</main>
       </Layout>
     </div>
   );
