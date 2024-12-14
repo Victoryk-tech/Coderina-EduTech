@@ -49,7 +49,7 @@ const News = () => {
                 key={i}
                 className="space-y-2 w-full md:w-[270px] h-full md:h-[330px]"
               >
-                <div className="w-full md:w-[260px] h-[200px]">
+                <div className="w-full">
                   <Image
                     src={cardInfo.img}
                     alt={`Image for news: ${cardInfo.text}`}

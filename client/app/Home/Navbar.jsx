@@ -20,30 +20,44 @@ const Navbar = () => {
     { label: "Media", path: "/Form" },
   ];
 
-  const [noBg, setNoBg] = useState("transparent");
+  // const [noBg, setNoBg] = useState("transparent");
+
+  // useEffect(() => {
+  //   const addBgColor = () => {
+  //     if (window.scrollY >= 10) {
+  //       setNoBg(whiteBg);
+  //     } else {
+  //       setNoBg("transparent");
+  //     }
+  //   };
+
+  //   window.addEventListener("scroll", addBgColor);
+
+  //   // Cleanup on unmount
+  //   return () => window.addEventListener("scroll", addBgColor);
+  // }, []);
+
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const addBgColor = () => {
-      if (window.scrollY >= 10) {
-        setNoBg(whiteBg);
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
       } else {
-        setNoBg("transparent");
+        setIsScrolled(false);
       }
     };
 
-    window.addEventListener("scroll", addBgColor);
-
-    // Cleanup on unmount
-    return () => window.addEventListener("scroll", addBgColor);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
-
   return (
     <div
-      className="sticky top-0 z-50  flex items-center justify-center px-2 md:px-4 py-6 lg:py-8 w-full   "
-      style={{
-        backgroundColor: noBg,
-        transition: "background-color 0.3s ease",
-      }}
+      className={`${
+        isScrolled ? "bg-white sticky top-0" : "bg-transparent"
+      } w-full sticky top-0 z-50  flex items-center justify-center px-2 md:px-4 py-6 lg:py-8 transition-colors duration-300`}
     >
       <div className="flex items-center justify-between w-full">
         <Link href="/" className="">

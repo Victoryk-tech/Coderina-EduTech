@@ -28,9 +28,14 @@ import {
 const page = () => {
   const homeContents1 = [
     // {
-    //     color: headerBackground,
-    //     section: <Header />
+    //   color: "transparent",
+    //   section: <Navbar />,
     // },
+
+    {
+      color: headerBackground,
+      section: <Header />,
+    },
     {
       // color: greenBg,
       section: <AboutSection />,
@@ -58,10 +63,7 @@ const page = () => {
   ];
 
   return (
-    <div overflow={"hidden"}>
-      <div bgcolor={headerBackground}>
-        <Header />
-      </div>
+    <div className=" overflow-hidden bg-white ">
       {homeContents1.map(({ color, section }, index) => (
         <div key={`${section}-${index}`} bgcolor={color}>
           <div>{section}</div>

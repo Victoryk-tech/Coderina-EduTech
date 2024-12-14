@@ -78,7 +78,7 @@ const Experience = () => {
               <div className="h-full w-full md:w-[450px] md:h-[340px]">
                 <Image
                   src={card.image}
-                  alt="card"
+                  alt="imagecard"
                   className="w-full object-cover h-full rounded-3xl"
                   layout="responsive"
                 />

@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
       </head>
-      <body className="font-Inter">
+      <body className="font-Inter bg-[#FFF5E5]">
         <div>
           <Navbar />
           <SessionProvider>{children}</SessionProvider>
