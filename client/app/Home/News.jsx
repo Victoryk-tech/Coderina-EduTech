@@ -39,11 +39,13 @@ const News = () => {
   return (
     <div className="w-full px-2 md:px-4 lg:px-16 py-10 font-Geist">
       <div>
-        <div className="flex items-center justify-between">
-          <h5>News & Updates</h5>
-          <CustomButton orange bold>
-            View all <HiOutlineArrowNarrowRight size={18} />
-          </CustomButton>
+        <div className="w-full flex items-center justify-between">
+          <h5 className="font-semibold text-[20px] md:text-[32px] text-center md:text-start">
+            News & Updates
+          </h5>
+          <button className="hidden md:flex space-x-2 rounded-3xl p-3 bg-[#FBB12F] text-black text-[16px]">
+            <p> View all</p> <HiOutlineArrowNarrowRight size={18} />
+          </button>
         </div>
 
         <div className="w-full grid md:grid-cols-4 items-center justify-between gap-y-6 md:gap-y-0 mt-10">
