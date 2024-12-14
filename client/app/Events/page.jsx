@@ -14,20 +14,23 @@ const Events = () => {
       color: pinkBg,
       section: <EventBody />,
     },
-    {
-      section: <SubscribeForm />,
-    },
   ];
 
   return (
-    <Box overflow={"hidden"}>
-      {eventContent.map(({ color, section }, index) => (
-        <Box p={4} key={`${section}-${index}`} bgcolor={color}>
-          <Container maxWidth="xl">{section}</Container>
-          <Footer />
-        </Box>
-      ))}
-    </Box>
+    <>
+      <Box overflow={"hidden"}>
+        {eventContent.map(({ color, section }, index) => (
+          <Box p={4} key={`${section}-${index}`} bgcolor={color}>
+            <Container maxWidth="xl">{section}</Container>
+          </Box>
+        ))}
+      </Box>
+      <div className="px-2 md:px-4 lg:px-16">
+        <SubscribeForm />
+      </div>
+
+      <Footer />
+    </>
   );
 };
 

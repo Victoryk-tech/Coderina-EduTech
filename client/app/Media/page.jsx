@@ -6,6 +6,7 @@ import { Box, Container, Stack } from "@mui/material";
 
 import MediaBody from "../Media/component/MediaBody";
 import Footer from "../Home/Footer";
+import SubscribeForm from "../Home/SubscribeForm";
 
 const Media = () => {
   const eventContent = [
@@ -24,6 +25,9 @@ const Media = () => {
           </Box>
         ))}
       </Box>
+      <div className="px-2 md:px-4 lg:px-16">
+        <SubscribeForm />
+      </div>
       <Footer />
     </>
   );
