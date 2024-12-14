@@ -36,6 +36,11 @@ const Layout = ({ children }) => {
       path: "/dashboard/subscribers",
     },
     {
+      icon: <GoPeople />,
+      name: "Subscriber",
+      path: "/dashboard/subscriber",
+    },
+    {
       icon: <RiSettings2Line />,
       name: "Settings",
       path: "/dashboard/settings",

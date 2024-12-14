@@ -2,11 +2,17 @@
 import { Box, Container, Stack } from "@mui/material";
 import React from "react";
 import EventBody from "./components/EventBody";
-import { blackColor, pinkBg } from "../utils/constants";
+import { blackColor, pinkBg, whiteBg } from "../utils/constants";
 import Partners from "../Home/Subscribers";
+import Navbar from "../Home/Navbar";
+import Footer from "../Home/Footer";
 
 const Events = () => {
   const eventContent = [
+    {
+      color: whiteBg,
+      section: <Navbar />,
+    },
     {
       color: pinkBg,
       section: <EventBody />,
@@ -14,6 +20,9 @@ const Events = () => {
     {
       color: pinkBg,
       section: <Partners />,
+    },
+    {
+      section: <Footer />,
     },
   ];
 

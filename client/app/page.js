@@ -10,6 +10,8 @@ import Partners from "./Home/SubscribeForm";
 import Footer from "./Home/Footer";
 import Experience from "./Home/Experience";
 import News from "./Home/News";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import Activities from "./Home/Activities";
 import Subscribers from "./Home/Subscribers";

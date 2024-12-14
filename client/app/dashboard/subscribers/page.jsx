@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import PersonIcon from "@mui/icons-material/Person";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
@@ -15,6 +15,8 @@ const SubscriberTable = ({ subscribers }) => {
   const [selectedSubscribers, setSelectedSubscribers] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  // const [subscribers, setSubscribers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const iconRef = useRef(null);
 
   const handleSelectAll = () => {
@@ -52,86 +54,111 @@ const SubscriberTable = ({ subscribers }) => {
       setSelectedSubscribers([...selectedSubscribers, email]);
     }
   };
+
+  // api
+  useEffect(() => {
+    const fetchSubscribers = async () => {
+      try {
+        const response = await fetch("/api/subscribers");
+        const data = await response.json();
+        setSubscribers(data.subscribers);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching subscribers:", error);
+      }
+    };
+
+    fetchSubscribers();
+  }, []);
+
   return (
-    <>
-      <table className="min-w-full border border-border">
-        <thead>
-          <tr className="hover:bg-gray-300">
-            <th className="text-gray-600 border-b border-border p-2 text-left">
-              <input
-                type="checkbox"
-                checked={selectAll}
-                onChange={handleSelectAll}
-                className="mr-8"
-              />
-              Subscriber
-            </th>
-            <th className="text-gray-600 border-b border-border p-2 text-left">
-              Subscription type
-              <MdKeyboardArrowDown className="inline ml-1" />{" "}
-              {/* Icon beside "Subscription type" */}
-            </th>
-            <th className="text-gray-600 border-b border-border p-2 text-left">
-              Activity
-            </th>
-            <th className="text-gray-600 border-b border-border p-2 text-left">
-              Subscription date
-            </th>
-            <th className="text-gray-600 border-b border-border p-2 text-left">
-              Revenue
-            </th>
-            <th className="text-gray-600 border-b border-border p-2 text-left">
-              Days active(last 30 days)
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {subscribers.map((subscriber, index) => (
-            <tr key={index} className="hover:bg-gray-200">
-              <td className="border-b border-border p-2">
+    <div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <table className="min-w-full border border-border">
+          <thead>
+            <tr className="hover:bg-gray-300">
+              <th className="text-gray-600 border-b border-border p-2 text-left">
                 <input
                   type="checkbox"
-                  checked={selectedSubscribers.includes(subscriber.email)}
-                  onChange={() => handleSubscriberSelect(subscriber.email)}
+                  checked={selectAll}
+                  onChange={handleSelectAll}
                   className="mr-8"
                 />
-                <PersonIcon
-                  className="h-5 w-5 mr-2"
-                  style={{ color: "gray" }}
-                />
-                {subscriber.email}
-              </td>
-              <td className="border-b border-border p-2">{subscriber.type}</td>
-              <td className="border-b border-border p-2">
-                {subscriber.activity}
-              </td>
-              <td className="border-b border-border p-2">{subscriber.date}</td>
-              <td className="border-b border-border p-2">
-                {subscriber.revenue}
-              </td>
-              <td>{subscriber.daysActive}</td>
-              <td>
-                <MoreHorizIcon
-                  ref={iconRef}
-                  onClick={handleModalOpen}
-                  style={{
-                    marginRight: "200px",
-                    fontSize: "40px",
-                    color: "gray",
-                    cursor: "pointer",
-                  }}
-                />
-                <Modal
-                  isOpen={modalOpen}
-                  onClose={handleModalClose}
-                  position={modalPosition}
-                />
-              </td>
+                Subscriber
+              </th>
+              <th className="text-gray-600 border-b border-border p-2 text-left">
+                Subscription type
+                <MdKeyboardArrowDown className="inline ml-1" />{" "}
+                {/* Icon beside "Subscription type" */}
+              </th>
+              <th className="text-gray-600 border-b border-border p-2 text-left">
+                Activity
+              </th>
+              <th className="text-gray-600 border-b border-border p-2 text-left">
+                Subscription date
+              </th>
+              <th className="text-gray-600 border-b border-border p-2 text-left">
+                Revenue
+              </th>
+              <th className="text-gray-600 border-b border-border p-2 text-left">
+                Days active(last 30 days)
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
+          </thead>
+          <tbody>
+            {subscribers.map((subscriber, index) => (
+              <tr key={index} className="hover:bg-gray-200">
+                <td className="border-b border-border p-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedSubscribers.includes(subscriber.email)}
+                    onChange={() => handleSubscriberSelect(subscriber.email)}
+                    className="mr-8"
+                  />
+                  <PersonIcon
+                    className="h-5 w-5 mr-2"
+                    style={{ color: "gray" }}
+                  />
+                  {subscriber.email}
+                </td>
+                <td className="border-b border-border p-2">
+                  {subscriber.type}
+                </td>
+                <td className="border-b border-border p-2">
+                  {subscriber.activity}
+                </td>
+                <td className="border-b border-border p-2">
+                  {new Date(subscriber.subscribedAt).toLocaleString()}
+                </td>
+                <td className="border-b border-border p-2">
+                  {subscriber.revenue}
+                </td>
+                <td>{subscriber.daysActive}</td>
+                <td>
+                  <MoreHorizIcon
+                    ref={iconRef}
+                    onClick={handleModalOpen}
+                    style={{
+                      marginRight: "200px",
+                      fontSize: "40px",
+                      color: "gray",
+                      cursor: "pointer",
+                    }}
+                  />
+                  <Modal
+                    isOpen={modalOpen}
+                    onClose={handleModalClose}
+                    position={modalPosition}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
   );
 };
 

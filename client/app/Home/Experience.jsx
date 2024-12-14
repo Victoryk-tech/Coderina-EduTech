@@ -9,6 +9,7 @@ import {
   headerBackground,
 } from "../utils/constants";
 import Image from "next/image";
+
 const Experience = () => {
   const expCard = [
     {
@@ -56,25 +57,30 @@ const Experience = () => {
                   {card.title}
                 </h1>
                 <div>
-                  {card.text.map((t, index) => (
-                    <div key={index}>
-                      <span
-                        className="text-[14px] md:[17px]"
-                        fontSize={{ xs: "14px", md: "17px" }}
-                        color={textColor}
-                      >
+                  {card.divType === "ul" ? (
+                    <ul className="list-disc">
+                      {card.text.map((t, index) => (
+                        <li key={index} className="text-[14px] md:[17px]">
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    card.text.map((t, index) => (
+                      <span key={index} className="text-[14px] md:[17px]">
                         {t}
                       </span>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
                 <CustomButton>{card.button}</CustomButton>
               </div>
               <div className="h-full w-full md:w-[450px] md:h-[340px]">
                 <Image
                   src={card.image}
-                  className="w-full object-cover h-full rounded-3xl"
                   alt="card"
+                  className="w-full object-cover h-full rounded-3xl"
+                  layout="responsive"
                 />
               </div>
             </div>
