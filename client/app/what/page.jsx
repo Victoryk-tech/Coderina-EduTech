@@ -9,6 +9,7 @@ import WhatBody from "./WhatBody";
 import Subscribers from "../Home/Subscribers";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Footer from "../Home/Footer";
 const Page = () => {
   const whatWedoContent = [
     {
@@ -29,6 +30,7 @@ const Page = () => {
           <Container maxWidth="xl">{section}</Container>
         </Box>
       ))}
+      <Footer />
     </Box>
   );
 };

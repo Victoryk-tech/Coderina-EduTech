@@ -1,164 +1,122 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import PersonIcon from "@mui/icons-material/Person";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import Modal from "../component/Modal";
-import LineChart from "../component/LineChart";
 
-const SubscriberTable = ({ subscribers }) => {
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectedSubscribers, setSelectedSubscribers] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  const iconRef = useRef(null);
+import { Box, Button, Stack, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import Grid from "@mui/material/Grid2";
+import SolutionCards from "../../Home/SolutionCards";
 
-  const handleSelectAll = () => {
-    setSelectAll(!selectAll);
+import axios from "axios";
 
-    if (!selectAll) {
-      const allSubscribers = subscribers.map((subscriber) => subscriber.email);
-      setSelectedSubscribers(allSubscribers);
-    } else {
-      setSelectedSubscribers([]);
+const MediaBody = () => {
+  const [mediaOption, setMediaOption] = useState("News Articles");
+  const [mediaItems, setMediaItems] = useState([]); // State for media data
+  const [loading, setLoading] = useState(false);
+
+  const mediaBtn = ["News Articles", "Publications", "Gallery"];
+
+  // Fetch Media Items
+  const fetchMedia = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("/api/media"); // Call GET route
+      setMediaItems(response.data.data); // Populate state with fetched media
+    } catch (error) {
+      console.error("Failed to fetch media:", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleModalOpen = (event) => {
-    const iconRect = event.target.getBoundingClientRect();
-    setModalPosition({
-      top: iconRect.bottom + window.scrollY,
-      left: iconRect.left + window.scrollX,
-    });
-    setModalOpen(true);
-  };
-
-  const handleModalClose = () => setModalOpen(false);
-
-  const handleSubscriberSelect = (email) => {
-    if (selectedSubscribers.includes(email)) {
-      setSelectedSubscribers(
-        selectedSubscribers.filter((sub) => sub !== email)
-      );
-    } else {
-      setSelectedSubscribers([...selectedSubscribers, email]);
+  // Post a New Media Item
+  const addMediaItem = async () => {
+    const newMedia = {
+      title: "Sample Title",
+      description: "Sample description for new media",
+      imageUrl: "https://example.com/sample-image.jpg",
+      categories: [mediaOption.toLowerCase().replace(" ", "")], // Dynamically set the category
+    };
+    try {
+      const response = await axios.post("/api/media", newMedia); // Call POST route
+      setMediaItems((prev) => [...prev, response.data.data]); // Update state with new item
+    } catch (error) {
+      console.error("Failed to add media:", error.message);
     }
   };
 
-  return (
-    <table className="min-w-full border border-border">
-      <thead>
-        <tr className="hover:bg-gray-300">
-          <th className="text-gray-600 border-b border-border p-2 text-left">
-            <input
-              type="checkbox"
-              checked={selectAll}
-              onChange={handleSelectAll}
-              className="mr-8"
-            />
-            Subscriber
-          </th>
-          <th className="text-gray-600 border-b border-border p-2 text-left">
-            Subscription type
-            <MdKeyboardArrowDown className="inline ml-1" />
-          </th>
-          <th className="text-gray-600 border-b border-border p-2 text-left">
-            Activity
-          </th>
-          <th className="text-gray-600 border-b border-border p-2 text-left">
-            Subscription date
-          </th>
-          <th className="text-gray-600 border-b border-border p-2 text-left">
-            Revenue
-          </th>
-          <th className="text-gray-600 border-b border-border p-2 text-left">
-            Days active (last 30 days)
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {subscribers.map((subscriber, index) => (
-          <tr key={index} className="hover:bg-gray-200">
-            <td className="border-b border-border p-2">
-              <input
-                type="checkbox"
-                checked={selectedSubscribers.includes(subscriber.email)}
-                onChange={() => handleSubscriberSelect(subscriber.email)}
-                className="mr-8"
-              />
-              <PersonIcon className="h-5 w-5 mr-2" style={{ color: "gray" }} />
-              {subscriber.email}
-            </td>
-            <td className="border-b border-border p-2">{subscriber.type}</td>
-            <td className="border-b border-border p-2">
-              {subscriber.activity}
-            </td>
-            <td className="border-b border-border p-2">
-              {new Date(subscriber.subscribedAt).toLocaleString()}
-            </td>
-            <td className="border-b border-border p-2">{subscriber.revenue}</td>
-            <td>{subscriber.daysActive}</td>
-            <td>
-              <MoreHorizIcon
-                ref={iconRef}
-                onClick={handleModalOpen}
-                style={{
-                  fontSize: "24px",
-                  color: "gray",
-                  cursor: "pointer",
-                }}
-              />
-              <Modal
-                isOpen={modalOpen}
-                onClose={handleModalClose}
-                position={modalPosition}
-              />
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
-const SubscribersTable = () => {
-  const [subscribers, setSubscribers] = useState([]);
-  const [search, setSearch] = useState("");
+  // Delete Media Item
+  const deleteMediaItem = async (id) => {
+    try {
+      await axios.delete(`/api/media/${id}`); // Call DELETE route
+      setMediaItems((prev) => prev.filter((item) => item._id !== id)); // Remove item from state
+    } catch (error) {
+      console.error("Failed to delete media:", error.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchSubscribers = async () => {
-      try {
-        const response = await fetch("/api/subscribers");
-        const data = await response.json();
-        setSubscribers(data.subscribers || []);
-      } catch (error) {
-        console.error("Error fetching subscribers:", error);
-      }
-    };
-    fetchSubscribers();
+    fetchMedia(); // Fetch media items on component mount
   }, []);
 
-  const filteredSubscribers = search
-    ? subscribers.filter((subscriber) =>
-        subscriber.email.toLowerCase().includes(search.toLowerCase())
-      )
-    : subscribers;
-
   return (
-    <div>
-      <h1 className="text-2xl m-6 font-bold">Subscribers Dashboard</h1>
-      <input
-        type="text"
-        placeholder="Search by email..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="border border-border rounded-lg p-2 w-full max-w-md mb-4"
-      />
-      <SubscriberTable subscribers={filteredSubscribers} />
-    </div>
+    <Box mt={6} className="media__container">
+      <Stack justifyContent={["center", "space-between"]}>
+        <Typography variant="h4">Media</Typography>
+        <Stack>
+          {mediaBtn.map((btn, i) => (
+            <Button
+              key={i}
+              variant={mediaOption === btn ? "contained" : ""}
+              sx={{
+                bgcolor: mediaOption === btn ? "white" : "",
+                fontSize: { xs: "12px", md: "14px" },
+              }}
+              onClick={() => setMediaOption(btn)}
+            >
+              {btn}
+            </Button>
+          ))}
+        </Stack>
+      </Stack>
+
+      {/* Display Media Items */}
+      {loading ? (
+        <Typography>Loading...</Typography>
+      ) : (
+        <Grid container className="news__cards">
+          {mediaItems
+            .filter((item) =>
+              item.categories.includes(
+                mediaOption.toLowerCase().replace(" ", "")
+              )
+            )
+            .map((mediaItem) => (
+              <SolutionCards
+                key={mediaItem._id}
+                {...mediaItem}
+                children1={mediaItem.title}
+              >
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => deleteMediaItem(mediaItem._id)}
+                >
+                  Delete
+                </Button>
+              </SolutionCards>
+            ))}
+        </Grid>
+      )}
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={addMediaItem}
+        sx={{ mt: 4 }}
+      >
+        Add Media Item
+      </Button>
+    </Box>
   );
 };
 
-export default SubscribersTable;
+export default MediaBody;

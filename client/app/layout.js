@@ -35,7 +35,6 @@ export default function RootLayout({ children }) {
             <Navbar />
             {children}
           </SessionProvider>
-          <Footer />
         </div>
       </body>
     </html>

@@ -16,6 +16,9 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },
+  images: {
+    domains: ["images.unsplash.com", "example.com"], // Add multiple domains if needed
+  },
 };
 
 module.exports = nextConfig;

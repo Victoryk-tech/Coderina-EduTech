@@ -9,11 +9,11 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import Image from "next/image";
 import CustomButton from "./CustomButton";
 import SideBar from "./SideBar";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const router = useRouter();
-  const [display, setDisplay] = useState(false);
+  const pathname = usePathname(false);
+  const [display, setDisplay] = useState();
   const links = [
     { label: "About us", path: "/About" },
     { label: "What we do", path: "/what" },
@@ -39,22 +39,21 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (!router.isReady) return; // Wait until the router is ready
-
-    const hiddenPaths = [
-      "/",
-      "/Media",
-      "/Form",
-      "/Couch",
-      "/About",
-      "/what",
-      "/Events",
-      "/Firstlego",
-      "*",
-    ];
-
-    setDisplay(!hiddenPaths.includes(router.pathname));
-  }, [router.isReady, router.pathname]);
+    if (
+      pathname === "/" ||
+      pathname === "/Media" ||
+      pathname === "/Form" ||
+      pathname === "/Couch" ||
+      pathname === "/what" ||
+      pathname === "/Events" ||
+      pathname === "/Firstlego" ||
+      pathname === "/About"
+    ) {
+      setDisplay(true);
+    } else {
+      setDisplay(false);
+    }
+  }, [pathname]);
   return display ? (
     <div
       className={`${
@@ -71,11 +70,11 @@ const Navbar = () => {
         </Link>
 
         {/* <nav className="hidden md:flex items-center justify-center space-x-8 text-[16px] font-normal">
-        <Link href="/About">About us</Link>
-        <Link href="/what">What we do</Link>
-        <Link href="/Events">Events</Link>
-        <Link href="/Media">Media</Link>
-      </nav> */}
+          <Link href="/About">About us</Link>
+          <Link href="/what">What we do</Link>
+          <Link href="/Events">Events</Link>
+          <Link href="/Media">Media</Link>
+        </nav> */}
         <nav className="hidden md:flex items-center justify-center space-x-8 text-[16px] font-normal">
           {links.map(({ label, path }, index) => (
             <Link key={`${label}-${index}`} href={path}>

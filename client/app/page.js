@@ -60,6 +60,10 @@ const page = () => {
       color: headerBackground,
       section: <Subscribers />,
     },
+    {
+      color: "#000",
+      section: <Footer />,
+    },
   ];
 
   return (

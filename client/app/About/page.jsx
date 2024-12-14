@@ -9,6 +9,8 @@ import CoreValues from "./components/CoreValues";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Subscribers from "../Home/Subscribers";
+import Footer from "../Home/Footer";
+import Foote from "../Home/Foote";
 
 const page = () => {
   return (
@@ -19,6 +21,7 @@ const page = () => {
       <Impact />
       <Team />
       <Subscribers />
+      <Footer />
     </div>
   );
 };

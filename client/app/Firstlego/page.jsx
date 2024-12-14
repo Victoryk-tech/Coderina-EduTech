@@ -11,6 +11,7 @@ import LegoPrograms from "./components/LegoPrograms";
 import LegoImpact from "./components/LegoImpact";
 import LegoCard3 from "./components/LegoCard3";
 import Resources from "./components/Resources";
+import Footer from "../Home/Footer";
 
 const FirstLego = () => {
   const legoContent = [
@@ -44,6 +45,7 @@ const FirstLego = () => {
       {legoContent.map(({ color, section }, index) => (
         <Box p={4} key={`${section}-${index}`} bgcolor={color}>
           <Container maxWidth="xl">{section}</Container>
+          <Footer />
         </Box>
       ))}
     </Box>

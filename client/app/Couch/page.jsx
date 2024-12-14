@@ -3,6 +3,7 @@ import { blackColor, pinkBg } from "../utils/constants";
 import { Box, Card, Container, Stack, Typography } from "@mui/material";
 import CustomButton from "../Home/CustomButton";
 import Subscribers from "../Home/Subscribers";
+import Footer from "../Home/Footer";
 
 const Couch = () => {
   const couchInfos = [
@@ -97,6 +98,8 @@ const Couch = () => {
       <Box p={4} bgcolor={blackColor}>
         <Container maxWidth="lg"></Container>
       </Box>
+
+      <Footer />
     </Box>
   );
 };

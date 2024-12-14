@@ -16,7 +16,7 @@ import {
   yellowColor,
 } from "../utils/constants";
 import Image from "next/image";
-const Footer = () => {
+const Foote = () => {
   const footerInfo = [
     {
       title: "Address",
@@ -112,4 +112,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default Foote;

@@ -24,6 +24,7 @@ const Events = () => {
       {eventContent.map(({ color, section }, index) => (
         <Box p={4} key={`${section}-${index}`} bgcolor={color}>
           <Container maxWidth="xl">{section}</Container>
+          <Footer />
         </Box>
       ))}
     </Box>
