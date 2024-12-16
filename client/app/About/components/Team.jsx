@@ -24,22 +24,6 @@ const Team = () => {
       img: memberImg,
       text: "Firstname Lastname",
     },
-    {
-      img: memberImg,
-      text: "Firstname Lastname",
-    },
-    {
-      img: memberImg,
-      text: "Firstname Lastname",
-    },
-    {
-      img: memberImg,
-      text: "Firstname Lastname",
-    },
-    {
-      img: memberImg,
-      text: "Firstname Lastname",
-    },
   ];
   return (
     <div className="px-4 md:px-4 lg:px-16 py-12 bg-white">

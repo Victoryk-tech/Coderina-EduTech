@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
-const mediaSchema = mongoose.Schema(
+const validator = require("validator");
+const formSchema = mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: [true, "Please add a title"],
+      required: [true, "Please add a firstname"],
       minLength: [2, "Minimum 2 letters"],
       maxLength: [20, "Maximum 30 letters"],
       lowercase: true,
@@ -11,7 +12,7 @@ const mediaSchema = mongoose.Schema(
     },
     lastName: {
       type: String,
-      required: [true, "Please add a title"],
+      required: [true, "Please add a lastname"],
       minLength: [2, "Minimum 2 letters"],
       maxLength: [20, "Maximum 30 letters"],
       lowercase: true,
@@ -28,19 +29,23 @@ const mediaSchema = mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "add your email"],
-
+      required: [true, "Add your email"],
       lowercase: true,
       trim: true,
+      validate: [validator.isEmail, "Please provide a valid email address"],
     },
 
     phone: {
       type: String,
       required: [true, "Please add a phone number"],
-      minLength: [11, "Minimum 11 letters"],
-      maxLength: [12, "Maximum 12 letters"],
+      minLength: [11, "Minimum 11 characters"],
+      maxLength: [12, "Maximum 12 characters"],
       lowercase: true,
       trim: true,
+      validate: [
+        validator.isMobilePhone,
+        "Please provide a valid phone number",
+      ],
     },
     address: {
       type: String,
@@ -70,18 +75,20 @@ const mediaSchema = mongoose.Schema(
     },
 
     gender: {
-      type: [String],
-      enum: ["Male", "Female", "other"],
-      required: [true, "Please select at least one category"],
+      type: String,
+      enum: ["Male", "female", "other"], // Allowed values
+      required: true,
     },
 
     link1: {
       type: String,
       required: [true, "Please add a link to a website"],
+      validate: [validator.isURL, "Please provide a valid URL"],
     },
     link2: {
       type: String,
       required: [true, "Please add a link to documents"],
+      validate: [validator.isURL, "Please provide a valid URL"],
     },
   },
   {
@@ -89,5 +96,5 @@ const mediaSchema = mongoose.Schema(
   }
 );
 
-const Form = mongoose.models.Form || mongoose.model("Form", mediaSchema); // Media model
-module.exports = Form;
+const form = mongoose.models.form || mongoose.model("form", formSchema); // Media model
+module.exports = form;
