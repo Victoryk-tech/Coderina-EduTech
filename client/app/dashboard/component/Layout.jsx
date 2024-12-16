@@ -37,8 +37,8 @@ const Layout = ({ children }) => {
     },
     {
       icon: <GoPeople />,
-      name: "Subscriber",
-      path: "/dashboard/subscriber",
+      name: "Couch",
+      path: "/dashboard/couchForm",
     },
     {
       icon: <RiSettings2Line />,
