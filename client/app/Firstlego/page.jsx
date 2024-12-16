@@ -4,7 +4,8 @@ import { Box, Container } from "@mui/material";
 import React from "react";
 import LegoHeader from "./components/LegoHeader";
 import { blackColor, pinkBg, pinkBgR, whiteColor } from "../utils/constants";
-
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import LegoCard1 from "./components/LegoCard1";
 import LegoCard2 from "./components/LegoCard2";
 import LegoPrograms from "./components/LegoPrograms";
@@ -41,14 +42,16 @@ const FirstLego = () => {
   ];
 
   return (
-    <Box className="first__lego">
-      {legoContent.map(({ color, section }, index) => (
-        <Box p={4} key={`${section}-${index}`} bgcolor={color}>
-          <Container maxWidth="xl">{section}</Container>
-          <Footer />
-        </Box>
-      ))}
-    </Box>
+    <>
+      <div className="px-2 md:px-4 lg:px-16">
+        {legoContent.map(({ color, section }, index) => (
+          <div p={4} key={`${section}-${index}`} bgcolor={color}>
+            <div>{section}</div>
+          </div>
+        ))}
+      </div>
+      <Footer />
+    </>
   );
 };
 

@@ -4,13 +4,13 @@ import ImpactSlider from "../../About/components/ImpactSlider";
 
 const LegoImpact = () => {
   return (
-    <Box className="aboutImpact__container lego__impact">
-      <Typography variant="h4">
+    <div className="aboutImpact__container lego__impact text-black font-Geist md:mt-10">
+      <h4 className="text-black font-medium">
         Inspiring Generations of Global Citizens and Helping Them Realize Their
         Power to Build a Better Future
-      </Typography>
-      <ImpactSlider lego />
-    </Box>
+      </h4>
+      <ImpactSlider />
+    </div>
   );
 };
 

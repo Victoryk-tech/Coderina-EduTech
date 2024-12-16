@@ -18,13 +18,13 @@ const Events = () => {
 
   return (
     <>
-      <Box overflow={"hidden"}>
+      <div className="overflow-hidden px-2 md:px-4 lg:px-16">
         {eventContent.map(({ color, section }, index) => (
-          <Box p={4} key={`${section}-${index}`} bgcolor={color}>
-            <Container maxWidth="xl">{section}</Container>
-          </Box>
+          <div className="p-4" key={`${section}-${index}`} bgcolor={color}>
+            <div>{section}</div>
+          </div>
         ))}
-      </Box>
+      </div>
       <div className="px-2 md:px-4 lg:px-16">
         <SubscribeForm />
       </div>

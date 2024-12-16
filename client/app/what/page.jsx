@@ -24,14 +24,14 @@ const Page = () => {
   ];
 
   return (
-    <Box className="about__us">
+    <div className="px-2 md:px-4 lg:px-16">
       {whatWedoContent.map(({ color, section }, index) => (
-        <Box p={4} key={`${section}-${index}`} bgcolor={color}>
-          <Container maxWidth="xl">{section}</Container>
-        </Box>
+        <div className="p-4" key={`${section}-${index}`} bgcolor={color}>
+          <div>{section}</div>
+        </div>
       ))}
       <Footer />
-    </Box>
+    </div>
   );
 };
 

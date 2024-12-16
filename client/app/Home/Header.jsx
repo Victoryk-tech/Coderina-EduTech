@@ -4,6 +4,7 @@ import CustomButton from "./CustomButton";
 import ImgSlider from "./ImgSlider";
 import Vector from "../../public/Vector.png";
 import Navbar from "./Navbar";
+import Link from "next/link";
 const Header = () => {
   const containerStyle = {
     backgroundSize: "cover",
@@ -32,9 +33,12 @@ const Header = () => {
             Empowerment.
           </h1>
         </div>
-        <button className="flex items-center justify-center bg-black text-white space-x-2 rounded-3xl p-3 text-sm md:text-xl">
+        <Link
+          href="/Form"
+          className="flex items-center justify-center bg-black text-white space-x-2 rounded-3xl p-3 text-sm md:text-xl"
+        >
           <p> Get Started</p> <FaArrowRightLong />
-        </button>
+        </Link>
       </div>
       <ImgSlider />
     </div>

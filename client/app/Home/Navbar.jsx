@@ -15,6 +15,7 @@ const Navbar = () => {
   const pathname = usePathname(false);
   const [display, setDisplay] = useState();
   const links = [
+    { label: "Home", path: "/" },
     { label: "About us", path: "/About" },
     { label: "What we do", path: "/what" },
     { label: "Events", path: "/Events" },

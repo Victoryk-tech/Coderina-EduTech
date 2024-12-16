@@ -11,6 +11,9 @@ import "slick-carousel/slick/slick-theme.css";
 import Subscribers from "../Home/Subscribers";
 import Footer from "../Home/Footer";
 import Foote from "../Home/Foote";
+import SubscribeForm from "../Home/SubscribeForm";
+import Testimonial from "./components/Testimonial";
+import Space from "../Home/Space";
 
 const page = () => {
   return (
@@ -20,7 +23,11 @@ const page = () => {
 
       <Impact />
       <Team />
-      <Subscribers />
+      <div className="px-2 md:px-4 lg:px-16 py-8">
+        <Testimonial />
+        <Space />
+        <SubscribeForm />
+      </div>
       <Footer />
     </div>
   );

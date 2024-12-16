@@ -73,9 +73,9 @@ const Page = () => {
   ];
 
   return (
-    <div className="w-full font-Geist px-2 md:px-4 lg:px-20 py-8">
+    <div className="w-full font-Geist px-2 md:px-4 lg:px-20 py-8 md:py-14 lg:py-16 bg-white">
       <div>
-        <div className="grid md:grid-cols-2 items-start justify-between w-full md:space-x-28">
+        <div className="grid md:grid-cols-2 items-start justify-between w-full space-y-10 md:space-y-0 md:space-x-28">
           <div>
             <h4 className="font-bold lg:text-[32px] lg:leading-[42px]">
               Register for the Coderina® University Challenge (COUCH)
