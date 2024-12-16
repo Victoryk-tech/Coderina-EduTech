@@ -1,7 +1,9 @@
 import React from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 
-import memberImg from "../../../public/member-img.png";
+import founder1 from "../../../public/founder1.jpg";
+import founder2 from "../../../public/founder2.jpg";
+import founder3 from "../../../public/founder3.jpg";
 
 import Image from "next/image";
 import SolutionCards from "../../Home/SolutionCards";
@@ -9,20 +11,24 @@ import CustomButton from "@/app/Home/CustomButton";
 const Team = () => {
   const ourTeamCard = [
     {
-      img: memberImg,
-      text: "Firstname Lastname",
+      img: founder1,
+      name: "Mr Olajide Ajayi",
+      text: "Founder",
     },
     {
-      img: memberImg,
-      text: "Firstname Lastname",
+      img: founder2,
+      name: "Mr Oluwabisi Kelvin Ajayi",
+      text: "Director of programs and engagements",
     },
     {
-      img: memberImg,
-      text: "Firstname Lastname",
+      img: founder3,
+      name: "Mr Femi Niyi",
+      text: "Chairman Board of trustee",
     },
     {
-      img: memberImg,
-      text: "Firstname Lastname",
+      img: founder1,
+      name: "Mr Olajide Ajayi",
+      text: "Founder",
     },
   ];
   return (
@@ -38,8 +44,25 @@ const Team = () => {
         <div className="grid md:grid-cols-4 items-center justify-center gap-x-3">
           {ourTeamCard.map((teamCard, i) => {
             return (
-              <div key={i} className=" W-[260px] h-[390px]">
-                <SolutionCards {...teamCard} childern2="Role" />
+              <div
+                className="w-full md:w-[250px] h-[300px]  md:space-y-3 rounded-2xl"
+                key={i}
+              >
+                <div className="w-full">
+                  <Image
+                    src={teamCard.img}
+                    alt="image"
+                    className="w-full h-full object-contain rounded-2xl"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="font-medium text-[17px] text-center">
+                    {teamCard.name}
+                  </h3>
+                  <h3 className="font-normal text-[13px] text-center">
+                    {teamCard.text}
+                  </h3>
+                </div>
               </div>
             );
           })}

@@ -31,11 +31,11 @@ const Alignment = () => {
           Alignment with the SDGs
         </h1>
       </div>
-      <div className="w-full grid md:grid-cols-4 items-center justify-center  md:space-x-3 ">
+      <div className="w-full grid md:grid-cols-4 items-start justify-between space-y-5 md:space-y-0  md:space-x-3 ">
         {align.map((sec, index) => {
           return (
             <div key={index} className="space-y-3">
-              <div className="w-[270px] h-[270px]">
+              <div className="w-full  md:w-[290px] h-[270px]">
                 <Image
                   src={sec.img}
                   alt="innovate"

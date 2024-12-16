@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import sendUpdates from "../lib/sendMessages";
+import sendUpdates from "./sendMessages";
 
 // Schedule updates to run daily at 9 AM
 cron.schedule("0 9 * * *", async () => {

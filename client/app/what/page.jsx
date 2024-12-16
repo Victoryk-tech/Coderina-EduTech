@@ -24,14 +24,16 @@ const Page = () => {
   ];
 
   return (
-    <div className="px-2 md:px-4 lg:px-16">
-      {whatWedoContent.map(({ color, section }, index) => (
-        <div className="p-4" key={`${section}-${index}`} bgcolor={color}>
-          <div>{section}</div>
-        </div>
-      ))}
+    <>
+      <div className="px-2 md:px-4 lg:px-16">
+        {whatWedoContent.map(({ color, section }, index) => (
+          <div className="p-4" key={`${section}-${index}`} bgcolor={color}>
+            <div>{section}</div>
+          </div>
+        ))}
+      </div>
       <Footer />
-    </div>
+    </>
   );
 };
 
