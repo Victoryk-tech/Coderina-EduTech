@@ -57,3 +57,52 @@ export async function POST(req) {
     );
   }
 }
+
+// get
+
+export async function GET() {
+  try {
+    await dbConnect();
+    const registrations = await Form.find({});
+    return NextResponse.json(
+      { success: true, data: registrations },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+// delete
+
+export async function DELETE(req) {
+  try {
+    await dbConnect();
+
+    const { id } = await req.json();
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Missing registration ID" },
+        { status: 400 }
+      );
+    }
+
+    await Form.findByIdAndDelete(id);
+
+    return NextResponse.json(
+      { success: true, message: "Registration deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Delete Error:", error);
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
+  }
+}
