@@ -141,7 +141,7 @@ const Testimonial = ({ lego }) => {
             sx={{
               bgcolor: "fff",
               borderRight: "1px solid #3D3D3D",
-              height: { xs: "45vh", md: "50vh" },
+              height: { xs: "26vh", md: "50vh" },
             }}
           >
             <Stack>
