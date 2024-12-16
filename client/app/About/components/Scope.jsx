@@ -43,7 +43,7 @@ const Scope = () => {
         {scopeCards.map((scopeCard, i) => {
           return (
             <div
-              className="w-full md:w-[250px] h-[400px]  md:space-y-3"
+              className="w-full md:w-[250px] h-[400px] space-y-4  md:space-y-3"
               key={i}
             >
               <div className="w-full">

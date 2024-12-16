@@ -67,7 +67,7 @@ const Team = () => {
           {ourTeamCard.map((teamCard, i) => {
             return (
               <div
-                className="w-full md:w-[250px] h-[400px]  md:space-y-8"
+                className="w-full md:w-[260px] h-[400px]  md:space-y-8"
                 key={i}
               >
                 <div className="w-full">

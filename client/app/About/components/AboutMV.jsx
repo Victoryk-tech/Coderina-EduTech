@@ -70,7 +70,7 @@ const AboutMV = () => {
   ];
   return (
     <div
-      className="py-10 lg:px-16 font-Geist bg-white "
+      className="py-10 px-2 md:px-4 lg:px-16 font-Geist bg-white "
       // style={{ backgroundColor: gradient2 }}
     >
       <div>
@@ -81,7 +81,7 @@ const AboutMV = () => {
                 {m.item}
               </h4>
 
-              <div className="grid md:grid-cols-4 items-center justify-between">
+              <div className="grid md:grid-cols-4 items-center justify-between space-y-4 md:space-y-0">
                 {m.details.map((detail, index) => {
                   return (
                     <div
@@ -117,7 +117,7 @@ const AboutMV = () => {
                 {v.item}
               </h4>
 
-              <div className="grid md:grid-cols-4 items-center justify-between">
+              <div className="grid md:grid-cols-4 items-center justify-between space-y-4 md:space-y-0">
                 {v.details.map((detail, indo) => {
                   return (
                     <div
