@@ -17,7 +17,13 @@ const nextConfig = {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },
   images: {
-    domains: ["images.unsplash.com", "example.com"], // Add multiple domains if needed
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**", // Matches all paths
+      },
+    ],
   },
 };
 

@@ -30,7 +30,7 @@ const mediaSchema = mongoose.Schema(
 
     categories: {
       type: [String],
-      enum: ["publications", "gallery", "newsArticles"],
+      enum: ["publications", "gallery", "Articles"],
       required: [true, "Please select at least one category"],
     },
   },

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+let isConnected = null;
 // Load environment variables
 dotenv.config();
 
@@ -18,6 +19,10 @@ const MONGODB_DB = process.env.MONGODB_DB;
 
 export default async function connect() {
   const uri = process.env.MONGODB_URI;
+  // if (isConnected) {
+  //   console.log("Using existing database connection");
+  //   return;
+  // }
   if (!uri) {
     console.error("MONGODB_URI is undefined. Check .env setup.");
     return;
