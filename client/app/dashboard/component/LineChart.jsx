@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 import {
@@ -22,111 +23,122 @@ ChartJS.register(
   Filler
 );
 
-const subscribersData = [
-  { month: "January", subscribers: 14 },
-  { month: "February", subscribers: 5 },
-  { month: "March", subscribers: 8 },
-  { month: "April", subscribers: 2 },
-  { month: "May", subscribers: 18 },
-  { month: "June", subscribers: 50 },
-  { month: "July", subscribers: 25 },
-  { month: "August", subscribers: 30 },
-  { month: "September", subscribers: 1 },
-  { month: "October", subscribers: 10 },
-  { month: "November", subscribers: 15 },
-  { month: "December", subscribers: 12 },
-];
-
 function LineChart() {
-  const data = {
-    labels: subscribersData.map((data) => data.month),
-    datasets: [
-      {
-        label: "Subscription",
-        data: subscribersData.map((data) => data.subscribers),
-        borderColor: "#6e90e6",
-        borderWidth: 1,
-        pointBorderColor: "#6e90e6",
-        pointBorderWidth: 2,
-        tension: 0.5,
-        fill: true,
-        backgroundColor: (context) => {
-          const ctx = context.chart.ctx;
-          const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-          gradient.addColorStop(0, "#6e90e6");
-          gradient.addColorStop(1, "white");
-          return gradient;
-        },
-      },
-    ],
-  };
+  const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSubscribers = async () => {
+      try {
+        const response = await fetch("/api/subscribers");
+        const { success, subscribers } = await response.json(); // Assuming the API returns { success, subscribers }
+
+        if (!success) throw new Error("Failed to fetch subscribers data");
+
+        // Group subscribers by month and year
+        const monthlyCounts = {};
+        subscribers.forEach(({ subscribedAt }) => {
+          const date = new Date(subscribedAt);
+          const monthYear = `${date.toLocaleString("default", {
+            month: "long",
+          })} ${date.getFullYear()}`; // e.g., "January 2024"
+          monthlyCounts[monthYear] = (monthlyCounts[monthYear] || 0) + 1;
+        });
+
+        // Ensure months and years are ordered chronologically
+        const sortedKeys = Object.keys(monthlyCounts).sort(
+          (a, b) => new Date(a) - new Date(b)
+        );
+        const counts = sortedKeys.map((key) => monthlyCounts[key]);
+
+        setChartData({
+          labels: sortedKeys,
+          datasets: [
+            {
+              label: "Subscribers Growth",
+              data: counts,
+              borderColor: "#6e90e6",
+              borderWidth: 1,
+              pointBorderColor: "#6e90e6",
+              pointBorderWidth: 2,
+              tension: 0.5,
+              fill: true,
+              backgroundColor: (context) => {
+                const ctx = context.chart.ctx;
+                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, "#6e90e6");
+                gradient.addColorStop(1, "white");
+                return gradient;
+              },
+            },
+          ],
+        });
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
+        setError("Failed to load chart data. Please try again later.");
+        setLoading(false);
+      }
+    };
+
+    fetchSubscribers();
+  }, []);
 
   const options = {
     plugins: {
-      legend: true,
+      legend: { display: true },
     },
     responsive: true,
     scales: {
       y: {
         ticks: {
-          stepSize: 2,
+          stepSize: 10,
           font: {
-            size: 17,
+            size: 14,
             weight: "bold",
           },
         },
         title: {
           display: true,
           text: "Subscribers",
-          padding: {
-            bottom: 10,
-          },
-          font: {
-            size: 30,
-            style: "italic",
-            family: "Arial",
-          },
+          padding: { bottom: 10 },
+          font: { size: 16, style: "italic", family: "Arial" },
         },
-        min: 0,
-        max: 30,
+        beginAtZero: true,
       },
       x: {
         ticks: {
-          font: {
-            size: 17,
-            weight: "bold",
-          },
+          font: { size: 14, weight: "bold" },
         },
         title: {
           display: true,
-          text: "Month",
-          padding: {
-            top: 10,
-          },
-          font: {
-            size: 30,
-            style: "italic",
-            family: "Arial",
-          },
+          text: "Month and Year",
+          padding: { top: 10 },
+          font: { size: 16, style: "italic", family: "Arial" },
         },
       },
     },
   };
 
+  if (loading) return <p>Loading Chart...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
     <div>
       <h1 className="font-bold text-3xl text-center mt-6">
-        Subscribers Growth Overtime
+        Subscribers Growth Over Time
       </h1>
       <div
         style={{
-          width: "1000px",
+          width: "900px",
           height: "550px",
           padding: "10px",
           cursor: "pointer",
         }}
       >
-        <Line data={data} options={options}></Line>
+        {chartData && <Line data={chartData} options={options} />}
       </div>
     </div>
   );

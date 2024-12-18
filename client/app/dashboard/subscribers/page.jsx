@@ -1,298 +1,248 @@
 "use client";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
 
-import PersonIcon from "@mui/icons-material/Person";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-
-import FilterListIcon from "@mui/icons-material/FilterList";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { MdKeyboardArrowDown, MdCalendarToday } from "react-icons/md";
-import Modal from "../component/Modal";
+import React, { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { IoClose, IoSend, IoTrash } from "react-icons/io5";
+import { IoIosSync } from "react-icons/io"; // Loader icon
 import LineChart from "../component/LineChart";
-const SubscriberTable = ({ subscribers }) => {
+
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import SendMessage from "./SendMessage";
+
+const SubscribersTable = () => {
+  const [subscribers, setSubscribers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(null); // Track the ID being deleted
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedSubscribers, setSelectedSubscribers] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  // const [subscribers, setSubscribers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const iconRef = useRef(null);
 
+  // Handle selecting all subscribers
   const handleSelectAll = () => {
-    setSelectAll(!selectAll);
-
+    setSelectAll((prev) => !prev);
     if (!selectAll) {
-      // Select all subscribers
-      const allSubscribers = subscribers.map((subscriber) => subscriber.email);
-      setSelectedSubscribers(allSubscribers);
+      // Select all subscribers and store their email addresses
+      setSelectedSubscribers(subscribers.map((subscriber) => subscriber.email));
     } else {
       // Deselect all subscribers
       setSelectedSubscribers([]);
     }
   };
 
-  const handleModalOpen = (event) => {
-    const iconRect = event.target.getBoundingClientRect(); // Get icon's position
-    setModalPosition({
-      top: iconRect.bottom + window.scrollY,
-      left: iconRect.left + window.scrollX,
-    });
-    setModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
-
+  // Handle selecting a specific subscriber
   const handleSubscriberSelect = (email) => {
-    if (selectedSubscribers.includes(email)) {
-      setSelectedSubscribers(
-        selectedSubscribers.filter((sub) => sub !== email)
-      );
-    } else {
-      setSelectedSubscribers([...selectedSubscribers, email]);
+    setSelectedSubscribers((prevSelected) => {
+      if (prevSelected.includes(email)) {
+        return prevSelected.filter((sub) => sub !== email);
+      } else {
+        return [...prevSelected, email];
+      }
+    });
+  };
+
+  // Function to toggle modal visibility
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  // Fetch subscribers
+  const fetchSubscribers = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/subscribers", { method: "GET" });
+      const data = await res.json();
+      if (data.success) {
+        setSubscribers(data.subscribers); // Set the subscribers data
+      } else {
+        toast.error("Failed to fetch subscribers");
+      }
+    } catch (error) {
+      toast.error("Error fetching subscribers");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // api
-  useEffect(() => {
-    const fetchSubscribers = async () => {
-      try {
-        const response = await fetch("/api/subscribers");
-        const data = await response.json();
-        setSubscribers(data.subscribers);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching subscribers:", error);
+  // Delete subscriber
+  const deleteSubscriber = async (id) => {
+    try {
+      setDeleting(id); // Set the deleting ID
+      const res = await fetch("/api/subscribers", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Subscriber deleted successfully");
+        setSubscribers((prev) =>
+          prev.filter((subscriber) => subscriber._id !== id)
+        );
+      } else {
+        toast.error(data.message || "Failed to delete subscriber");
       }
-    };
+    } catch (error) {
+      toast.error("Error deleting subscriber");
+    } finally {
+      setDeleting(null); // Reset the deleting ID
+    }
+  };
 
+  useEffect(() => {
     fetchSubscribers();
   }, []);
 
   return (
-    <div>
+    <div className="w-full px-4 py-10 h-full bg-white">
+      <Toaster />
+
+      <h1 className="text-2xl font-bold mb-4">Subscribers</h1>
+      <div className="flex justify-center items-center w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8 lg:gap-12 w-full max-w-screen-lg px-4">
+          {/* Card 1 */}
+          <div className="text-lg font-semibold p-4 h-auto w-[300px] md:w-60 rounded-lg bg-gray-200 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-gray-600 text-lg">All Subscribers</h2>
+                <p className="text-gray-600 text-2xl">{subscribers.length}</p>
+              </div>
+              <PeopleAltIcon className="h-10 w-10" style={{ color: "gray" }} />
+            </div>
+          </div>
+          {/* Card 2 */}
+          <div className="text-lg font-semibold p-4 h-auto w-[300px] md:w-60 rounded-lg bg-gray-200 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-gray-600 text-lg font-semibold">
+                  No of messages sent
+                </h2>
+                <p className="text-2xl">{subscribers.length}</p>
+              </div>
+              <PeopleAltIcon className="h-10 w-10" style={{ color: "gray" }} />
+            </div>
+          </div>
+          {/* Card 3 */}
+          <div className="text-lg font-semibold p-4 h-auto w-[300px] md:w-60 rounded-lg bg-gray-200 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-gray-600 text-lg font-semibold">
+                  Most Subscribered month
+                </h2>
+                <p className="text-2xl">{subscribers.length}</p>
+              </div>
+              <PeopleAltIcon className="h-10 w-10" style={{ color: "gray" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="pt-6">
+        <LineChart />
+      </div>
+
+      {/* Send update button, enabled only if there are selected subscribers */}
+      <h1
+        className={`mb-2 text-right font-medium p-3 w-[10rem] text-white rounded-2xl bg-red-700 cursor-pointer ${
+          selectedSubscribers.length > 0
+            ? "opacity-100"
+            : "opacity-50 cursor-not-allowed"
+        }`}
+        onClick={toggleModal}
+        aria-label="Send update"
+        disabled={selectedSubscribers.length === 0}
+      >
+        <p className="text-[14px] text-nowrap text-center flex items-center justify-between">
+          Send update <IoSend />
+        </p>
+      </h1>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg w-[80%] md:w-[40%]">
+            <p
+              className="absolute top-2 right-2 text-black text-xl font-bold rounded-2xl p-2 bg-white"
+              onClick={toggleModal}
+              aria-label="Close modal"
+            >
+              <IoClose />
+            </p>
+            <SendMessage selectedSubscribers={selectedSubscribers} />
+          </div>
+        </div>
+      )}
+
       {loading ? (
-        <p>Loading...</p>
+        <p className="text-center">Loading...</p>
       ) : (
-        <table className="min-w-full border border-border">
-          <thead>
-            <tr className="hover:bg-gray-300">
-              <th className="text-gray-600 border-b border-border p-2 text-left">
-                <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleSelectAll}
-                  className="mr-8"
-                />
-                Subscriber
-              </th>
-              <th className="text-gray-600 border-b border-border p-2 text-left">
-                Subscription type
-                <MdKeyboardArrowDown className="inline ml-1" />{" "}
-                {/* Icon beside "Subscription type" */}
-              </th>
-              <th className="text-gray-600 border-b border-border p-2 text-left">
-                Activity
-              </th>
-              <th className="text-gray-600 border-b border-border p-2 text-left">
-                Subscription date
-              </th>
-              <th className="text-gray-600 border-b border-border p-2 text-left">
-                Revenue
-              </th>
-              <th className="text-gray-600 border-b border-border p-2 text-left">
-                Days active(last 30 days)
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {subscribers.map((subscriber, index) => (
-              <tr key={index} className="hover:bg-gray-200">
-                <td className="border-b border-border p-2">
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border-collapse border border-gray-300 text-sm">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-300 p-2">
                   <input
                     type="checkbox"
-                    checked={selectedSubscribers.includes(subscriber.email)}
-                    onChange={() => handleSubscriberSelect(subscriber.email)}
-                    className="mr-8"
+                    checked={selectAll}
+                    onChange={handleSelectAll}
+                    aria-label="Select all subscribers"
                   />
-                  <PersonIcon
-                    className="h-5 w-5 mr-2"
-                    style={{ color: "gray" }}
-                  />
-                  {subscriber.email}
-                </td>
-                <td className="border-b border-border p-2">
-                  {subscriber.type}
-                </td>
-                <td className="border-b border-border p-2">
-                  {subscriber.activity}
-                </td>
-                <td className="border-b border-border p-2">
-                  {new Date(subscriber.subscribedAt).toLocaleString()}
-                </td>
-                <td className="border-b border-border p-2">
-                  {subscriber.revenue}
-                </td>
-                <td>{subscriber.daysActive}</td>
-                <td>
-                  <MoreHorizIcon
-                    ref={iconRef}
-                    onClick={handleModalOpen}
-                    style={{
-                      marginRight: "200px",
-                      fontSize: "40px",
-                      color: "gray",
-                      cursor: "pointer",
-                    }}
-                  />
-                  <Modal
-                    isOpen={modalOpen}
-                    onClose={handleModalClose}
-                    position={modalPosition}
-                  />
-                </td>
+                </th>
+                <th className="border border-gray-300 p-2">#</th>
+                <th className="border border-gray-300 p-2">Email</th>
+                <th className="border border-gray-300 p-2">Subscribed At</th>
+                <th className="border border-gray-300 p-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {subscribers.map((subscriber, index) => (
+                <tr key={subscriber._id}>
+                  <td className="border border-gray-300 p-2 text-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedSubscribers.includes(subscriber.email)}
+                      onChange={() => handleSubscriberSelect(subscriber.email)}
+                      aria-label={`Select subscriber ${subscriber.email}`}
+                    />
+                  </td>
+
+                  <td className="border border-gray-300 p-2 text-center">
+                    {index + 1}
+                  </td>
+                  <td className="border border-gray-300 p-2">
+                    {subscriber.email}
+                  </td>
+                  <td className="border border-gray-300 p-2">
+                    {new Date(subscriber.subscribedAt).toLocaleString()}
+                  </td>
+
+                  <td className="border border-gray-300 p-2 text-center">
+                    {deleting === subscriber._id ? (
+                      <IoIosSync className="animate-spin text-gray-500 text-xl" />
+                    ) : (
+                      <IoTrash
+                        onClick={() => deleteSubscriber(subscriber._id)}
+                        aria-label={`Delete subscriber ${subscriber.email}`}
+                        className="text-red-600 hover:text-red-800 cursor-pointer text-xl"
+                      />
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {subscribers.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={3}
+                    className="text-center border border-gray-300 p-2"
+                  >
+                    No subscribers found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
 };
-
-const SubscribersTable = () => {
-  const [subscribers, setSubscribers] = useState([
-    {
-      email: "kvngjohny10@gmail.com",
-      type: "Author",
-      activity: "Active",
-      date: "March 14th, 2024",
-      revenue: "$0.00",
-      daysActive: 2,
-    },
-  ]);
-
-  const [premiumSubscribers, setPremiumSubscribers] = useState([]);
-  const [basicSubscribers, setBasicSubscribers] = useState([]);
-
-  const user = { name: "Jane", email: "jane@mail.com" };
-
-  const searchHandler = (e) => {
-    const search = e.target.value;
-    if (search === "") {
-      setSubscribers(subscribers);
-    } else {
-      const filteredSubscribers = subscribers.filter((subscriber) =>
-        subscriber.email.toUpperCase().includes(search)
-      );
-      setSubscribers(filteredSubscribers);
-    }
-  };
-
-  return (
-    <div>
-      <div className="container mx-auto mb-48">
-        <h1 className="text-2xl m-6 font-bold">{user.name + "s"} Substack</h1>
-        <div className="flex justify-center items-center w-full">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8 lg:gap-12 w-full max-w-screen-lg px-4">
-            {/* Card 1 */}
-            <div className="text-lg font-semibold p-4 h-auto w-[300px] md:w-60 rounded-lg bg-gray-200 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-gray-600 text-lg">All Subscribers</h2>
-                  <p className="text-gray-600 text-2xl">{subscribers.length}</p>
-                </div>
-                <PeopleAltIcon
-                  className="h-10 w-10"
-                  style={{ color: "gray" }}
-                />
-              </div>
-            </div>
-            {/* Card 2 */}
-            <div className="text-lg font-semibold p-4 h-auto w-[300px] md:w-60 rounded-lg bg-gray-200 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-gray-600 text-lg font-semibold">
-                    Basic Subscribers
-                  </h2>
-                  <p className="text-2xl">{basicSubscribers.length}</p>
-                </div>
-                <PeopleAltIcon
-                  className="h-10 w-10"
-                  style={{ color: "gray" }}
-                />
-              </div>
-            </div>
-            {/* Card 3 */}
-            <div className="text-lg font-semibold p-4 h-auto w-[300px] md:w-60 rounded-lg bg-gray-200 shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-gray-600 text-lg font-semibold">
-                    Premium Subscribers
-                  </h2>
-                  <p className="text-2xl">{premiumSubscribers.length}</p>
-                </div>
-                <PeopleAltIcon
-                  className="h-10 w-10"
-                  style={{ color: "gray" }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="">
-          <LineChart />
-        </div>
-        <div className="flex gap-2">
-          <h2 className="text-gray-600 text-2xl font-semibold">
-            All subscribers ({subscribers.length})
-          </h2>
-          <span className="text-sm p-2 rounded-lg bg-gray-200 text-muted-foreground">
-            Data updated 2 months ago
-          </span>
-        </div>
-        <div className="flex items-center mb-4">
-          <input
-            type="text"
-            placeholder="Search by name or email..."
-            onChange={searchHandler}
-            className="border border-border rounded-lg p-2 w-96"
-          />
-          <button className={`border m-3 p-2 rounded-lg`}>
-            <FilterListIcon className="mr-2" />0 Filters
-          </button>
-          <button className={`border ml-2 p-2 rounded-lg`}>Columns</button>
-          {/* <button className={`hover:bg-accent/80 mt-4 p-2 rounded-lg`}>
-            Add Subscriber(s)
-          </button>
-          <button className={`hover:bg-accent/80 mt-4 p-2 rounded-lg ml-2`}>
-            Manage group subscriptions
-          </button> */}
-        </div>
-        <SubscriberTable subscribers={subscribers} />
-      </div>
-      <div
-        role="button"
-        aria-label="Open Chatbot"
-        className="mb-28 flex justify-end  right-0 mr-4 "
-        tabindex="1"
-      >
-        <button className="bg-gray-800 text-2xl rounded-full text-white p-6">
-          Ask a question
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// export async function getServerSideProps(context) {
-//   const { writer } = context.query;
-//   return {
-//     props: { writer },
-//   };
-// }
 
 export default SubscribersTable;

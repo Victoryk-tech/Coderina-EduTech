@@ -277,7 +277,10 @@ const Page = () => {
           </div>
 
           <div className="mt-6">
-            <button disabled={loading}>
+            <button
+              disabled={loading}
+              className="bg-black text-white rounded-3xl p-2 text-[16px]"
+            >
               {loading ? "Submitting..." : "Register"}
             </button>
           </div>

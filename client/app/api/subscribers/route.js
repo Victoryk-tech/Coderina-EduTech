@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 // MongoDB configuration
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -48,21 +48,61 @@ export async function POST(req) {
   }
 }
 
-// Named export for handling GET requests
-export async function GET() {
-  const db = await connectToDatabase();
-  const collection = db.collection("subscribers");
-
+export async function GET(req) {
   try {
-    const subscribers = await collection.find().toArray();
-    return new Response(JSON.stringify(subscribers), {
+    // Connect to MongoDB
+    const db = await connectToDatabase();
+    const collection = db.collection("subscribers");
+
+    // Fetch all subscribers
+    const subscribers = await collection.find({}).toArray();
+
+    return new Response(JSON.stringify({ success: true, subscribers }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Error in GET:", error);
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({ success: false, message: "Internal Server Error" }),
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    const { id } = await req.json();
+
+    if (!id) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Missing subscriber ID" }),
+        { status: 400 }
+      );
+    }
+
+    const db = await connectToDatabase();
+    const collection = db.collection("subscribers");
+
+    const result = await collection.deleteOne({ _id: new ObjectId(id) });
+    if (result.deletedCount === 0) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Subscriber not found" }),
+        { status: 404 }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Subscriber deleted successfully",
+      }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Delete Error:", error.message);
+    return new Response(
+      JSON.stringify({ success: false, message: "Internal Server Error" }),
+      { status: 500 }
+    );
   }
 }

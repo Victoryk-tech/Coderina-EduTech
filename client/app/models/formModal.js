@@ -51,7 +51,7 @@ const formSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add a description"],
       minLength: [2, "Minimum 2 letters"],
-      maxLength: [50, "Maximum 50 letters"],
+
       lowercase: true,
       trim: true,
     },
@@ -60,7 +60,7 @@ const formSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add idea"],
       minLength: [2, "Minimum 2 letters"],
-      maxLength: [50, "Maximum 50 letters"],
+
       lowercase: true,
       trim: true,
     },
@@ -69,7 +69,7 @@ const formSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add a idea name"],
       minLength: [2, "Minimum 2 letters"],
-      maxLength: [20, "Maximum 20 letters"],
+
       lowercase: true,
       trim: true,
     },

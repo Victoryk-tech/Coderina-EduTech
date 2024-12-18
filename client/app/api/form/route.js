@@ -80,28 +80,34 @@ export async function GET() {
 // delete
 
 export async function DELETE(req) {
+  const { email } = await req.json();
+
+  if (!email) {
+    return NextResponse.json(
+      { success: false, message: "Email is required." },
+      { status: 400 }
+    );
+  }
+
   try {
-    await dbConnect();
+    const db = await connectToDatabase();
+    const collection = db.collection("subscribers");
 
-    const { id } = await req.json();
-
-    if (!id) {
+    const result = await collection.deleteOne({ email });
+    if (result.deletedCount === 0) {
       return NextResponse.json(
-        { success: false, message: "Missing registration ID" },
-        { status: 400 }
+        { success: false, message: "Subscriber not found." },
+        { status: 404 }
       );
     }
-
-    await Form.findByIdAndDelete(id);
-
     return NextResponse.json(
-      { success: true, message: "Registration deleted successfully" },
+      { success: true, message: "Subscriber deleted successfully." },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Delete Error:", error);
+    console.error("delete Error:", error);
     return NextResponse.json(
-      { success: false, message: error.message },
+      { success: false, message: "Internal Server Error." },
       { status: 500 }
     );
   }
