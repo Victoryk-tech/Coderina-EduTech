@@ -100,7 +100,7 @@ const Foote = () => {
       </div>
       <div className="border-[1px] border-t-white mt-8 md:mt-10"></div>
       <div className="text-[14px] md:text-[15px] text-[#E6E6E6] space-y-2 md:space-y-0 w-full flex flex-col md:flex-row items-star md:justify-between px-10 md:px-2  lg:px-8 py-8 md:py-8">
-        <Link href="/dashboard/overview">Coderina-Copyright 2024</Link>
+        <p>Coderina-Copyright 2024</p>
         <div className="flex flex-col md:flex-row items-start space-y-2 md:space-y-0   md:space-x-4">
           <p> Privacy Policy</p>
           <p>Accessibility Statement</p>
