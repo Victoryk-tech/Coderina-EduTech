@@ -1,5 +1,6 @@
 import Form from "../../models/formModal";
 import dbConnect from "../../lib/dbConnect"; // Utility for DB connection
+import { ObjectId } from "mongodb";
 // Import the Form model
 import { NextResponse } from "next/server";
 
@@ -80,32 +81,33 @@ export async function GET() {
 // delete
 
 export async function DELETE(req) {
-  const { email } = await req.json();
-
-  if (!email) {
-    return NextResponse.json(
-      { success: false, message: "Email is required." },
-      { status: 400 }
-    );
-  }
-
   try {
-    const db = await connectToDatabase();
-    const collection = db.collection("subscribers");
+    const { id } = await req.json();
 
-    const result = await collection.deleteOne({ email });
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "ID is required." },
+        { status: 400 }
+      );
+    }
+
+    await dbConnect();
+
+    const result = await Form.deleteOne({ _id: new ObjectId(id) });
+
     if (result.deletedCount === 0) {
       return NextResponse.json(
-        { success: false, message: "Subscriber not found." },
+        { success: false, message: "Form not found." },
         { status: 404 }
       );
     }
+
     return NextResponse.json(
-      { success: true, message: "Subscriber deleted successfully." },
+      { success: true, message: "Form deleted successfully." },
       { status: 200 }
     );
   } catch (error) {
-    console.error("delete Error:", error);
+    console.error("Delete Error:", error);
     return NextResponse.json(
       { success: false, message: "Internal Server Error." },
       { status: 500 }

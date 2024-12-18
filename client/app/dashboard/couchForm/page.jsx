@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { IoTrash } from "react-icons/io5";
 import { IoIosSync } from "react-icons/io"; // For loader icon
 import { CiMenuKebab } from "react-icons/ci";
+import { HiDownload } from "react-icons/hi";
 
 const RegistrationsTable = () => {
   const [registrations, setRegistrations] = useState([]);
@@ -57,6 +58,95 @@ const RegistrationsTable = () => {
     }
   };
 
+  // Download individual registration details
+  const downloadDetails = (registration) => {
+    const fileName = `${registration.firstName}_${registration.lastName}_details.txt`;
+    const details = `
+    First Name: ${registration.firstName}
+    Last Name: ${registration.lastName}
+    Email: ${registration.email}
+    School: ${registration.school}
+    Phone: ${registration.phone || "N/A"}
+    Address: ${registration.address || "N/A"}
+    Idea: ${registration.idea}
+    Idea Description: ${registration.ideaDescription || "N/A"}
+    Gender: ${registration.gender || "N/A"}
+    Link 1: ${registration.link1 || "N/A"}
+    Link 2: ${registration.link2 || "N/A"}
+    Submitted At: ${new Date(registration.createdAt).toLocaleString()}
+  `;
+
+    // Create a Blob and trigger download
+    const blob = new Blob([details], { type: "text/plain;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link and click it to download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    link.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
+  };
+
+  // Convert registrations to CSV
+  const downloadCSV = () => {
+    if (registrations.length === 0) {
+      toast.error("No registrations to download");
+      return;
+    }
+
+    const headers = [
+      "First Name",
+      "Last Name",
+      "Email",
+      "School",
+      "Phone",
+      "Address",
+      "Idea",
+      "Idea Description",
+      "Gender",
+      "Link 1",
+      "Link 2",
+      "Submitted At",
+    ];
+
+    const rows = registrations.map((reg) => [
+      reg.firstName,
+      reg.lastName,
+      reg.email,
+      reg.school,
+      reg.phone,
+      reg.address,
+      reg.idea,
+      reg.ideaDescription,
+      reg.gender,
+      reg.link1,
+      reg.link2,
+      new Date(reg.createdAt).toLocaleString(),
+    ]);
+
+    // Combine headers and rows into a CSV string
+    const csvContent = [
+      headers.join(","), // Header row
+      ...rows.map((row) => row.map((field) => `"${field}"`).join(",")), // Data rows
+    ].join("\n");
+
+    // Create a Blob and a downloadable link
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "registrations.csv";
+    link.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
+  };
+
   useEffect(() => {
     fetchRegistrations();
   }, []);
@@ -67,6 +157,15 @@ const RegistrationsTable = () => {
       <h1 className="text-2xl font-bold mb-4">Registrations</h1>
       <div className="mb-4 text-right font-medium">
         Total Registrations: {registrations.length}
+      </div>
+
+      <div className="flex justify-between items-center mb-4">
+        <button
+          onClick={downloadCSV}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Download CSV
+        </button>
       </div>
       <div className="overflow-x-auto">
         <table className="table-auto w-full border-collapse border border-gray-300 text-[14px]">
@@ -107,14 +206,21 @@ const RegistrationsTable = () => {
                   {new Date(registration.createdAt).toLocaleString()}
                 </td>
                 <td className="border border-gray-300 p-2 text-center">
-                  {loadingId === registration._id ? (
-                    <IoIosSync className="animate-spin text-gray-500 text-xl" />
-                  ) : (
-                    <IoTrash
-                      onClick={() => deleteRegistration(registration._id)}
-                      className="text-red-600 hover:text-red-800 cursor-pointer text-xl"
+                  <div className="flex items-center justify-center gap-2">
+                    {loadingId === registration._id ? (
+                      <IoIosSync className="animate-spin text-gray-500 text-xl" />
+                    ) : (
+                      <IoTrash
+                        onClick={() => deleteRegistration(registration._id)}
+                        className="text-red-600 hover:text-red-800 cursor-pointer text-xl"
+                      />
+                    )}
+                    <HiDownload
+                      onClick={() => downloadDetails(registration)}
+                      className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl"
+                      title="Download Details"
                     />
-                  )}
+                  </div>
                 </td>
                 <td
                   onClick={() => handleOpenModal(registration)}

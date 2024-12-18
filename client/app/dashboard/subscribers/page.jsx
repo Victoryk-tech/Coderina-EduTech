@@ -114,7 +114,7 @@ const SubscribersTable = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-gray-600 text-lg font-semibold">
-                  No of messages sent
+                  All Messages sent
                 </h2>
                 <p className="text-2xl">{subscribers.length}</p>
               </div>
