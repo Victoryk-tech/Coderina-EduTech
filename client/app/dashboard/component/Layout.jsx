@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MenuIcon,
   BellIcon,
   UserCircleIcon,
   LogoutIcon,
 } from "@heroicons/react/outline";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import logo from "../../../public/coderinaLogo.png";
@@ -21,6 +22,9 @@ const Layout = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const searchParams = useSearchParams();
+  const greeting = searchParams.get("greeting"); // Get query param
+  const [username, setUsername] = useState("");
 
   const links = [
     { icon: <GoHome />, name: "Home", path: "/dashboard/overview" },
@@ -50,6 +54,11 @@ const Layout = ({ children }) => {
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("username");
+    if (savedUsername) setUsername(savedUsername);
+  }, []);
 
   return (
     <div className="h-screen flex font-Inter">
@@ -88,6 +97,11 @@ const Layout = ({ children }) => {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white text-black py-6 px-6 flex justify-between items-center sticky top-0 z-50 shadow-md">
+          <h1 className="text-[15px] font-bold">
+            {greeting === "hello"
+              ? `Hello, ${username}`
+              : `Welcome back, ${username}`}
+          </h1>
           <div className="flex items-center">
             <MenuIcon
               className="h-6 w-6 mr-4 cursor-pointer block md:hidden"
@@ -95,6 +109,7 @@ const Layout = ({ children }) => {
             />
             {/* <Image src={logo} alt="Coderina Logo" className="w-40 h-10" /> */}
           </div>
+
           <div className="flex items-center space-x-4">
             <BellIcon
               className="h-6 w-6 cursor-pointer"
@@ -107,13 +122,13 @@ const Layout = ({ children }) => {
             {showProfileMenu && (
               <div className="absolute right-6 top-14 mt-2 w-48 bg-white shadow-lg rounded-lg py-2">
                 <Link
-                  href="#"
+                  href="/dashboard/profile"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                 >
                   Profile
                 </Link>
                 <Link
-                  href="#"
+                  href="/dashboard/profile"
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                 >
                   Settings
