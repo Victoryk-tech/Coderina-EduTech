@@ -254,11 +254,10 @@ const Page = () => {
                 name="link1"
                 value={formData.link1}
                 onChange={handleChange}
-                className={`w-full p-2 rounded-lg outline-none ${
-                  errors.link1 ? "border-red-500" : ""
-                }`}
+                className="w-full p-2 rounded-lg outline-none "
                 placeholder="Add URL (optional)"
               />
+              <p className="border-red-500 text-[11px]">{errors.link1}</p>
             </div>
 
             <div>
