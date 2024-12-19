@@ -10,11 +10,11 @@ import SolutionCards from "../../Home/SolutionCards";
 import CustomButton from "@/app/Home/CustomButton";
 const Team = () => {
   const ourTeamCard = [
-    {
-      img: founder1,
-      name: "Mr Olajide Ajayi",
-      text: "Founder",
-    },
+    // {
+    //   img: founder1,
+    //   name: "Mr Olajide Ajayi",
+    //   text: "Founder",
+    // },
     {
       img: founder3,
       name: "Mr Femi Niyi",
@@ -63,11 +63,11 @@ const Team = () => {
           })}
         </div> */}
 
-        <div className="w-full grid md:grid-cols-3 items-start md:items-center justify-between space-y-[5rem] md:space-y-0 ">
+        <div className="w-full grid md:grid-cols-2 items-start md:items-center justify-between md:justify-center space-y-[5rem] md:space-y-0 md:px-[9rem] ">
           {ourTeamCard.map((teamCard, i) => {
             return (
               <div
-                className="w-full md:w-[260px] h-[400px]  md:space-y-8"
+                className="w-full md:w-[280px] h-[400px]  md:space-y-8"
                 key={i}
               >
                 <div className="w-full">
