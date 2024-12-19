@@ -1,270 +1,216 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
-import TextEditor from "../component/TextEditor";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FaArrowLeft } from "react-icons/fa";
-import PostPreview from "../component/PreviewModal";
+import toast, { Toaster } from "react-hot-toast";
 
-export default function CreatePost() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [postVisibility, setPostVisibility] = useState("Everyone");
-  const [allowComments, setAllowComments] = useState("Everyone");
-  const [commentOrder, setCommentOrder] = useState("Top comments first");
-  const [tags, setTags] = useState("");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+const createPost = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [newPost, setNewPost] = useState({
+    title: "",
+    description: "",
+    category: "",
+    body: "",
+    images: [],
+  });
+  const [selectedImages, setSelectedImages] = useState([]);
+
   const router = useRouter();
 
-  const draftLink =
-    "https://michaelharry.threndin.com/p/4fca0ea1-f649-47e6-977d-d9301f38e466";
+  const categories = ["gallery", "publications", "news articles"];
 
-  const handleFilePicker = (callback, value, meta) => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute(
-      "accept",
-      meta.filetype === "image" ? "image/*" : "media/*"
-    );
-    input.onchange = function () {
-      const file = this.files[0];
-      const reader = new FileReader();
-      reader.onload = function () {
-        const base64 = reader.result;
-        callback(base64, { alt: file.name });
-      };
-      reader.readAsDataURL(file);
-    };
-    input.click();
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/media");
+      const data = await res.json();
+      if (data.success) {
+        setPosts(data.data);
+      } else {
+        toast.error("Failed to fetch posts");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleContentChange = (newContent) => {
-    setContent(newContent);
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setSelectedImages(files);
+  };
+
+  const handleCreatePost = async () => {
+    if (!newPost.title || !newPost.description || !newPost.category) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("title", newPost.title);
+      formData.append("description", newPost.description);
+      formData.append("category", newPost.category);
+      formData.append("body", newPost.body);
+      selectedImages.forEach((image) => formData.append("images", image));
+
+      const res = await fetch("/api/media", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Post created successfully");
+        fetchPosts();
+        setNewPost({
+          title: "",
+          description: "",
+          category: "",
+          body: "",
+          images: [],
+        });
+        setSelectedImages([]);
+      } else {
+        toast.error(data.error || "Failed to create post");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeletePost = async (id) => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/media?id=${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Post deleted successfully");
+        fetchPosts();
+      } else {
+        toast.error(data.error || "Failed to delete post");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="bg-gray-white p-4">
-      {/*================== header =====================*/}
-      <header className="flex justify-between">
-        <div>
-          <button
-            onClick={() => router.back()}
-            className="hover:bg-[#ccce] bg-[#EEE] px-3 py-3 font-bold text-gray-600 rounded-lg flex items-center gap-2"
-          >
-            <FaArrowLeft />
-          </button>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setIsPreviewOpen(true)}
-            className="hover:bg-[#ccce] bg-[#EEE] px-3 py-2 rounded-lg font-semibold text-gray-600"
-          >
-            Preview
-          </button>
-          <button className="bg-[#ff9900] hover:bg-[#f48d2d] text-white px-3 py-2 rounded-lg">
-            Continue
-          </button>
-        </div>
-      </header>
-      <Suspense fallback={<div>Loading...</div>}>
-        <div className=" flex  justify-center ">
-          <main className="flex-grow p-6 max-w-4xl">
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <Toaster />
+      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+
+      {/* New Post Form */}
+      <div className="bg-white p-4 rounded shadow mb-6">
+        <h2 className="text-xl font-semibold mb-3">Create New Post</h2>
+
+        <input
+          type="text"
+          placeholder="Title"
+          value={newPost.title}
+          onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+          className="w-full p-2 border rounded mb-3"
+        />
+
+        <textarea
+          placeholder="Description"
+          value={newPost.description}
+          onChange={(e) =>
+            setNewPost({ ...newPost, description: e.target.value })
+          }
+          className="w-full p-2 border rounded mb-3"
+        />
+
+        <select
+          value={newPost.category}
+          onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
+          className="w-full p-2 border rounded mb-3"
+        >
+          <option value="">Select Category</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+
+        {(newPost.category === "publications" ||
+          newPost.category === "news articles") && (
+          <textarea
+            placeholder="Body"
+            value={newPost.body}
+            onChange={(e) => setNewPost({ ...newPost, body: e.target.value })}
+            className="w-full p-2 border rounded mb-3"
+          />
+        )}
+
+        {(newPost.category === "gallery" ||
+          newPost.category === "publications") && (
+          <div className="mb-3">
+            <label className="block mb-1">Upload Images</label>
             <input
-              className="w-full text-4xl font-bold border-none outline-none mb-4 bg-transparent"
-              placeholder="Add a title..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              autoFocus
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              className="block w-full border rounded"
             />
-            {/*===================== Editor ========================*/}
-            <TextEditor
-              handleFilePicker={handleFilePicker}
-              content={content}
-              onContentChange={handleContentChange}
-            />
-          </main>
+          </div>
+        )}
 
-          {/*============== Button to open Settings Modal ==============*/}
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="fixed bottom-8 right-6 hover:bg-[#ccce] bg-[#EEE] text-gray-700 font-semibold py-3 px-4 rounded-lg shadow-lg"
-          >
-            Post Settings
-          </button>
+        <button
+          onClick={handleCreatePost}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          disabled={loading}
+        >
+          {loading ? "Creating..." : "Create Post"}
+        </button>
+      </div>
 
-          {/*================= Modal for Settings ================*/}
-          {isModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center z-50">
-              <div className="absolute inset-0 bg-gray-800 opacity-75"></div>
-              <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 z-50 relative">
-                {/*============== Close Button ================*/}
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
-                >
-                  &times;
-                </button>
+      {/* Posts List */}
+      <div className="bg-white p-4 rounded shadow">
+        <h2 className="text-xl font-semibold mb-3">Manage Posts</h2>
 
-                {/*============== Modal Content ===============*/}
-                <h3 className="text-xl font-bold mb-4 border-b-2  border-b-gray-50 pb-2">
-                  Post Settings
-                </h3>
-
-                <div className="max-h-96 overflow-y-auto px-10">
-                  <div className="mb-6">
-                    <label className="block font-medium text-gray-700 mb-2">
-                      This post is for...
-                    </label>
-                    <div className="flex space-x-4">
-                      <button
-                        onClick={() => setPostVisibility("Everyone")}
-                        className={`${
-                          postVisibility === "Everyone"
-                            ? "bg-[#ff9900] hover:bg-[#f48d2d]"
-                            : "hover:bg-[#ccce] bg-[#EEE]"
-                        } text-white font-semibold py-2 px-4 rounded`}
-                      >
-                        Everyone
-                      </button>
-                      <button
-                        onClick={() =>
-                          setPostVisibility("Paid subscribers only")
-                        }
-                        className={`${
-                          postVisibility === "Paid subscribers only"
-                            ? "bg-[#ff9900] hover:bg-[#f48d2d]"
-                            : "hover:bg-[#ccce] bg-[#EEE]"
-                        } text-white font-semibold py-2 px-4 rounded`}
-                      >
-                        Paid subscribers only
-                      </button>
-                    </div>
-                  </div>
-
-                  {/*=============== Comments Settings =================*/}
-                  <div className="mb-6">
-                    <label className="block font-medium text-gray-700 mb-2">
-                      Allow comments from...
-                    </label>
-                    <div className="flex space-x-4">
-                      <button
-                        onClick={() => setAllowComments("Everyone")}
-                        className={`${
-                          allowComments === "Everyone"
-                            ? "bg-[#ff9900] hover:bg-[#f48d2d]"
-                            : "hover:bg-[#ccce] bg-[#EEE]"
-                        } text-white font-semibold py-2 px-4 rounded`}
-                      >
-                        Everyone
-                      </button>
-                      <button
-                        onClick={() => setAllowComments("No one")}
-                        className={`${
-                          allowComments === "No one"
-                            ? "bg-[#ff9900] hover:bg-[#f48d2d]"
-                            : "hover:bg-[#ccce] bg-[#EEE]"
-                        } text-white font-semibold py-2 px-4 rounded`}
-                      >
-                        No one (disable comments)
-                      </button>
-                    </div>
-                  </div>
-
-                  {/*===================== Comment Order =====================*/}
-                  <div className="mb-6">
-                    <label className="block font-medium text-gray-700 mb-2">
-                      Order comments by…
-                    </label>
-                    <select
-                      value={commentOrder}
-                      onChange={(e) => setCommentOrder(e.target.value)}
-                      className="w-full border border-gray-300 p-2 rounded"
-                    >
-                      <option>Top comments first</option>
-                      <option>Newest comments first</option>
-                      <option>Oldest comments first</option>
-                    </select>
-                  </div>
-
-                  {/*================ Tags Input ================*/}
-                  <div className="mb-6">
-                    <label className="block font-medium text-gray-700 mb-2">
-                      Add tags
-                    </label>
-                    <input
-                      value={tags}
-                      onChange={(e) => setTags(e.target.value)}
-                      type="text"
-                      className="w-full border border-gray-300 p-2 rounded"
-                      placeholder="Select..."
-                    />
-                  </div>
-
-                  {/*================== Send Test Email ====================*/}
-                  <div className="mb-6">
-                    <label className="block font-medium text-gray-700 mb-2">
-                      Send test email
-                    </label>
-                    <input
-                      value="matrixcode00@gmail.com"
-                      readOnly
-                      className="w-full border border-gray-300 p-2 rounded bg-gray-100"
-                    />
-                    <button className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-                      Send
-                    </button>
-                    <p className="text-sm text-gray-500 mt-1">
-                      This will send two test emails: one with the version of
-                      the post that your free subscribers will receive and
-                      another for paid subscribers.
-                    </p>
-                  </div>
-
-                  {/*==================== Secret Draft Link ================*/}
-                  <div className="mb-6">
-                    <label className="block font-medium text-gray-700 mb-2">
-                      Secret draft link
-                    </label>
-                    <input
-                      value={draftLink}
-                      readOnly
-                      className="w-full border border-gray-300 p-2 rounded bg-gray-100"
-                    />
-                    <button className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-                      Copy link
-                    </button>
-                    <p className="text-sm text-gray-500 mt-1">
-                      This link allows you to share a secret draft link with
-                      others before publishing. Anyone with the link will be
-                      able to view the post and leave comments, but they won’t
-                      be able to share it.
-                    </p>
-                  </div>
-                  {/*====================== Danger Zone =====================*/}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-red-600 mb-2">
-                      Danger zone
-                    </h3>
-                    <button className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded">
-                      Delete Post
-                    </button>
-                  </div>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <ul>
+            {posts.map((post) => (
+              <li key={post._id} className="border-b py-3 flex justify-between">
+                <div>
+                  <h3 className="font-bold">{post.title}</h3>
+                  <p>{post.description}</p>
+                  <p className="text-sm text-gray-500">
+                    Category: {post.categories.join(", ")}
+                  </p>
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/*============== Preview Modal ==============*/}
-          {isPreviewOpen && (
-            <PostPreview
-              title={title}
-              content={content}
-              onClose={() => setIsPreviewOpen(false)}
-            />
-          )}
-        </div>
-      </Suspense>
+                <button
+                  onClick={() => handleDeletePost(post._id)}
+                  className="text-red-500 hover:underline"
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
-}
+};
+
+export default createPost;

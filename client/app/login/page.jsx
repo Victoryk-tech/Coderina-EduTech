@@ -1,123 +1,126 @@
+//
+
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import Image from "next/image";
-import focus from "../../public/focus.jpg";
+
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter(); // For navigation
+  const router = useRouter();
+
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setError("");
+
+  //   if (!email || !password) {
+  //     setError("Please fill in both fields.");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await axios.post("/api/auth/login", { email, password });
+
+  //     if (response.status === 200) {
+  //       const { user, token } = response.data;
+
+  //       // Save token and user info in localStorage
+  //       localStorage.setItem("token", token);
+  //       localStorage.setItem("username", user.username);
+  //       localStorage.setItem("role", user.role);
+
+  //       toast.success("Login successful!");
+
+  //       // Redirect based on role
+  //       if (user.role === "admin") {
+  //         router.push(`/dashboard/overview?greeting=welcome`);
+  //       } else {
+  //         router.push("/");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     const message = error.response?.data?.message || "An error occurred.";
+  //     setError(message);
+  //     toast.error(message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-
     try {
-      const response = await axios.post("/api/auth/login", { email, password });
+      const response = await axios.post("/api/auth/login", {
+        email,
+        password,
+      });
+      const { token, user } = response.data;
 
-      if (response.status === 200) {
-        const { token, user } = response.data; // Assuming user info is returned from backend
-        const username = user?.username || "User"; // Fallback if username is not provided
+      // Save token and user data in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("username", user.username);
+      localStorage.setItem("role", user.role);
 
-        // Save the token and username
-        localStorage.setItem("token", token);
-        localStorage.setItem("username", username);
-
-        toast.success("Login successful!");
-        router.push(`/dashboard/overview?greeting=welcome`); // Add query param for greeting
-      }
+      toast.success("Login successful!");
     } catch (error) {
-      const message = error.response?.data?.message || "An error occurred.";
-      setError(message);
-      toast.error(message);
-    } finally {
-      setLoading(false);
+      console.log("Login error:", error.response?.data || error.message);
+      toast.error("Invalid credentials.");
     }
   };
-
   return (
-    <section className="flex items-center justify-center h-screen bg-gray-100">
+    <div className="flex items-center justify-center h-screen bg-gray-100">
       <Toaster />
-      <div className="w-full h-full opacity-50">
-        <Image
-          src={focus}
-          alt="imagee"
-          className="h-full w-full object-cover"
-        />
-      </div>
-      <div className=" p-6  w-full  max-w-md md:max-w-xl">
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
         <form onSubmit={handleLogin}>
-          {/* Email Field */}
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 mb-1">
-              Email Address
+            <label htmlFor="email" className="block text-gray-700">
+              Email
             </label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded outline-none"
+              className="w-full p-3 border rounded"
               placeholder="Enter your email"
               required
             />
           </div>
-
-          {/* Password Field */}
-          <div className="mb-4 relative">
-            <label htmlFor="password" className="block text-gray-700 mb-1">
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-gray-700">
               Password
             </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded pr-10 outline-none"
-                placeholder="Enter your password"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-gray-600"
-              >
-                {showPassword ? (
-                  <span>&#128065;</span> // Eye emoji for "visible"
-                ) : (
-                  <span>&#128584;</span> // Eye-slash emoji for "hidden"
-                )}
-              </button>
-            </div>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 border rounded"
+              placeholder="Enter your password"
+              required
+            />
           </div>
-
-          {/* Submit Button */}
+          {error && <p className="text-red-500 text-center">{error}</p>}
           <button
             type="submit"
-            className={`w-full p-3 rounded ${
-              loading
-                ? "bg-blue-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            } text-white`}
             disabled={loading}
+            className={`w-full p-3 text-white ${
+              loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+            } rounded`}
           >
             {loading ? "Logging In..." : "Login"}
           </button>
         </form>
-
-        {/* Error Message */}
-        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
       </div>
-    </section>
+    </div>
   );
 };
 

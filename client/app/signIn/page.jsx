@@ -1,20 +1,22 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
 const initialState = {
   email: "",
   password: "",
   username: "",
+  role: "",
 };
+
 const SignInPage = () => {
   const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const router = useRouter(); // Initialize useRouter
-  const { email, password, username } = formData;
+  const router = useRouter();
+  const { email, password, username, role } = formData;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,8 +32,8 @@ const SignInPage = () => {
 
       if (res.status === 201) {
         const { token } = res.data;
-        localStorage.setItem("token", token); // Store token in localStorage
-        localStorage.setItem("username", user.username);
+        localStorage.setItem("token", token);
+        localStorage.setItem("username", username); // Use username from formData
         toast.success("User created successfully!");
         setFormData(initialState);
 
@@ -66,6 +68,7 @@ const SignInPage = () => {
               placeholder="Enter your email"
               className="w-full p-3 border border-gray-300 rounded"
               required
+              disabled={loading}
             />
           </div>
 
@@ -82,6 +85,7 @@ const SignInPage = () => {
               placeholder="Enter your username"
               className="w-full p-3 border border-gray-300 rounded"
               required
+              disabled={loading}
             />
           </div>
 
@@ -98,6 +102,24 @@ const SignInPage = () => {
               placeholder="Enter your password"
               className="w-full p-3 border border-gray-300 rounded"
               required
+              disabled={loading}
+            />
+          </div>
+
+          {/* Role */}
+          <div className="mb-4">
+            <label htmlFor="role" className="block text-gray-700">
+              Role
+            </label>
+            <input
+              type="text"
+              name="role"
+              value={role}
+              onChange={handleChange}
+              placeholder="Enter your role"
+              className="w-full p-3 border border-gray-300 rounded"
+              required
+              disabled={loading}
             />
           </div>
 

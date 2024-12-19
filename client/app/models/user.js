@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 const validator = require("validator");
 
-const userSchema = mongoose.Schema(
+const usersSchema = mongoose.Schema(
   {
     username: {
       type: String,
@@ -21,6 +21,13 @@ const userSchema = mongoose.Schema(
       lowercase: true,
       validate: [validator.isEmail, "Please enter a valid email address"],
     },
+
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+    },
+
     password: {
       type: String,
       required: [true, "Please add a password!"],
@@ -49,7 +56,7 @@ const userSchema = mongoose.Schema(
   }
 );
 //hash the password before saving to database!
-userSchema.pre("save", async function (next) {
+usersSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next;
   }
@@ -61,6 +68,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const users = mongoose.models.users || mongoose.model("users", usersSchema);
 
-export default User;
+export default users;

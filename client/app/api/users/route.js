@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server";
 import connectDB from "../../lib/dbConnect";
-import User from "../../models/user";
-import handleUpload from "../../utils/cloudinary";
-import generateToken from "../../utils/token";
-
+import users from "../../models/user";
+// import handleUpload from "../../utils/cloudinary";
+// import generateToken from "../../utils/token";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
+
 // Connect to the database
 connectDB();
 
 // Fetch all users
 export async function GET(req) {
   try {
-    const users = await User.find({}).select("-password").sort("-createdAt");
+    const users = await users.find({}).select("-password").sort("-createdAt");
 
     if (!users.length) {
       return NextResponse.json({ message: "No users found!" }, { status: 404 });
@@ -31,9 +31,13 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const { email, password, username } = await req.json();
+    const { username, email, password, role } = await req.json();
 
-    const existingUser = await User.findOne({ email });
+    if (!username || !email || !password) {
+      throw new Error("Missing required fields: username, email, or password");
+    }
+
+    const existingUser = await users.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
         { message: "User already exists" },
@@ -41,18 +45,33 @@ export async function POST(req) {
       );
     }
 
-    const newUser = await User.create({ email, password, username });
+    const newUser = await users.create({ username, email, password, role });
 
-    // Generate JWT
-    const token = generateToken({ id: newUser._id, email });
+    const token = jwt.sign(
+      { userId: newUser._id, email: newUser.email, role: newUser.role },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
 
-    return NextResponse.json(
-      { user: { username: newUser.username }, token },
+    const { password: _, ...userWithoutPassword } = newUser.toObject();
+
+    const response = NextResponse.json(
+      { user: userWithoutPassword, token },
       { status: 201 }
     );
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60,
+      sameSite: "Strict",
+    });
+
+    return response;
   } catch (error) {
+    console.error("Error during sign-up:", error);
     return NextResponse.json(
-      { error: `Error creating user: ${error.message}` },
+      { error: `Error during sign-up: ${error.message}` },
       { status: 500 }
     );
   }
@@ -65,7 +84,7 @@ export async function PATCH(req) {
       await req.json();
 
     // Update user information
-    const user = await User.findByIdAndUpdate(
+    const user = await users.findByIdAndUpdate(
       id,
       { username, email, address, phone, profilePicture },
       { new: true }
@@ -90,7 +109,7 @@ export async function DELETE(req) {
     const { id } = await req.json();
 
     // Delete the user by ID
-    const user = await User.findByIdAndDelete(id);
+    const user = await users.findByIdAndDelete(id);
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });

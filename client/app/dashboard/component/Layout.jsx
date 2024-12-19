@@ -97,11 +97,11 @@ const Layout = ({ children }) => {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white text-black py-6 px-6 flex justify-between items-center sticky top-0 z-50 shadow-md">
-          <h1 className="text-[15px] font-bold">
+          {/* <h1 className="text-[15px] font-bold">
             {greeting === "hello"
               ? `Hello, ${username}`
               : `Welcome back, ${username}`}
-          </h1>
+          </h1> */}
           <div className="flex items-center">
             <MenuIcon
               className="h-6 w-6 mr-4 cursor-pointer block md:hidden"
