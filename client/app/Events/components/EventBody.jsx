@@ -40,7 +40,7 @@ const EventBody = () => {
   ];
 
   return (
-    <Box className="event__container">
+    <Box className="event__container pt-[6rem]">
       <Stack>
         <Stack
           className="event__upcoming"

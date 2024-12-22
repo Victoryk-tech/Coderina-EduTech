@@ -1,9 +1,12 @@
+"use client";
+
 import React from "react";
 import { blackColor, pinkBg } from "../utils/constants";
 import { Box, Card, Container, Stack, Typography } from "@mui/material";
 import CustomButton from "../Home/CustomButton";
 import Subscribers from "../Home/Subscribers";
 import Footer from "../Home/Footer";
+import SubscribeForm from "../Home/SubscribeForm";
 
 const Couch = () => {
   const couchInfos = [
@@ -89,14 +92,7 @@ const Couch = () => {
             </Stack>
           ))}
         </Container>
-      </Box>
-      <Box mb={10}>
-        {/* <Container maxWidth="md">
-          <Subscribers register link={"/register"} />
-        </Container> */}
-      </Box>
-      <Box p={4} bgcolor={blackColor}>
-        <Container maxWidth="lg"></Container>
+        <SubscribeForm />
       </Box>
 
       <Footer />

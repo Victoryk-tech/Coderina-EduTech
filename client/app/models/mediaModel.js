@@ -32,7 +32,6 @@ const mediaSchema = mongoose.Schema(
           type: String,
           validate: {
             validator(value) {
-              // Check if the value is a valid URL or file path
               if (validator.isURL(value)) {
                 return true;
               }
@@ -93,7 +92,12 @@ const mediaSchema = mongoose.Schema(
         },
         replies: [
           {
-            adminReply: {
+            email: {
+              type: String,
+              required: [true, "Email is required for replying"],
+              validate: [validator.isEmail, "Invalid email format"],
+            },
+            reply: {
               type: String,
               required: [true, "Reply is required"],
               minLength: [2, "Minimum reply length is 2 characters"],

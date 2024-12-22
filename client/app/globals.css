@@ -1121,7 +1121,7 @@ button {
 .event__container {
   display: flex;
   flex-direction: column;
-  margin: 7em 0;
+
   gap: 5em;
 
   > div {

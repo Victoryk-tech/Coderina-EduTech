@@ -3,13 +3,30 @@ import dbConnect from "../../lib/dbConnect";
 import Media from "../../models/mediaModel";
 
 // Fetch all media or filter by category
+// Fetch all media, filter by category, or fetch by ID
 export async function GET(req) {
   await dbConnect();
 
   try {
     const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
     const category = searchParams.get("category");
 
+    // Fetch by ID
+    if (id) {
+      const media = await Media.findById(id);
+      if (!media) {
+        return new Response(
+          JSON.stringify({ success: false, error: "Media not found" }),
+          { status: 404 }
+        );
+      }
+      return new Response(JSON.stringify({ success: true, data: media }), {
+        status: 200,
+      });
+    }
+
+    // Fetch all media or filter by category
     const query = category ? { category: category.toLowerCase() } : {};
     const mediaList = await Media.find(query);
 
@@ -24,7 +41,6 @@ export async function GET(req) {
   }
 }
 
-// Create new media post (Admin-only operation)
 // Create new media post (Admin-only operation)
 export async function POST(req) {
   await dbConnect();
@@ -44,11 +60,14 @@ export async function POST(req) {
         );
       }
 
-      if (category === "publications" && (!images || images.length !== 1)) {
+      if (
+        (category === "publications" || category === "news articles") &&
+        (!images || images.length > 3)
+      ) {
         return new Response(
           JSON.stringify({
             success: false,
-            error: "Publications must include exactly one image.",
+            error: `${category} can include up to 3 images.`,
           }),
           { status: 400 }
         );
@@ -76,7 +95,6 @@ export async function POST(req) {
   });
 }
 
-// Update media post (Admin-only operation)
 // Update media post (Admin-only operation)
 export async function PUT(req) {
   await dbConnect();
@@ -112,7 +130,6 @@ export async function PUT(req) {
   });
 }
 
-// Delete media post (Admin-only operation)
 // Delete media post (Admin-only operation)
 export async function DELETE(req) {
   await dbConnect();
@@ -190,20 +207,7 @@ export async function PATCH(req) {
         );
       }
 
-      const existingComment = media.comments.find((cmt) => cmt.email === email);
-
-      if (!existingComment) {
-        media.comments.push({ email, comment });
-      } else {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            error: "You have already commented on this post",
-          }),
-          { status: 400 }
-        );
-      }
-
+      media.comments.push({ email, comment });
       await media.save();
       return new Response(JSON.stringify({ success: true, data: media }), {
         status: 200,
@@ -219,7 +223,7 @@ export async function PATCH(req) {
         );
       }
 
-      targetComment.replies.push({ email, comment });
+      targetComment.replies.push({ email, comment: reply.comment });
       await media.save();
       return new Response(JSON.stringify({ success: true, data: media }), {
         status: 200,
