@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import Image from "next/image";
 
 export default function CreatePost() {
   const [title, setTitle] = useState("");
@@ -128,7 +129,7 @@ export default function CreatePost() {
           />
           <div className="flex gap-2">
             {images.map((img, idx) => (
-              <img
+              <Image
                 key={idx}
                 src={img}
                 alt={`Uploaded ${idx}`}

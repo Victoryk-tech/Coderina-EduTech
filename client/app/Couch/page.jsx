@@ -50,7 +50,7 @@ const Couch = () => {
   return (
     <Box className="couch__container">
       <Box p={4} bgcolor={pinkBg}>
-        <Container maxWidth="xl" className="couch__header">
+        <Container maxWidth="lg" className="couch__header">
           <Stack p={{ xs: "4em 1em", md: "6.5em 14em" }}>
             <Typography variant="h4" fontSize={{ xs: "18px", md: "27px" }}>
               Coderina® University Challenge (COUCH)
@@ -64,9 +64,9 @@ const Couch = () => {
           </Stack>
         </Container>
       </Box>
-      <Box mt={15} mb={10}>
+      <Box mt={10} mb={10}>
         <Container
-          maxWidth="md"
+          maxWidth="lg"
           className="couch__info"
           sx={{ padding: { xs: "", md: "0 5em" } }}
         >
@@ -91,8 +91,11 @@ const Couch = () => {
               </Stack>
             </Stack>
           ))}
+
+          <Box>
+            <SubscribeForm />
+          </Box>
         </Container>
-        <SubscribeForm />
       </Box>
 
       <Footer />

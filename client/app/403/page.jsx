@@ -1,5 +1,6 @@
-"client side";
+"use client";
 
+import Link from "next/link";
 import React from "react";
 
 const page = () => {
@@ -7,7 +8,7 @@ const page = () => {
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>403 - Forbidden</h1>
       <p>You do not have permission to access this page.</p>
-      <a href="/">Go back to Home</a>
+      <Link href="/">Go back to Home</Link>
     </div>
   );
 };
