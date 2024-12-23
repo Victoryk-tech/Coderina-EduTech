@@ -20,6 +20,8 @@ export default function CreatePost() {
     "publications",
   ]);
   const [editId, setEditId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     fetchPosts();
@@ -123,6 +125,27 @@ export default function CreatePost() {
     }
   };
 
+  const openModal = (index) => {
+    setCurrentImageIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === formData.images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? formData.images.length - 1 : prev - 1
+    );
+  };
+
   return (
     <div className="p-4">
       <Toaster position="top-right" />
@@ -207,6 +230,7 @@ export default function CreatePost() {
               width={100}
               height={100}
               className="object-contain"
+              onClick={() => openModal(0)} // Open the first image of gallery
             />
             <h3 className="font-bold text-sm">{post.title}</h3>
             <p className="text-[13px] font-normal">{post.description}</p>
@@ -228,6 +252,36 @@ export default function CreatePost() {
           </div>
         ))}
       </div>
+
+      {/* Modal for Viewing Gallery Images */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded relative max-w-lg">
+            <button
+              className="absolute top-2 right-2 text-xl text-gray-600"
+              onClick={closeModal}
+            >
+              &times;
+            </button>
+            <div className="flex justify-between items-center">
+              <button onClick={prevImage} className="text-xl">
+                &#8249;
+              </button>
+              <Image
+                src={formData.images[currentImageIndex]}
+                alt="gallery image"
+                width={400}
+                height={400}
+                className="object-contain"
+                unoptimized={true} // Allow base64 images to load properly
+              />
+              <button onClick={nextImage} className="text-xl">
+                &#8250;
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

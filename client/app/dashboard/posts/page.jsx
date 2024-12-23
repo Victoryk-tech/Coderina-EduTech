@@ -31,7 +31,8 @@ const Posts = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-
+  const [ModalOpen, setModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navItems = [
     { category: "Published", total: "1" },
     { category: "Categories", total: "3" },
@@ -137,8 +138,28 @@ const Posts = () => {
     return postDate.toLocaleDateString(undefined, options);
   };
 
+  const openModal = (index) => {
+    setCurrentImageIndex(index);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === formData.images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? formData.images.length - 1 : prev - 1
+    );
+  };
   return (
-    <div className="mx-[5.7rem] bg-white mt-8 text-gray-700">
+    <div className="mx-[5.7rem] h-full bg-white mt-8 text-gray-700">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold">Posts</h1>
         <div className="relative inline-block text-left">
@@ -226,6 +247,7 @@ const Posts = () => {
                   width={70}
                   height={70}
                   className="object-cover rounded-md"
+                  onClick={() => openModal(0)} // Open the first image of gallery
                 />
               </div>
               <div className="text-xs flex flex-col gap-2">
@@ -306,6 +328,42 @@ const Posts = () => {
             >
               Close
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Viewing Gallery Images */}
+      {ModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded relative max-w-lg">
+            <button
+              className="absolute top-2 right-2 text-xl text-gray-600"
+              onClick={closeModal}
+            >
+              &times;
+            </button>
+            <div className="flex justify-between items-center">
+              <button
+                onClick={prevImage}
+                className="text-xl hover:bg-black hover:text-white hover:px-3 hover:py-1 hover:rounded-2xl"
+              >
+                &#8249;
+              </button>
+              <Image
+                src={formData.images[currentImageIndex]}
+                alt="gallery image"
+                width={400}
+                height={400}
+                className="object-contain"
+                unoptimized={true} // Allow base64 images to load properly
+              />
+              <button
+                onClick={nextImage}
+                className="text-xl hover:bg-black hover:text-white hover:px-3 hover:py-1 hover:rounded-2xl"
+              >
+                &#8250;
+              </button>
+            </div>
           </div>
         </div>
       )}
