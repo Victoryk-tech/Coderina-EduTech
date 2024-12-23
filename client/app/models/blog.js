@@ -19,7 +19,7 @@ const BlogSchema = new mongoose.Schema({
   body: { type: String },
   category: {
     type: String,
-    enum: ["New Articles", "Publications", "Gallery"],
+    enum: ["new Articles", "publications", "gallery"],
     required: true,
   },
   images: [String], // For gallery posts

@@ -1,167 +1,233 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Image from "next/image";
 
 export default function CreatePost() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("New Articles");
-  const [body, setBody] = useState("");
-  const [images, setImages] = useState([]);
-  const [imageInput, setImageInput] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    category: "",
+    body: "",
+    images: [],
+  });
+  const [posts, setPosts] = useState([]);
+  const [categories, setCategories] = useState([
+    "gallery",
+    "new Articles",
+    "publications",
+  ]);
+  const [editId, setEditId] = useState(null);
 
-  const handleImageUpload = (e) => {
-    const files = e.target.files;
-    const uploadedImages = Array.from(files).map((file) =>
-      URL.createObjectURL(file)
-    );
-    setImages([...images, ...uploadedImages]);
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const response = await axios.get(
+        `/api/blog?category=${formData.category || ""}`
+      );
+      console.log(response);
+      if (response.data.success) {
+        setPosts(response.data.data);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch posts");
+      console.error("Error fetching posts:", error);
+    }
   };
 
-  const handleAddImageByUrl = () => {
-    if (imageInput.trim() !== "") {
-      setImages([...images, imageInput]);
-      setImageInput("");
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageChange = async (e) => {
+    const files = Array.from(e.target.files);
+
+    const images = await Promise.all(
+      files.map((file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      })
+    );
+
+    setFormData({ ...formData, images });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!title || !description || images.length === 0) {
-      toast.error("Title, description, and at least one image are required.");
-      return;
-    }
-
-    if ((category === "New Articles" || category === "Publications") && !body) {
-      toast.error("Body content is required for the selected category.");
-      return;
-    }
-
-    const postData = {
-      title,
-      description,
-      category,
-      body: category === "Gallery" ? undefined : body,
-      images,
-    };
-
     try {
-      const response = await axios.post("/api/blog", postData);
+      const formDataToSend = { ...formData };
+      if (editId) {
+        // Update post
+        const response = await axios.put(`/api/blog`, {
+          ...formDataToSend,
+          id: editId,
+        });
+        if (response.data.success) {
+          toast.success("Post updated successfully!");
+          fetchPosts();
+          setEditId(null);
+        }
+      } else {
+        // Create new post
+        const response = await axios.post(`/api/blog`, formDataToSend);
+        if (response.data.success) {
+          toast.success("Post created successfully!");
+          fetchPosts();
+        }
+      }
+      setFormData({
+        title: "",
+        description: "",
+        category: "",
+        body: "",
+        images: [],
+      });
+    } catch (error) {
+      toast.error("Failed to submit post");
+      console.error("Error submitting post:", error);
+    }
+  };
+
+  const handleEdit = (post) => {
+    setEditId(post._id);
+    setFormData({
+      title: post.title,
+      description: post.description,
+      category: post.category,
+      body: post.body || "",
+      images: [],
+    });
+    toast.info("Editing post...");
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`/api/blog?id=${id}`);
       if (response.data.success) {
-        toast.success("Post created successfully!");
-        // Reset form
-        setTitle("");
-        setDescription("");
-        setCategory("New Articles");
-        setBody("");
-        setImages([]);
+        toast.success("Post deleted successfully!");
+        fetchPosts();
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to create post.");
+      toast.error("Failed to delete post");
+      console.error("Error deleting post:", error);
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Toaster />
-      <h1 className="text-3xl font-bold mb-6">Create a New Post</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
+    <div className="p-4">
+      <Toaster position="top-right" />
+      <h2 className="text-xl font-bold mb-4">Create or Edit Post</h2>
+      <form onSubmit={handleSubmit} className="mb-8">
+        <div className="mb-4">
+          <label className="block text-sm font-medium">Title</label>
           <input
             type="text"
-            className="w-full border rounded px-3 py-2"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            className="w-full border rounded p-2"
             required
           />
         </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Description</label>
+        <div className="mb-4">
+          <label className="block text-sm font-medium">Description</label>
           <textarea
-            className="w-full border rounded px-3 py-2"
-            rows="3"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            className="w-full border rounded p-2"
             required
-          />
+          ></textarea>
         </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Category</label>
+        <div className="mb-4">
+          <label className="block text-sm font-medium">Category</label>
           <select
-            className="w-full border rounded px-3 py-2"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            name="category"
+            value={formData.category}
+            onChange={handleInputChange}
+            className="w-full border rounded p-2"
+            required
           >
-            <option value="New Articles">New Articles</option>
-            <option value="Publications">Publications</option>
-            <option value="Gallery">Gallery</option>
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
-
-        {category !== "Gallery" && (
-          <div>
-            <label className="block text-sm font-medium mb-1">Body</label>
+        {formData.category !== "gallery" && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Body</label>
             <textarea
-              className="w-full border rounded px-3 py-2"
-              rows="5"
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
+              name="body"
+              value={formData.body}
+              onChange={handleInputChange}
+              className="w-full border rounded p-2"
               required
-            />
+            ></textarea>
           </div>
         )}
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Images</label>
+        <div className="mb-4">
+          <label className="block text-sm font-medium">Images</label>
           <input
             type="file"
+            name="images"
+            onChange={handleImageChange}
+            className="w-full border rounded p-2"
             multiple
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="block mb-2"
+            required
           />
-          <div className="flex gap-2">
-            {images.map((img, idx) => (
-              <Image
-                key={idx}
-                src={img}
-                alt={`Uploaded ${idx}`}
-                className="w-20 h-20 object-cover border rounded"
-              />
-            ))}
-          </div>
-          <div className="mt-2">
-            <input
-              type="text"
-              placeholder="Image URL"
-              value={imageInput}
-              onChange={(e) => setImageInput(e.target.value)}
-              className="border rounded px-3 py-2 mr-2"
-            />
-            <button
-              type="button"
-              onClick={handleAddImageByUrl}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Add Image URL
-            </button>
-          </div>
         </div>
-
         <button
           type="submit"
-          className="bg-green-500 text-white px-6 py-2 rounded font-bold"
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
-          Submit Post
+          {editId ? "Update Post" : "Create Post"}
         </button>
       </form>
+
+      <h2 className="text-xl font-bold mb-4">Posts by Category</h2>
+      <div className="space-y-4">
+        {posts.map((post) => (
+          <div key={post._id} className="border p-4 rounded">
+            <Image
+              src={post.images}
+              alt="image"
+              width={100}
+              height={100}
+              className="object-contain"
+            />
+            <h3 className="text-lg font-bold">{post.title}</h3>
+            <p>{post.description}</p>
+            <p className="text-sm text-gray-600">Category: {post.category}</p>
+            <div className="flex space-x-4 mt-2">
+              <button
+                onClick={() => handleEdit(post)}
+                className="text-blue-500 hover:underline"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(post._id)}
+                className="text-red-500 hover:underline"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

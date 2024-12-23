@@ -1,51 +1,37 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 
-let isConnected = null;
-// Load environment variables
-dotenv.config();
+// Track connection status
+let isConnected = false;
 
-// MongoDB configuration
-const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB = process.env.MONGODB_DB;
-
-// const connectToDatabase = async () => {
-//   const client = await MongoClient.connect(MONGODB_URI, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   });
-//   return client.db(MONGODB_DB);
-// };
-
-export default async function connect() {
+export default async function connectDB() {
   const uri = process.env.MONGODB_URI;
-  // if (isConnected) {
-  //   console.log("Using existing database connection");
-  //   return;
-  // }
+
+  // Ensure the MongoDB URI is provided
   if (!uri) {
-    console.error("MONGODB_URI is undefined. Check .env setup.");
+    console.error("Error: MONGODB_URI is undefined. Check your .env setup.");
+    throw new Error("Missing MONGODB_URI");
+  }
+
+  if (isConnected) {
+    console.log("Using existing database connection");
     return;
   }
 
   try {
-    // Connect to MongoDB without deprecated options
-    await mongoose.connect(uri);
-
-    const connection = mongoose.connection;
-
-    connection.on("connected", () => {
-      console.log("MongoDB connected successfully");
+    // Establish a new MongoDB connection
+    const db = await mongoose.connect(uri, {
+      // useNewUrlParser: true,
+      // useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000,
     });
 
-    connection.on("error", (err) => {
-      console.error(
-        "MongoDB connection error: please make sure MongoDB is running. Error:",
-        err
-      );
-      process.exit(1); // Exit the process with a failure code
-    });
+    isConnected = db.connections[0].readyState === 1; // Check if the connection is successful
+    console.log("MongoDB connected successfully");
   } catch (error) {
-    console.error("Something went wrong:", error);
+    console.error(
+      "MongoDB connection error: please make sure MongoDB is running. Error:",
+      error
+    );
+    process.exit(1); // Exit the process with a failure code
   }
 }

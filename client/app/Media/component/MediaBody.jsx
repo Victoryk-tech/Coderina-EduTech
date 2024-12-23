@@ -19,6 +19,8 @@ export default function MediaBody() {
         setLoading(true);
         setError(null);
         const res = await axios.get(`/api/blog?category=${category}`);
+        console.log("API Response:", res.data); // Log the response
+
         setBlogs(res.data.data); // Set the blogs data from the API response
 
         // Fetch likes and comments count for each blog post
@@ -82,7 +84,7 @@ export default function MediaBody() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Blog</h1>
+      <h1 className="text-3xl font-bold mb-6">Media</h1>
 
       {/* Category Tabs */}
       <div className="flex space-x-4 mb-6">
@@ -104,7 +106,7 @@ export default function MediaBody() {
       {error && <p className="text-red-500">{error}</p>}
 
       {/* Blog Posts Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {blogs.length === 0 && !loading && !error ? (
           <p>No blogs available for this category.</p>
         ) : (
@@ -119,41 +121,54 @@ export default function MediaBody() {
             };
 
             return (
-              <div key={blog._id} className="border p-4 rounded shadow-sm">
-                {/* Display image if available */}
-                {blog.images?.length > 0 && (
-                  <Image
-                    src={blog.images[0]}
-                    alt={blog.title}
-                    width={300}
-                    height={200}
-                    className="rounded"
-                  />
-                )}
-                <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
-                <p className="text-gray-600 mb-4">{blog.description}</p>
+              <div key={blog._id} className="w-full flex justify-center">
+                <div className="border rounded shadow-sm h-[340px] w-full max-w-[350px] space-y-2">
+                  {/* Display image if available */}
+                  {blog.images?.length > 0 && (
+                    <div className="w-full h-1/2">
+                      <Image
+                        src={blog.images[0]}
+                        alt={blog.title}
+                        width={120}
+                        height={100}
+                        className="rounded object-contain"
+                      />
+                    </div>
+                  )}
+                  <div className="px-3">
+                    <p className="text-[13px] font-medium mb-2">{blog.title}</p>
+                    <p className="text-gray-600 text-[12px] font-normal">
+                      {blog.description}.....
+                    </p>
+                  </div>
 
-                {/* Display likes and comments count */}
-                <div className="text-sm text-gray-500 flex items-center space-x-1">
-                  {likesCount}{" "}
-                  <CiHeart
-                    onClick={() => handleLike(blog._id)}
-                    className={`cursor-pointer ${
-                      liked ? "text-red-500 scale-110" : ""
-                    } transition-all`}
-                    size={20}
-                  />{" "}
-                  | {commentsCount}
-                  <Link href={`/Media/${blog._id}`}>
-                    <p className="flex items-center">
-                      <FaRegCommentDots className="cursor-pointer" size={20} />
+                  {/* Display likes and comments count */}
+                  <div className="text-[13px] text-gray-500 flex items-center space-x-1 px-3">
+                    {likesCount}{" "}
+                    <CiHeart
+                      onClick={() => handleLike(blog._id)}
+                      className={`cursor-pointer ${
+                        liked ? "text-red-500 scale-110" : ""
+                      } transition-all`}
+                      size={20}
+                    />{" "}
+                    | {commentsCount}
+                    <Link href={`/Media/${blog._id}`}>
+                      <p className="flex items-center">
+                        <FaRegCommentDots
+                          className="cursor-pointer"
+                          size={20}
+                        />
+                      </p>
+                    </Link>
+                  </div>
+
+                  <Link href={`/Media/${blog._id}`} className="">
+                    <p className="text-blue-500 hover:underline text-sm px-3">
+                      Read More
                     </p>
                   </Link>
                 </div>
-
-                <Link href={`/Media/${blog._id}`}>
-                  <p className="text-blue-500 hover:underline">Read More</p>
-                </Link>
               </div>
             );
           })
