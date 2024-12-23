@@ -82,6 +82,24 @@ export default function MediaBody() {
   // Categories in the specified order
   const categories = ["new Articles", "publications", "gallery"];
 
+  // Function to format the date similar to Instagram
+  const formatTime = (timestamp) => {
+    const now = new Date();
+    const postDate = new Date(timestamp);
+    const seconds = Math.floor((now - postDate) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (seconds < 60) return `${seconds} seconds ago`;
+    if (minutes < 60) return `${minutes} minutes ago`;
+    if (hours < 24) return `${hours} hours ago`;
+    if (days < 30) return `${days} days ago`;
+
+    // If it's more than a month old, show the full date
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return postDate.toLocaleDateString(undefined, options);
+  };
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Media</h1>
@@ -122,28 +140,27 @@ export default function MediaBody() {
 
             return (
               <div key={blog._id} className="w-full flex justify-center">
-                <div className="border rounded shadow-sm h-[340px] w-full max-w-[350px] space-y-2">
+                <div className=" h-[320px] w-full max-w-[350px] space-y-2">
                   {/* Display image if available */}
                   {blog.images?.length > 0 && (
-                    <div className="w-full h-1/2">
-                      <Image
-                        src={blog.images[0]}
-                        alt={blog.title}
-                        width={120}
-                        height={100}
-                        className="rounded object-contain"
-                      />
-                    </div>
+                    <Image
+                      src={blog.images[0]}
+                      alt={blog.title}
+                      width={262}
+                      height={100}
+                      className="rounded object-contain"
+                    />
                   )}
-                  <div className="px-3">
-                    <p className="text-[13px] font-medium mb-2">{blog.title}</p>
-                    <p className="text-gray-600 text-[12px] font-normal">
-                      {blog.description}.....
+                  <div className="">
+                    {/* Show formatted time */}
+                    <p className="text-[13px] font-medium mb-2">
+                      {formatTime(blog.createdAt)}
                     </p>
+                    <p className="text-[13px] font-medium mb-2">{blog.title}</p>
                   </div>
 
                   {/* Display likes and comments count */}
-                  <div className="text-[13px] text-gray-500 flex items-center space-x-1 px-3">
+                  <div className="text-[13px] text-gray-500 flex items-center space-x-1">
                     {likesCount}{" "}
                     <CiHeart
                       onClick={() => handleLike(blog._id)}
@@ -164,7 +181,7 @@ export default function MediaBody() {
                   </div>
 
                   <Link href={`/Media/${blog._id}`} className="">
-                    <p className="text-blue-500 hover:underline text-sm px-3">
+                    <p className="text-blue-500 hover:underline text-[13px] pt-3">
                       Read More
                     </p>
                   </Link>
