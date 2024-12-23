@@ -200,16 +200,16 @@ export default function CreatePost() {
       <h2 className="text-xl font-bold mb-4">Posts by Category</h2>
       <div className="space-y-4">
         {posts.map((post) => (
-          <div key={post._id} className="border p-4 rounded">
+          <div key={post._id} className="border p-4 rounded space-y-2">
             <Image
-              src={post.images}
+              src={post.images[0]}
               alt="image"
               width={100}
               height={100}
               className="object-contain"
             />
-            <h3 className="text-lg font-bold">{post.title}</h3>
-            <p>{post.description}</p>
+            <h3 className="font-bold text-sm">{post.title}</h3>
+            <p className="text-[13px] font-normal">{post.description}</p>
             <p className="text-sm text-gray-600">Category: {post.category}</p>
             <div className="flex space-x-4 mt-2">
               <button

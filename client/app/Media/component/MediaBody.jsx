@@ -101,22 +101,24 @@ export default function MediaBody() {
     return postDate.toLocaleDateString(undefined, options);
   };
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Media</h1>
+    <div className="container mx-auto px-4 py-8 font-Geist">
+      <div className="flex items-center justify-between py-4">
+        <h1 className="text-3xl font-bold mb-6">Media</h1>
 
-      {/* Category Tabs */}
-      <div className="flex space-x-4 mb-6">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            className={`px-4 py-2 rounded ${
-              cat === category ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-            onClick={() => setCategory(cat)}
-          >
-            {cat.charAt(0).toUpperCase() + cat.slice(1)}
-          </button>
-        ))}
+        {/* Category Tabs */}
+        <div className="flex space-x-4 mb-6">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              className={`px-4 py-2 rounded text-[14px] ${
+                cat === category ? "bg-blue-500 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => setCategory(cat)}
+            >
+              {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Loading and Error Handling */}
@@ -140,7 +142,7 @@ export default function MediaBody() {
 
             return (
               <div key={blog._id} className="w-full flex justify-center">
-                <div className=" h-[320px] w-full max-w-[350px] space-y-2">
+                <div className=" h-[355px] w-full max-w-[350px] space-y-1">
                   {/* Display image if available */}
                   {blog.images?.length > 0 && (
                     <Image
@@ -151,12 +153,12 @@ export default function MediaBody() {
                       className="rounded object-contain"
                     />
                   )}
-                  <div className="">
+                  <div className="h-[6.6rem] ">
                     {/* Show formatted time */}
-                    <p className="text-[13px] font-medium mb-2">
+                    <p className="text-[12.6px] font-medium mb-2">
                       {formatTime(blog.createdAt)}
                     </p>
-                    <p className="text-[13px] font-medium mb-2">{blog.title}</p>
+                    <p className="text-[13px] font-medium mb-1">{blog.title}</p>
                   </div>
 
                   {/* Display likes and comments count */}
@@ -181,7 +183,7 @@ export default function MediaBody() {
                   </div>
 
                   <Link href={`/Media/${blog._id}`} className="">
-                    <p className="text-blue-500 hover:underline text-[13px] pt-3">
+                    <p className="text-blue-500 hover:underline text-[13px] pt-2">
                       Read More
                     </p>
                   </Link>
