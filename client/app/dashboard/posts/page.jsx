@@ -119,6 +119,24 @@ const Posts = () => {
     };
   }, [dropdownRef]);
 
+  const formatTime = (timestamp) => {
+    const now = new Date();
+    const postDate = new Date(timestamp);
+    const seconds = Math.floor((now - postDate) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (seconds < 60) return `${seconds} seconds ago`;
+    if (minutes < 60) return `${minutes} minutes ago`;
+    if (hours < 24) return `${hours} hours ago`;
+    if (days < 30) return `${days} days ago`;
+
+    // If it's more than a month old, show the full date
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return postDate.toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className="mx-[5.7rem] bg-white mt-8 text-gray-700">
       <div className="flex justify-between">
@@ -225,10 +243,11 @@ const Posts = () => {
             <div className="flex justify-between items-center w-full sm:w-[50%] uppercase text-xs">
               <div className="flex flex-col gap-2">
                 <p className="font-bold">
-                  {new Date(post.createdAt).toLocaleString("en-US", {
+                  {/* {new Date(post.createdAt).toLocaleString("en-US", {
                     month: "short",
                     day: "numeric",
-                  })}
+                  })} */}
+                  {formatTime(post.createdAt)}
                 </p>
                 <p>posted</p>
               </div>

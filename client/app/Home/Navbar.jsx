@@ -13,6 +13,9 @@ import { usePathname, useRouter } from "next/navigation";
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const pathname = usePathname(false);
+  const id = pathname.startsWith("/Media/")
+    ? pathname.split("/Media/")[1]
+    : null;
   const [display, setDisplay] = useState();
   const links = [
     { label: "Home", path: "/" },
@@ -43,6 +46,7 @@ const Navbar = () => {
     if (
       pathname === "/" ||
       pathname === "/Media" ||
+      (id && pathname === `/Media/${id}`) ||
       pathname === "/Form" ||
       pathname === "/Couch" ||
       pathname === "/what" ||
