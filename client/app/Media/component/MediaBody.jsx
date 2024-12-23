@@ -142,7 +142,7 @@ export default function MediaBody() {
 
             return (
               <div key={blog._id} className="w-full flex justify-center">
-                <div className=" h-[355px] w-full max-w-[350px] space-y-1">
+                <div className=" h-[350px] w-full max-w-[350px] space-y-2">
                   {/* Display image if available */}
                   {blog.images?.length > 0 && (
                     <Image
@@ -150,10 +150,10 @@ export default function MediaBody() {
                       alt={blog.title}
                       width={262}
                       height={100}
-                      className="rounded object-contain"
+                      className="rounded-2xl object-contain"
                     />
                   )}
-                  <div className="h-[6.6rem] ">
+                  <div className=" ">
                     {/* Show formatted time */}
                     <p className="text-[12.6px] font-medium mb-2">
                       {formatTime(blog.createdAt)}
@@ -161,32 +161,34 @@ export default function MediaBody() {
                     <p className="text-[13px] font-medium mb-1">{blog.title}</p>
                   </div>
 
-                  {/* Display likes and comments count */}
-                  <div className="text-[13px] text-gray-500 flex items-center space-x-1">
-                    {likesCount}{" "}
-                    <CiHeart
-                      onClick={() => handleLike(blog._id)}
-                      className={`cursor-pointer ${
-                        liked ? "text-red-500 scale-110" : ""
-                      } transition-all`}
-                      size={20}
-                    />{" "}
-                    | {commentsCount}
-                    <Link href={`/Media/${blog._id}`}>
-                      <p className="flex items-center">
-                        <FaRegCommentDots
-                          className="cursor-pointer"
-                          size={20}
-                        />
+                  <div className="h-14">
+                    {/* Display likes and comments count */}
+                    <div className="text-[13px] text-gray-500 flex items-center space-x-1">
+                      {likesCount}{" "}
+                      <CiHeart
+                        onClick={() => handleLike(blog._id)}
+                        className={`cursor-pointer ${
+                          liked ? "text-red-500 scale-110" : ""
+                        } transition-all`}
+                        size={20}
+                      />{" "}
+                      | {commentsCount}
+                      <Link href={`/Media/${blog._id}`}>
+                        <p className="flex items-center">
+                          <FaRegCommentDots
+                            className="cursor-pointer"
+                            size={20}
+                          />
+                        </p>
+                      </Link>
+                    </div>
+
+                    <Link href={`/Media/${blog._id}`} className="">
+                      <p className="text-blue-500 hover:underline text-[13px] pt-2">
+                        Read More
                       </p>
                     </Link>
                   </div>
-
-                  <Link href={`/Media/${blog._id}`} className="">
-                    <p className="text-blue-500 hover:underline text-[13px] pt-2">
-                      Read More
-                    </p>
-                  </Link>
                 </div>
               </div>
             );
