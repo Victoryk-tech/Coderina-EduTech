@@ -1,6 +1,6 @@
 "use client"; // This line ensures this component runs on the client side.
 
-import React from "react";
+import React, { Suspense } from "react";
 import "./globals.css";
 import { Inter } from "next/font/google";
 
@@ -32,8 +32,10 @@ export default function RootLayout({ children }) {
       <body className="font-Inter bg-[#FFF5E5]">
         <div>
           <SessionProvider>
-            <Navbar />
-            {children}
+            <Suspense fallback={null}>
+              <Navbar />
+              {children}
+            </Suspense>
           </SessionProvider>
         </div>
       </body>
