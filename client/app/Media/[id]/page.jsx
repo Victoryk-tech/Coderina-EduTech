@@ -11,10 +11,11 @@ import { IoTrash } from "react-icons/io5";
 import { VscReply } from "react-icons/vsc";
 import { MdOutlineExpandMore } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
-
+import EmailModal from "../component/EmailModal";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 export default function BlogDetails() {
   const pathname = usePathname();
-  const id = pathname.split("/").pop(); // Fetch the dynamic ID from the URL
+  const id = pathname.split("/").pop(); // Extract blog ID from URL
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,6 +27,7 @@ export default function BlogDetails() {
   const [visibleComments, setVisibleComments] = useState(3);
   const [emailModal, setEmailModal] = useState(false);
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const loadMoreComments = () => {
     setVisibleComments((prev) => prev + 3); // Load 3 more comments
@@ -36,11 +38,9 @@ export default function BlogDetails() {
       async function fetchBlogDetails() {
         try {
           setLoading(true);
-          setError(null);
-
-          const res = await axios.get(`/api/auth/blog?id=${id}`); // Replace with your API endpoint
-          setBlog(res.data.data); // Update the blog state with fetched data
-        } catch (error) {
+          const res = await axios.get(`/api/likesandcomments?id=${id}`);
+          setBlog(res.data.data);
+        } catch {
           setError("Failed to fetch blog details. Please try again later.");
         } finally {
           setLoading(false);
@@ -52,8 +52,9 @@ export default function BlogDetails() {
   }, [id]);
 
   const handleAction = async (action, payload) => {
+    setIsSubmitting(true); // Start spinner
     try {
-      const res = await axios.post("/api/comments", {
+      const res = await axios.post("/api/likesandcomments", {
         blogId: id,
         action,
         ...payload,
@@ -61,66 +62,67 @@ export default function BlogDetails() {
       setBlog(res.data.data);
 
       if (action === "comment") {
-        setNewComment(""); // Clear the comment textarea after sending
+        setNewComment("");
         toast.success("Comment posted successfully!");
       } else if (action === "like") {
-        setLiked(!liked); // Toggle the local "liked" state
+        setLiked(!liked);
         toast.success(liked ? "Like removed!" : "Liked the blog!");
       }
-    } catch (error) {
-      console.error("Failed to perform action:", error.message);
+    } catch {
       toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false); // Stop spinner after success or failure
     }
   };
 
   const handleEdit = async () => {
-    if (!reply.trim()) return; // Prevent empty edits
+    if (!reply.trim()) return;
 
     try {
-      const res = await axios.patch("/api/comments", {
+      const res = await axios.patch("/api/likesandcomments", {
         blogId: id,
         commentId: editCommentId,
-        email: "user@example.com", // Add dynamic email
+        email,
         updatedComment: reply,
       });
-
-      if (res.data.success) {
-        setBlog(res.data.data);
-        setEditCommentId(null); // Clear edit mode
-        setReply(""); // Reset reply input
-        toast.success("Comment edited successfully!");
-      }
-    } catch (error) {
-      console.error("Failed to edit comment:", error.message);
+      setBlog(res.data.data);
+      setEditCommentId(null);
+      setReply("");
+      toast.success("Comment edited successfully!");
+    } catch {
       toast.error("Failed to edit the comment.");
+    }
+  };
+
+  const handleDelete = async (commentId) => {
+    try {
+      const res = await axios.delete("/api/likesandcomments", {
+        data: { blogId: id, commentId, email },
+      });
+      setBlog(res.data.data);
+      toast.success("Comment deleted successfully!");
+    } catch {
+      toast.error("Failed to delete the comment.");
     }
   };
 
   const toggleLike = async () => {
     if (!email) {
-      setEmailModal(true); // Open email modal if no email is provided
+      setEmailModal(true);
       return;
     }
-
-    // Toggle the liked state locally
     setLiked((prev) => !prev);
+    const updatedLikes = liked ? blog.likes.length - 1 : blog.likes.length + 1;
+    setBlog((prev) => ({ ...prev, likes: Array(updatedLikes).fill(email) }));
 
-    // Update the likes count locally
-    const updatedLikesCount = liked ? blog.likesCount - 1 : blog.likesCount + 1;
-    setBlog((prevBlog) => ({
-      ...prevBlog,
-      likesCount: updatedLikesCount,
-    }));
-
-    // Send the like action to the server
     try {
       await handleAction("like", { email });
-    } catch (error) {
-      console.error("Error updating like:", error);
-      // Revert the likes count in case of an error
-      setBlog((prevBlog) => ({
-        ...prevBlog,
-        likesCount: liked ? prevBlog.likesCount + 1 : prevBlog.likesCount - 1,
+    } catch {
+      setBlog((prev) => ({
+        ...prev,
+        likes: Array(
+          liked ? prev.likes.length + 1 : prev.likes.length - 1
+        ).fill(email),
       }));
     }
   };
@@ -133,24 +135,20 @@ export default function BlogDetails() {
   };
 
   const handleReply = async (commentId) => {
-    if (!reply.trim()) return; // Prevent empty replies
+    if (!reply.trim()) return;
 
     try {
-      const res = await axios.post("/api/comments", {
+      const res = await axios.post("/api/likesandcomments", {
         blogId: id,
         action: "reply",
         email,
         comment: reply,
         replyTo: commentId,
       });
-
-      if (res.data.success) {
-        setBlog(res.data.data);
-        setReply(""); // Reset the reply input
-        toast.success("Reply posted successfully!");
-      }
-    } catch (error) {
-      console.error("Failed to reply to comment:", error.message);
+      setBlog(res.data.data);
+      setReply("");
+      toast.success("Reply posted successfully!");
+    } catch {
       toast.error("Failed to post reply.");
     }
   };
@@ -166,23 +164,18 @@ export default function BlogDetails() {
     if (seconds < 60) return `${seconds} seconds ago`;
     if (minutes < 60) return `${minutes} minutes ago`;
     if (hours < 24) return `${hours} hours ago`;
-    if (days < 30) return `${days} days ago`;
-
-    // If it's more than a month old, show the full date
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return postDate.toLocaleDateString(undefined, options);
+    return `${days} days ago`;
   };
-
-  // Handle undefined `id`
-  if (!id) {
-    return <p>Loading...</p>; // Wait for the ID to be available
-  }
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
+  // Ensure blog.likes is defined
+  const likesCount = blog.likes ? blog.likes.length : 0;
+
   return (
     <div className="container mx-auto px-4 py-8 md:py-24 font-Geist">
+      <Toaster />
       <div className="max-w-4xl mx-auto">
         {blog && (
           <>
@@ -203,7 +196,7 @@ export default function BlogDetails() {
             {/* Like and Comments Count */}
             <div className="flex items-center justify-start space-x-1 mb-2">
               <p className="flex items-center space-x-1">
-                {blog.likesCount}
+                {blog?.likes?.length || 0}
                 <CiHeart
                   size={23}
                   color={liked ? "red" : "black"}
@@ -212,7 +205,7 @@ export default function BlogDetails() {
               </p>
               <p>|</p>
               <div className="flex items-center space-x-1">
-                <p>{blog.comments ? blog.comments.length : 0}</p>{" "}
+                <p>{blog?.comments?.length || 0}</p>{" "}
                 <FaRegCommentDots size={20} />
               </div>
             </div>
@@ -243,136 +236,120 @@ export default function BlogDetails() {
                       comment: newComment,
                     })
                   }
-                  disabled={!newComment.trim()}
-                  className={`px-4 py-2 rounded-md mt-2 ${
-                    newComment.trim()
-                      ? "bg-[#FBB12F] text-white cursor-pointer"
-                      : "text-gray-500 cursor-not-allowed"
+                  disabled={!newComment.trim() || isSubmitting} // Disable when submitting
+                  className={`text-blue-500 flex items-center ${
+                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
-                  <FiSend size={24} />
+                  {isSubmitting ? (
+                    <AiOutlineLoading3Quarters
+                      size={22}
+                      className="animate-spin"
+                    /> // Spinner Icon
+                  ) : (
+                    <FiSend size={22} /> // Regular Icon
+                  )}
                 </button>
               </div>
             </div>
 
             {/* Comments Section */}
-            <div className="mt-6">
-              <div className="flex items-center justify-start space-x-1 font-medium font-Inter mb-6 md:mb-9">
-                <p className="text-[15px]">Recent comments</p>{" "}
-                <MdOutlineExpandMore size={23} />
-              </div>
-              {blog.comments?.slice(0, visibleComments).map((comment) => (
-                <div key={comment._id} className="mb-4 border-b pb-4">
-                  <div className="flex items-center justify-start space-x-8">
-                    <p className="font-semibold text-[15px]">{comment.email}</p>
-                    <p className="text-[11px] font-normal font-Inter">
-                      {formatTime(comment.createdAt)}
-                    </p>
+            <div className="mt-4">
+              {blog.comments.slice(0, visibleComments).map((comment) => (
+                <div
+                  key={comment._id}
+                  className="border-t-[0.8px] border-gray-300 py-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold">{comment.email}</p>
+                      <p className="text-sm">{formatTime(comment.createdAt)}</p>
+                    </div>
+                    <div className="flex items-center">
+                      <CiEdit
+                        size={18}
+                        onClick={() => {
+                          setEditCommentId(comment._id);
+                          setReply(comment.comment);
+                        }}
+                      />
+                      <IoTrash
+                        size={18}
+                        onClick={() => handleDelete(comment._id)}
+                      />
+                    </div>
                   </div>
-                  {editCommentId === comment._id ? (
-                    <div className="w-[70%] md:w-[30%] px-2 flex items-center justify-center border-gray-400 border-[0.7px] rounded-3xl">
+                  <p>{comment.comment}</p>
+
+                  {/* Replies Section */}
+                  {visibleReplies[comment._id] && (
+                    <div className="ml-4">
+                      {comment.replies.map((reply, index) => (
+                        <div key={index} className="flex flex-col space-y-1">
+                          <div className="flex items-center space-x-2">
+                            <p className="font-semibold">{reply.email}</p>
+                            <p className="text-sm">
+                              {formatTime(reply.timestamp)}
+                            </p>
+                          </div>
+                          <p>{reply.comment}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <button
+                    className="text-blue-500 flex items-center"
+                    onClick={() => toggleReplies(comment._id)}
+                  >
+                    <VscReply size={18} /> Reply
+                  </button>
+
+                  {visibleReplies[comment._id] && (
+                    <div className="mt-2 flex items-center space-x-2">
                       <textarea
                         value={reply}
                         onChange={(e) => setReply(e.target.value)}
-                        className="w-full outline-none bg-transparent"
+                        className="border-[0.8px] rounded-2xl p-2 text-sm outline-none"
+                        placeholder="Reply to this comment"
                       />
                       <button
-                        onClick={handleEdit}
-                        className="text-gray-500 px-4 py-2 rounded-md"
-                      >
-                        <FiSend size={20} />
-                      </button>
-                    </div>
-                  ) : (
-                    <p className="font-normal text-[14px]">{comment.comment}</p>
-                  )}
-
-                  <div className="flex space-x-2 mt-2">
-                    <button
-                      onClick={() => handleReply(comment._id)}
-                      className="text-blue-500"
-                    >
-                      <VscReply />
-                    </button>
-                    <button
-                      onClick={() => setEditCommentId(comment._id)}
-                      className="text-green-500"
-                    >
-                      <CiEdit />
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleAction("delete", {
-                          email,
-                          commentId: comment._id,
-                        })
-                      }
-                      className="text-red-500"
-                    >
-                      <IoTrash />
-                    </button>
-                  </div>
-
-                  {comment.replies?.length > 0 && (
-                    <div className="pl-4 mt-2 border-l">
-                      <button
-                        onClick={() => toggleReplies(comment._id)}
+                        onClick={() => handleReply(comment._id)}
+                        disabled={!reply.trim()}
                         className="text-blue-500"
                       >
-                        {visibleReplies[comment._id]
-                          ? "Hide Replies"
-                          : `View ${comment.replies.length} Replies`}
+                        <FiSend size={18} />
                       </button>
-                      {visibleReplies[comment._id] &&
-                        comment.replies.map((reply) => (
-                          <p key={reply._id}>
-                            <span className="font-bold">{reply.email}:</span>{" "}
-                            {reply.comment}
-                          </p>
-                        ))}
                     </div>
                   )}
                 </div>
               ))}
 
-              {visibleComments < (blog.comments ? blog.comments.length : 0) && (
-                <p
+              {/* Load More Comments */}
+              {blog.comments.length > visibleComments && (
+                <button
+                  className="mt-4 text-blue-500"
                   onClick={loadMoreComments}
-                  className="text-black-500 mt-6 cursor-pointer text-[14px]"
                 >
-                  See More....
-                </p>
+                  Load More
+                </button>
               )}
             </div>
-
-            {/* Email Modal */}
-            {emailModal && (
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-10">
-                <div className="bg-white p-6 rounded-lg shadow-lg">
-                  <h3 className="text-xl font-bold">Enter your Email</h3>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                    className="w-full p-2 border rounded-md mt-4"
-                  />
-                  <button
-                    onClick={() => {
-                      setEmailModal(false);
-                      if (email) toggleLike();
-                    }}
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
-            )}
           </>
         )}
       </div>
-      <Toaster />
+
+      {/* Email Modal */}
+      {emailModal && (
+        <EmailModal
+          email={email}
+          setEmail={setEmail}
+          setEmailModal={setEmailModal}
+          onSubmit={(email) => {
+            setEmail(email);
+            setEmailModal(false);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import founder1 from "../../../public/founder1.jpg";
 import founder2 from "../../../public/founder2.jpg";
 import founder3 from "../../../public/founder3.jpg";
 import group from "../../../public/group1.jpg";
-
+import daniel from "../../../public/daniel.jpg";
 import Image from "next/image";
 import SolutionCards from "../../Home/SolutionCards";
 import CustomButton from "@/app/Home/CustomButton";
@@ -24,7 +24,12 @@ const Team = () => {
     {
       img: founder2,
       name: "Mr Olabisi Kelvin Ajayi",
-      text: "Director of Relationships and engagements",
+      text: "Director of Relationships and engagement",
+    },
+    {
+      img: daniel,
+      name: "Mr Aduku Daniel",
+      text: "Program Director: Emerging Technology Education",
     },
   ];
   return (
@@ -64,14 +69,14 @@ const Team = () => {
           })}
         </div> */}
 
-        <div className="w-full grid md:grid-cols-2 items-start md:items-center justify-between md:justify-center space-y-[5rem] md:space-y-0 md:px-[9rem] ">
+        <div className="w-full grid md:grid-cols-3 items-start md:items-center justify-between md:justify-center space-y-[5rem] md:space-y-0  ">
           {ourTeamCard.map((teamCard, i) => {
             return (
               <div
                 className="w-full md:w-[280px] h-[400px]  md:space-y-8"
                 key={i}
               >
-                <div className="w-full">
+                <div className="w-full h-[300px]">
                   <Image
                     src={teamCard.img}
                     alt="image"

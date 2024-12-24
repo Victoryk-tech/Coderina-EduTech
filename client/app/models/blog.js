@@ -23,8 +23,8 @@ const BlogSchema = new mongoose.Schema({
     required: true,
   },
   images: [String], // For gallery posts
-  likesCount: { type: Number, default: 0 },
-  likes: [{ type: String }],
+
+  likes: { type: [String], default: [] },
   comments: [CommentSchema], // Nested comments
   createdAt: { type: Date, default: Date.now },
 });
