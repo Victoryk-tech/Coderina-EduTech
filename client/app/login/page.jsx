@@ -7,121 +7,71 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
-const LoginForm = () => {
+const SignInForm = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   setError("");
-
-  //   if (!email || !password) {
-  //     setError("Please fill in both fields.");
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axios.post("/api/auth/login", { email, password });
-
-  //     if (response.status === 200) {
-  //       const { user, token } = response.data;
-
-  //       // Save token and user info in localStorage
-  //       localStorage.setItem("token", token);
-  //       localStorage.setItem("username", user.username);
-  //       localStorage.setItem("role", user.role);
-
-  //       toast.success("Login successful!");
-
-  //       // Redirect based on role
-  //       if (user.role === "admin") {
-  //         router.push(`/dashboard/overview?greeting=welcome`);
-  //       } else {
-  //         router.push("/");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     const message = error.response?.data?.message || "An error occurred.";
-  //     setError(message);
-  //     toast.error(message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     try {
       const response = await axios.post("/api/auth/login", {
         email,
         password,
       });
-      const { token, user } = response.data;
+      // Store the username and greeting message in localStorage
+      localStorage.setItem("username", response.data.user.username); // Store the username
+      localStorage.setItem(
+        "greeting",
+        `Welcome back ${response.data.user.username}`
+      );
+      toast.success(response.data.message);
 
-      // Save token and user data in localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("username", user.username);
-      localStorage.setItem("role", user.role);
+      // Save token to local storage or context
+      localStorage.setItem("token", response.data.token);
 
-      toast.success("Login successful!");
+      // Redirect based on role
+      if (response.data.user.role === "admin") {
+        router.push("/dashboard");
+      } else {
+        router.push("/");
+      }
     } catch (error) {
-      console.log("Login error:", error.response?.data || error.message);
-      toast.error("Invalid credentials.");
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
+    <form onSubmit={handleSubmit}>
       <Toaster />
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border rounded"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 border rounded"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-          {error && <p className="text-red-500 text-center">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full p-3 text-white ${
-              loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
-            } rounded`}
-          >
-            {loading ? "Logging In..." : "Login"}
-          </button>
-        </form>
+      <div>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
       </div>
-    </div>
+      <div>
+        <label>Password:</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Signing In..." : "Sign In"}
+      </button>
+    </form>
   );
 };
 
-export default LoginForm;
+export default SignInForm;

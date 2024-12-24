@@ -7,9 +7,9 @@ import {
   UserCircleIcon,
   LogoutIcon,
 } from "@heroicons/react/outline";
-import { useSearchParams } from "next/navigation";
+
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import logo from "../../../public/coderinaLogo.png";
 import { RiMenu2Fill, RiHome2Fill, RiSettings2Line } from "react-icons/ri";
 import Image from "next/image";
@@ -22,9 +22,12 @@ const Layout = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
-  const searchParams = useSearchParams();
-  const greeting = searchParams.get("greeting"); // Get query param
+  // const searchParams = useSearchParams();
+  //const greeting = searchParams.get("greeting"); // Get query param
   const [username, setUsername] = useState("");
+  // const [greeting, setGreeting] = useState("");
+  const [greeting, setGreeting] = useState("");
+  const router = useRouter();
 
   const links = [
     { icon: <GoHome />, name: "Home", path: "/dashboard/overview" },
@@ -56,8 +59,14 @@ const Layout = ({ children }) => {
   };
 
   useEffect(() => {
-    const savedUsername = localStorage.getItem("username");
-    if (savedUsername) setUsername(savedUsername);
+    // Check if the user is logged in by verifying if the greeting exists in localStorage
+    const storedGreeting = localStorage.getItem("greeting");
+    if (storedGreeting) {
+      setGreeting(storedGreeting); // Set the greeting if found
+    } else {
+      // If greeting is not found, redirect to login
+      router.push("/login");
+    }
   }, []);
 
   return (
@@ -97,11 +106,9 @@ const Layout = ({ children }) => {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white text-black py-6 px-6 flex justify-between items-center sticky top-0 z-50 shadow-md">
-          {/* <h1 className="text-[15px] font-bold">
-            {greeting === "hello"
-              ? `Hello, ${username}`
-              : `Welcome back, ${username}`}
-          </h1> */}
+          <h1 className="text-[15px] font-bold">
+            {greeting ? <p>{greeting}</p> : <p>Loading...</p>}
+          </h1>
           <div className="flex items-center">
             <MenuIcon
               className="h-6 w-6 mr-4 cursor-pointer block md:hidden"
