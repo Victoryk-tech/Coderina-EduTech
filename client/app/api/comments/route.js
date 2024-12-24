@@ -2,84 +2,101 @@ import { NextResponse } from "next/server";
 import Blog from "../../models/blog";
 import connectDB from "../../lib/dbConnect";
 
-// POST: Add a new comment, reply, or like
+// Utility for responses
+const respond = (success, message, data = null, status = 200) =>
+  NextResponse.json({ success, message, data }, { status });
+
+// Helper functions
+const findBlog = async (blogId) => {
+  const blog = await Blog.findById(blogId);
+  if (!blog) throw new Error("Blog not found");
+  return blog;
+};
+
+const findComment = (blog, commentId) => {
+  const comment = blog.comments.id(commentId);
+  if (!comment) throw new Error("Comment not found");
+  return comment;
+};
+
+// PATCH Route
+export async function PATCH(req) {
+  await connectDB();
+
+  try {
+    const { blogId, commentId, email, updatedComment } = await req.json();
+    const blog = await findBlog(blogId);
+    const targetComment = findComment(blog, commentId);
+
+    if (targetComment.email !== email) {
+      return respond(
+        false,
+        "You are not authorized to edit this comment",
+        null,
+        403
+      );
+    }
+
+    if (!updatedComment) {
+      return respond(true, "Comment fetched successfully", targetComment, 200);
+    }
+
+    targetComment.comment = updatedComment;
+    await blog.save();
+
+    return respond(true, "Comment updated successfully", targetComment, 200);
+  } catch (error) {
+    return respond(false, `Error: ${error.message}`, null, 500);
+  }
+}
+
+// POST Route
 export async function POST(req) {
   await connectDB();
 
   try {
     const { blogId, action, email, comment, replyTo, commentId } =
       await req.json();
-    //const { blogId } = req.nextUrl.searchParams; // Get blogId from query params
+    const blog = await findBlog(blogId);
 
-    // Validate `blogId`
-    const blog = await Blog.findById(blogId);
-    if (!blog) {
-      return NextResponse.json(
-        { success: false, message: "Blog not found" },
-        { status: 404 }
-      );
-    }
-
-    // Perform action based on `action` type
     if (action === "comment") {
-      // Add a comment
-      if (!email || !comment) {
-        return NextResponse.json(
-          { success: false, message: "Email and comment are required" },
-          { status: 400 }
-        );
-      }
+      if (!email || !comment) throw new Error("Email and comment are required");
       blog.comments.push({ email, comment, replies: [] });
     } else if (action === "reply") {
-      // Reply to a specific comment
-      if (!email || !comment || !replyTo) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "Email, comment, and replyTo are required",
-          },
-          { status: 400 }
-        );
-      }
-      const targetComment = blog.comments.id(replyTo);
-      if (!targetComment) {
-        return NextResponse.json(
-          { success: false, message: "Comment not found" },
-          { status: 404 }
-        );
-      }
+      if (!email || !comment || !replyTo)
+        throw new Error("Email, comment, and replyTo are required");
+      const targetComment = findComment(blog, replyTo);
       targetComment.replies.push({ email, comment });
     } else if (action === "like") {
-      // Toggle like
-      if (!email) {
-        return NextResponse.json(
-          { success: false, message: "Email is required for liking" },
-          { status: 400 }
-        );
-      }
-
-      // Update the likesCount based on whether the user has already liked the post
+      if (!email) throw new Error("Email is required for liking");
       if (blog.likes.includes(email)) {
-        blog.likes = blog.likes.filter((e) => e !== email); // Unlike
-        blog.likesCount -= 1; // Decrease like count
+        blog.likes = blog.likes.filter((e) => e !== email);
+        blog.likesCount = Math.max(0, blog.likesCount - 1);
       } else {
-        blog.likes.push(email); // Like
-        blog.likesCount += 1; // Increase like count
+        blog.likes.push(email);
+        blog.likesCount += 1;
       }
+    } else if (action === "edit") {
+      if (!email || !comment || !commentId)
+        throw new Error("Email, comment, and commentId are required");
+      const targetComment = findComment(blog, commentId);
+      if (targetComment.email !== email)
+        throw new Error("You are not authorized to edit this comment");
+      targetComment.comment = comment;
+    } else if (action === "delete") {
+      if (!email || !commentId)
+        throw new Error("Email and commentId are required");
+      const targetComment = findComment(blog, commentId);
+      if (targetComment.email !== email)
+        throw new Error("You are not authorized to delete this comment");
+      targetComment.remove();
     } else {
-      return NextResponse.json(
-        { success: false, message: "Invalid action" },
-        { status: 400 }
-      );
+      return respond(false, "Invalid action", null, 400);
     }
 
-    // Save the updated blog
     await blog.save();
-    return NextResponse.json({ success: true, data: blog }, { status: 200 });
+    return respond(true, "Action performed successfully", blog, 200);
   } catch (error) {
-    return NextResponse.json(
-      { success: false, message: error.message },
-      { status: 500 }
-    );
+    return respond(false, `Unexpected error: ${error.message}`, null, 500);
   }
 }

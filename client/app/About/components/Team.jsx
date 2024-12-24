@@ -4,6 +4,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import founder1 from "../../../public/founder1.jpg";
 import founder2 from "../../../public/founder2.jpg";
 import founder3 from "../../../public/founder3.jpg";
+import group from "../../../public/group1.jpg";
 
 import Image from "next/image";
 import SolutionCards from "../../Home/SolutionCards";
@@ -29,8 +30,8 @@ const Team = () => {
   return (
     <div className="px-4 md:px-4 lg:px-20 py-12 bg-white w-full">
       {" "}
-      <div className="team__container">
-        <div className="flex items-center justify-between">
+      <div className="flex flex-col items-center justify-center space-y-9">
+        <div className="w-full flex items-center justify-between">
           <h4 className="text-[20px] md:text-[30px]">Our Team</h4>
           <CustomButton>
             Volunteer with us <FaArrowRightLong />
@@ -88,6 +89,14 @@ const Team = () => {
               </div>
             );
           })}
+        </div>
+
+        <div className="w-full md:w-[600px] h-[450px] lg:px-4 flex items-center justify-center rounded-[3rem]">
+          <Image
+            src={group}
+            alt="groupPicture"
+            className="w-full h-full object-cover rounded-[3rem]"
+          />
         </div>
       </div>
     </div>

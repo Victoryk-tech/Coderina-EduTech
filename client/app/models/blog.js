@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const CommentSchema = new mongoose.Schema({
-  email: { type: String, required: true },
+  email: { type: String, required: true, match: /.+\@.+\..+/ },
   comment: { type: String, required: true },
   replies: [
     {
@@ -24,6 +24,7 @@ const BlogSchema = new mongoose.Schema({
   },
   images: [String], // For gallery posts
   likesCount: { type: Number, default: 0 },
+  likes: [{ type: String }],
   comments: [CommentSchema], // Nested comments
   createdAt: { type: Date, default: Date.now },
 });
