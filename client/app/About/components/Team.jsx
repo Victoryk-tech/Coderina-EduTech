@@ -24,7 +24,7 @@ const Team = () => {
     {
       img: founder2,
       name: "Mr Olabisi Kelvin Ajayi",
-      text: "Director of programs and engagements",
+      text: "Director of Relationships and engagements",
     },
   ];
   return (
