@@ -15,6 +15,7 @@ import EmailModal from "../component/EmailModal";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import LikeAndComment from "../component/Likes";
 import CommentPopup from "../component/Commentpopup";
+import CommentInput from "../component/CommentInpute";
 export default function BlogDetails() {
   const pathname = usePathname();
   const id = pathname.split("/").pop(); // Extract blog ID from URL
@@ -33,6 +34,7 @@ export default function BlogDetails() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [comments, setComments] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+
   const loadMoreComments = () => {
     setVisibleComments((prev) => prev + 3); // Load 3 more comments
   };
@@ -104,8 +106,21 @@ export default function BlogDetails() {
     }
   };
 
+  // const handleDelete = async (commentId) => {
+  //   try {
+  //     const res = await axios.delete("/api/likesandcomments", {
+  //       data: { blogId: id, commentId, email },
+  //     });
+  //     setBlog(res.data.data);
+  //     toast.success("Comment deleted successfully!");
+  //   } catch {
+  //     toast.error("Failed to delete the comment.");
+  //   }
+  // };
+
   const handleDelete = async (commentId) => {
     try {
+      setLoading(commentId); // Set the loading state to the comment ID
       const res = await axios.delete("/api/likesandcomments", {
         data: { blogId: id, commentId, email },
       });
@@ -113,6 +128,8 @@ export default function BlogDetails() {
       toast.success("Comment deleted successfully!");
     } catch {
       toast.error("Failed to delete the comment.");
+    } finally {
+      setLoading(null); // Clear the loading state
     }
   };
 
@@ -224,19 +241,12 @@ export default function BlogDetails() {
 
             {/* Add New Comment */}
             <div className="mt-16 border-t-[0.8px] border-gray-300 py-4">
-              <div
-                className="flex items-center justify-center border-[0.6px] rounded-2xl border-black p-2"
-                // onClick={() => {
-                //   console.log("Textarea clicked, setting modal to true."),
-                //     setEmailModal(true);
-                // }}
-              >
+              {/* <div className="flex items-center justify-center border-[0.6px] rounded-2xl border-black p-2">
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Add a comment..."
                   className="w-full outline-none bg-transparent"
-                  // disabled={!email.trim()}
                 />
                 <button
                   onClick={() => {
@@ -263,18 +273,17 @@ export default function BlogDetails() {
                     <FiSend size={22} />
                   )}
                 </button>
-              </div>
-            </div>
+              </div> */}
 
-            {/* the popup for comments */}
-            {/* {showPopup && (
-              <CommentPopup
+              <CommentInput
                 email={email}
+                setEmailModal={setEmailModal}
                 handleAction={handleAction}
                 isSubmitting={isSubmitting}
-                onClose={() => setShowPopup(false)}
+                newComment={newComment}
+                setNewComment={setNewComment}
               />
-            )} */}
+            </div>
 
             {/* Comments Section */}
             <div className="mt-4">
@@ -296,10 +305,18 @@ export default function BlogDetails() {
                           setReply(comment.comment);
                         }}
                       />
-                      <IoTrash
-                        size={18}
-                        onClick={() => handleDelete(comment._id)}
-                      />
+                      {loading === comment._id ? (
+                        <AiOutlineLoading3Quarters
+                          size={18}
+                          className="animate-spin text-red-500"
+                        />
+                      ) : (
+                        <IoTrash
+                          size={18}
+                          onClick={() => handleDelete(comment._id)}
+                          className="cursor-pointer text-red-500"
+                        />
+                      )}
                     </div>
                   </div>
                   <p>{comment.comment}</p>
@@ -312,7 +329,7 @@ export default function BlogDetails() {
                           <div className="flex items-center space-x-2">
                             <p className="font-semibold">{reply.email}</p>
                             <p className="text-sm">
-                              {formatTime(reply.timestamp)}
+                              {formatTime(reply.createdAt)}
                             </p>
                           </div>
                           <p>{reply.comment}</p>
@@ -324,7 +341,7 @@ export default function BlogDetails() {
                     className="text-blue-500 flex items-center"
                     onClick={() => toggleReplies(comment._id)}
                   >
-                    <VscReply size={18} /> Reply
+                    <VscReply size={18} /> Reply {comment.replies.length}
                   </button>
 
                   {visibleReplies[comment._id] && (
