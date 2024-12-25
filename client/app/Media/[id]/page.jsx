@@ -13,6 +13,7 @@ import { MdOutlineExpandMore } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
 import EmailModal from "../component/EmailModal";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import LikeAndComment from "../component/Likes";
 export default function BlogDetails() {
   const pathname = usePathname();
   const id = pathname.split("/").pop(); // Extract blog ID from URL
@@ -194,7 +195,14 @@ export default function BlogDetails() {
             )}
 
             {/* Like and Comments Count */}
-            <div className="flex items-center justify-start space-x-1 mb-2">
+
+            <LikeAndComment
+              likes={blog?.likes?.length || 0}
+              comments={blog?.comments?.length || 0}
+              liked={liked}
+              toggleLike={toggleLike}
+            />
+            {/* <div className="flex items-center justify-start space-x-1 mb-2">
               <p className="flex items-center space-x-1">
                 {blog?.likes?.length || 0}
                 <CiHeart
@@ -208,7 +216,7 @@ export default function BlogDetails() {
                 <p>{blog?.comments?.length || 0}</p>{" "}
                 <FaRegCommentDots size={20} />
               </div>
-            </div>
+            </div> */}
 
             {/* Blog Description */}
             <p className="text-lg font-medium text-gray-600 mb-4">

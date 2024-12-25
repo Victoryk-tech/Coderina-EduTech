@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
-import { FaRegCommentDots } from "react-icons/fa";
-import { CiHeart } from "react-icons/ci";
+import LikeAndComment from "./Likes";
 
 export default function MediaBody() {
   const [category, setCategory] = useState("new Articles");
@@ -27,7 +26,7 @@ export default function MediaBody() {
         const likesAndCommentsData = {};
         await Promise.all(
           fetchedBlogs.map(async (blog) => {
-            const data = await fetchLikesAndCommentsCount(blog._id);
+            const data = await fetchLikesAndComments(blog._id);
             likesAndCommentsData[blog._id] = data;
           })
         );
@@ -43,13 +42,14 @@ export default function MediaBody() {
     fetchBlogs();
   }, [category]);
 
-  const fetchLikesAndCommentsCount = async (blogId) => {
+  const fetchLikesAndComments = async (blogId) => {
     try {
       const res = await axios.get(`/api/likesandcomments?id=${blogId}`);
-      const { likeCount, commentCount } = res.data;
+      const blogData = res.data.data;
+
       return {
-        likesCount: likeCount,
-        commentsCount: commentCount,
+        likesCount: blogData.likes.length,
+        commentsCount: blogData.comments.length,
         liked: false,
       };
     } catch (error) {
@@ -68,18 +68,14 @@ export default function MediaBody() {
     blogData.liked = !blogData.liked;
 
     // Update likes count based on the 'liked' state
-    if (blogData.liked) {
-      blogData.likesCount += 1;
-    } else {
-      blogData.likesCount -= 1;
-    }
-
+    blogData.likesCount += blogData.liked ? 1 : -1;
     setLikesAndComments(updatedLikesAndComments);
 
     try {
       await axios.post(`/api/likesandcomments`, {
         blogId,
-        liked: blogData.liked,
+        action: "like",
+        email: "user@example.com", // Replace with authenticated user's email
       });
     } catch (error) {
       console.error("Failed to update like status on the server:", error);
@@ -107,7 +103,6 @@ export default function MediaBody() {
       day: "numeric",
     });
   };
-
   return (
     <div className="container mx-auto px-4 py-8 font-Geist">
       <div className="flex items-center justify-between py-4">
@@ -135,9 +130,8 @@ export default function MediaBody() {
           <p>No blogs available for this category.</p>
         ) : (
           blogs.map((blog) => {
-            const { likesCount, commentsCount, liked } = likesAndComments[
-              blog._id
-            ] || { likesCount: 0, commentsCount: 0, liked: false };
+            const { likesCount, commentsCount, liked } =
+              likesAndComments[blog._id] || {};
 
             return (
               <div key={blog._id} className="w-full flex justify-center">
@@ -158,23 +152,12 @@ export default function MediaBody() {
                     <p className="text-[13px] font-medium mb-1">{blog.title}</p>
                   </div>
                   <div className="h-14">
-                    <div className="text-[13px] text-gray-500 flex items-center space-x-1">
-                      {likesCount}{" "}
-                      <CiHeart
-                        onClick={() => handleLike(blog._id)}
-                        className={`cursor-pointer ${
-                          liked ? "text-red-500 scale-110" : ""
-                        } transition-all`}
-                        size={20}
-                      />{" "}
-                      | {commentsCount}
-                      <Link href={`/Media/${blog._id}`}>
-                        <FaRegCommentDots
-                          className="cursor-pointer"
-                          size={20}
-                        />
-                      </Link>
-                    </div>
+                    <LikeAndComment
+                      likes={likesCount}
+                      comments={commentsCount}
+                      liked={liked}
+                      toggleLike={() => handleLike(blog._id)}
+                    />
                     <Link href={`/Media/${blog._id}`}>
                       <p className="text-blue-500 hover:underline text-[13px] pt-2">
                         Read More
