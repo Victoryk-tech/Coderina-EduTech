@@ -29,7 +29,7 @@ export default function BlogDetails() {
   const [emailModal, setEmailModal] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [comments, setComments] = useState([]);
   const loadMoreComments = () => {
     setVisibleComments((prev) => prev + 3); // Load 3 more comments
   };
@@ -55,6 +55,11 @@ export default function BlogDetails() {
   const handleAction = async (action, payload) => {
     setIsSubmitting(true); // Start spinner
     try {
+      console.log("Sending payload:", {
+        blogId: id,
+        action,
+        ...payload,
+      }); //
       const res = await axios.post("/api/likesandcomments", {
         blogId: id,
         action,
@@ -63,6 +68,7 @@ export default function BlogDetails() {
       setBlog(res.data.data);
 
       if (action === "comment") {
+        setComments(data.data.comments);
         setNewComment("");
         toast.success("Comment posted successfully!");
       } else if (action === "like") {
@@ -202,21 +208,6 @@ export default function BlogDetails() {
               liked={liked}
               toggleLike={toggleLike}
             />
-            {/* <div className="flex items-center justify-start space-x-1 mb-2">
-              <p className="flex items-center space-x-1">
-                {blog?.likes?.length || 0}
-                <CiHeart
-                  size={23}
-                  color={liked ? "red" : "black"}
-                  onClick={toggleLike}
-                />
-              </p>
-              <p>|</p>
-              <div className="flex items-center space-x-1">
-                <p>{blog?.comments?.length || 0}</p>{" "}
-                <FaRegCommentDots size={20} />
-              </div>
-            </div> */}
 
             {/* Blog Description */}
             <p className="text-lg font-medium text-gray-600 mb-4">

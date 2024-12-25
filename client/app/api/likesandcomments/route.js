@@ -21,7 +21,7 @@ export async function GET(req) {
 // Handle POST requests
 export async function POST(req) {
   const { blogId, action, email, comment, replyTo } = await req.json();
-
+  console.log({ blogId, action, email, comment });
   try {
     const blog = await Blog.findById(blogId);
 
