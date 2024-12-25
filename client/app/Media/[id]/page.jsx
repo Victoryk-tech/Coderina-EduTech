@@ -7,13 +7,14 @@ import Image from "next/image";
 import { CiEdit, CiHeart } from "react-icons/ci";
 import { FaRegCommentDots } from "react-icons/fa6";
 import { FiSend } from "react-icons/fi";
-import { IoTrash } from "react-icons/io5";
+import { IoTrash, IoTrashBin } from "react-icons/io5";
 import { VscReply } from "react-icons/vsc";
 import { MdOutlineExpandMore } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
 import EmailModal from "../component/EmailModal";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import LikeAndComment from "../component/Likes";
+import CommentPopup from "../component/Commentpopup";
 export default function BlogDetails() {
   const pathname = usePathname();
   const id = pathname.split("/").pop(); // Extract blog ID from URL
@@ -27,9 +28,11 @@ export default function BlogDetails() {
   const [visibleReplies, setVisibleReplies] = useState({});
   const [visibleComments, setVisibleComments] = useState(3);
   const [emailModal, setEmailModal] = useState(false);
+  const [Modal, setModal] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [comments, setComments] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
   const loadMoreComments = () => {
     setVisibleComments((prev) => prev + 3); // Load 3 more comments
   };
@@ -54,17 +57,17 @@ export default function BlogDetails() {
 
   const handleAction = async (action, payload) => {
     setIsSubmitting(true); // Start spinner
+
+    const data = {
+      blogId: id, // Replace with actual blog ID
+      action,
+      email: email, // Ensure email is passed correctly from your context or component
+      comment: newComment,
+      ...payload, // Spread any additional data from payload
+    };
     try {
-      console.log("Sending payload:", {
-        blogId: id,
-        action,
-        ...payload,
-      }); //
-      const res = await axios.post("/api/likesandcomments", {
-        blogId: id,
-        action,
-        ...payload,
-      });
+      console.log("Sending payload:", data); // Log the data you're sending
+      const res = await axios.post("/api/likesandcomments", data);
       setBlog(res.data.data);
 
       if (action === "comment") {
@@ -201,7 +204,7 @@ export default function BlogDetails() {
             )}
 
             {/* Like and Comments Count */}
-
+            {/* <IoTrashBin onClick={() => setShowPopup(true)} /> */}
             <LikeAndComment
               likes={blog?.likes?.length || 0}
               comments={blog?.comments?.length || 0}
@@ -221,21 +224,32 @@ export default function BlogDetails() {
 
             {/* Add New Comment */}
             <div className="mt-16 border-t-[0.8px] border-gray-300 py-4">
-              <div className="flex items-center justify-center border-[0.6px] rounded-2xl border-black p-2">
+              <div
+                className="flex items-center justify-center border-[0.6px] rounded-2xl border-black p-2"
+                // onClick={() => {
+                //   console.log("Textarea clicked, setting modal to true."),
+                //     setEmailModal(true);
+                // }}
+              >
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Add a comment..."
                   className="w-full outline-none bg-transparent"
+                  // disabled={!email.trim()}
                 />
                 <button
-                  onClick={() =>
+                  onClick={() => {
+                    if (!email.trim()) {
+                      setEmailModal(true); // Trigger email modal if no email is set
+                      return;
+                    }
                     handleAction("comment", {
-                      email,
+                      email: email.trim(), // Use dynamic email from state
                       comment: newComment,
-                    })
-                  }
-                  disabled={!newComment.trim() || isSubmitting} // Disable when submitting
+                    });
+                  }}
+                  disabled={!newComment.trim() || isSubmitting} // Enable only if there's a comment and not submitting
                   className={`text-blue-500 flex items-center ${
                     isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                   }`}
@@ -244,13 +258,23 @@ export default function BlogDetails() {
                     <AiOutlineLoading3Quarters
                       size={22}
                       className="animate-spin"
-                    /> // Spinner Icon
+                    />
                   ) : (
-                    <FiSend size={22} /> // Regular Icon
+                    <FiSend size={22} />
                   )}
                 </button>
               </div>
             </div>
+
+            {/* the popup for comments */}
+            {/* {showPopup && (
+              <CommentPopup
+                email={email}
+                handleAction={handleAction}
+                isSubmitting={isSubmitting}
+                onClose={() => setShowPopup(false)}
+              />
+            )} */}
 
             {/* Comments Section */}
             <div className="mt-4">
