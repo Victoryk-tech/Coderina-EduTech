@@ -1,15 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: "/blog/:path*",
-  //       destination: "/blog/:path*", // Ensure this route is correct
-  //       permanent: false,
-  //     },
-  //   ];
-  // },
+
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },
@@ -21,6 +13,19 @@ const nextConfig = {
         pathname: "/**", // Matches all paths
       },
     ],
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "/api/:path*", // API routes unchanged
+      },
+      {
+        source: "/Media/:path*",
+        destination: "/Media/:path*", // Keep media routes functional
+      },
+    ];
   },
 };
 
