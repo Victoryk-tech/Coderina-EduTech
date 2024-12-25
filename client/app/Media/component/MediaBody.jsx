@@ -3,6 +3,7 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import LikeAndComment from "./Likes";
+import ImageModal from "./ImageModal";
 
 export default function MediaBody() {
   const [category, setCategory] = useState("new Articles");
@@ -10,6 +11,18 @@ export default function MediaBody() {
   const [likesAndComments, setLikesAndComments] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  const openModal = (images) => {
+    setSelectedImages(images);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedImages([]);
+  };
 
   useEffect(() => {
     async function fetchBlogs() {
@@ -143,6 +156,7 @@ export default function MediaBody() {
                       width={262}
                       height={100}
                       className="rounded-2xl object-contain"
+                      onClick={() => openModal(blog.images)} // Open modal on click
                     />
                   )}
                   <div>
@@ -170,6 +184,13 @@ export default function MediaBody() {
           })
         )}
       </div>
+
+      {/* Modal */}
+      <ImageModal
+        images={selectedImages}
+        isOpen={modalOpen}
+        onClose={closeModal}
+      />
     </div>
   );
 }
