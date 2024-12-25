@@ -16,6 +16,7 @@ import Image from "next/image";
 import { IoPerson } from "react-icons/io5";
 import { GoHome, GoPeople } from "react-icons/go";
 import { BsActivity } from "react-icons/bs";
+import toast, { Toaster } from "react-hot-toast";
 
 const Layout = ({ children }) => {
   const pathname = usePathname();
@@ -28,6 +29,16 @@ const Layout = ({ children }) => {
   // const [greeting, setGreeting] = useState("");
   const [greeting, setGreeting] = useState("");
   const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("/api/auth/logout"); // Implement logout API on the server side
+      toast.success("Logged out successfully!");
+      router.push("/login"); // Redirect to the login page
+    } catch (error) {
+      toast.error("Failed to log out.");
+    }
+  };
 
   const links = [
     { icon: <GoHome />, name: "Home", path: "/dashboard/overview" },
@@ -71,6 +82,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="h-screen flex font-Inter">
+      <Toaster />
       {/* Sidebar */}
       <aside
         className={`bg-gray-200 text-gray-700 w-56 p-4 flex flex-col items-start space-y-6 ${
@@ -141,7 +153,7 @@ const Layout = ({ children }) => {
                   Settings
                 </Link>
                 <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200 flex items-center">
-                  <LogoutIcon className="h-5 w-5 mr-2" />
+                  <LogoutIcon onClick={handleLogout} className="h-5 w-5 mr-2" />
                   Logout
                 </button>
               </div>

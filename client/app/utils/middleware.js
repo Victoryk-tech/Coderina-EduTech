@@ -5,31 +5,32 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.ACCESS_TOKEN_SECRET || "your-jwt-secret";
 
 // Middleware function to protect routes
-export function middleware(request) {
-  const token = request.cookies.get("token");
-
+export async function middleware(req) {
   // Check if the user is trying to access the dashboard
-  if (request.nextUrl.pathname.startsWith("/dashboard")) {
+  if (req.nextUrl.pathname.startsWith("/dashboard")) {
+    const token = req.cookies.get("token");
+
     if (!token) {
-      // If there's no token, redirect the user to the sign-in page
-      return NextResponse.redirect(new URL("/login", request.url));
+      // If there's no token, redirect to the login page
+      return NextResponse.redirect(new URL("/login", req.url));
     }
 
     try {
-      // Verify the token
-      jwt.verify(token, JWT_SECRET);
+      // Verify the token using the JWT secret
+      const decoded = jwt.verify(token, JWT_SECRET);
+      req.user = decoded; // Attach user info to the request
       return NextResponse.next(); // Allow access to the dashboard
     } catch (error) {
-      // If the token is invalid or expired, redirect to sign-in page
-      return NextResponse.redirect(new URL("/login", request.url));
+      // If the token is invalid or expired, redirect to login page
+      return NextResponse.redirect(new URL("/login", req.url));
     }
   }
 
-  // Allow other routes to pass through
+  // Allow other routes to pass through (e.g., public pages)
   return NextResponse.next();
 }
 
-// Define paths where the middleware will be applied (optional)
+// Define paths where the middleware will be applied
 export const config = {
-  matcher: ["/dashboard", "/dashboard/*"], // Protect the dashboard route and its subpages
+  matcher: ["/dashboard"], // Protect these paths
 };

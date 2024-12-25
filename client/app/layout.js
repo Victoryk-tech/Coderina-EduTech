@@ -7,6 +7,7 @@ import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "./Home/Navbar";
 import Footer from "./Home/Footer";
+import { AuthProvider } from "./lib/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,12 +32,12 @@ export default function RootLayout({ children }) {
       </head>
       <body className="font-Inter bg-[#FFF5E5]">
         <div>
-          <SessionProvider>
+          <AuthProvider>
             <Suspense fallback={null}>
               <Navbar />
               {children}
             </Suspense>
-          </SessionProvider>
+          </AuthProvider>
         </div>
       </body>
     </html>
