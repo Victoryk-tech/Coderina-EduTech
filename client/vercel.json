@@ -7,6 +7,14 @@
     {
       "source": "/Media/:path*",
       "destination": "/Media/:path*"
+    },
+    {
+      "source": "/dashboard/posts#",
+      "destination": "/dashboard/posts#"
+    },
+    {
+      "source": "/dashboard/",
+      "destination": "/dashboard/"
     }
   ]
 }

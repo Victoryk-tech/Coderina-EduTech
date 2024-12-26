@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   reactStrictMode: false,
-
+  env: {
+    MONGODB_URI: process.env.MONGODB_URI,
+  },
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },
