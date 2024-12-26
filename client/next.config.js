@@ -26,7 +26,7 @@ const nextConfig = {
         destination: "/Media/:path*", // Keep media routes functional
       },
       {
-        source: "/dashboard/posts#*",
+        source: "/dashboard/posts#",
         destination: "/dashboard/posts#", // Keep post routes functional
       },
     ];
