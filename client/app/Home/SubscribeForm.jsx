@@ -87,14 +87,6 @@ const SubscribeForm = ({ register }) => {
             </button>
             <Toaster />
           </form>
-          {/* {message && (
-            <Typography
-              mt={2}
-              color={message.startsWith("Success") ? "green" : "red"}
-            >
-              {message}
-            </Typography>
-          )} */}
         </div>
       </div>
     );

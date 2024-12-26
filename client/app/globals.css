@@ -1433,7 +1433,6 @@ button {
 
   > div:nth-child(3) {
     p {
-      color: #ffffff;
       /* font-size: 21px; */
       font-family: var(--fontStyle);
       font-weight: 500;

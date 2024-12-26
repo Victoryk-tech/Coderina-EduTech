@@ -64,7 +64,7 @@ const Couch = () => {
 
             <Link
               href="/Form"
-              className="bg-black flex items-center justify-between text-white rounded-3xl py-3 px-5 gap-x-3 text-sm font-medium"
+              className="bg-black flex items-center justify-between text-white rounded-3xl py-3 px-8 gap-x-3 text-sm font-medium"
             >
               {" "}
               Get Started
@@ -101,7 +101,19 @@ const Couch = () => {
           ))}
 
           <Box>
-            <SubscribeForm />
+            <div className="w-full bg-[#00a859] font-Geist py-8 px-3 md:px-6 text-[#fff] flex flex-col md:flex-row items-center justify-between mb-8 rounded-2xl gap-y-4 md:gap-y-0 md:gap-x-8 mt-4">
+              <h4 className="text-[20px] md:text-[20px] text-[#fff]">
+                Fill out the form to register
+              </h4>
+
+              <Link
+                href="/Form"
+                className="bg-black flex items-center justify-between text-white rounded-3xl py-3 px-6 gap-x-3 text-sm font-medium"
+              >
+                {" "}
+                Get Started
+              </Link>
+            </div>
           </Box>
         </Container>
       </Box>
