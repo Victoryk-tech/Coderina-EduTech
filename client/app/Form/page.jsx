@@ -22,9 +22,10 @@ const Page = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const [isSubmit, setIsSubmit] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const handleValidation = () => {
+  const handleValidation = (formData) => {
     const newErrors = {};
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     const phonePattern = /^[0-9]{11,12}$/;
@@ -50,6 +51,12 @@ const Page = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    setErrors((prevErrors) => {
+      const updatedErrors = { ...prevErrors };
+      delete updatedErrors[name]; // Clear the error for the current field
+      return updatedErrors;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -116,10 +123,14 @@ const Page = () => {
                 onChange={handleChange}
                 required
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.firstName ? "border-red-500" : ""
+                  errors.firstName
+                    ? "border-red-500 text-red-500 text-[12px]"
+                    : ""
                 }`}
                 placeholder="Enter your first name"
               />
+
+              <p className=" text-red-500 text-[12px]">{errors.firstName}</p>
             </div>
 
             <div>
@@ -278,7 +289,7 @@ const Page = () => {
           <div className="mt-6">
             <button
               disabled={loading}
-              className="bg-black text-white rounded-3xl p-2 text-[16px]"
+              className="bg-black text-white rounded-3xl py-2 cursor-pointer px-4 text-[16px]"
             >
               {loading ? "Submitting..." : "Register"}
             </button>

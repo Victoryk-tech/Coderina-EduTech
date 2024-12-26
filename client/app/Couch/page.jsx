@@ -64,7 +64,7 @@ const Couch = () => {
 
             <Link
               href="/Form"
-              className="bg-black flex items-center justify-between text-white rounded-3xl p-3 gap-x-3 text-sm font-medium"
+              className="bg-black flex items-center justify-between text-white rounded-3xl py-3 px-5 gap-x-3 text-sm font-medium"
             >
               {" "}
               Get Started
@@ -72,7 +72,7 @@ const Couch = () => {
           </Stack>
         </Container>
       </Box>
-      <Box mt={10} mb={10}>
+      <Box className="bg-white py-10 md:px-4 lg:px-28 ">
         <Container
           maxWidth="lg"
           className="couch__info"

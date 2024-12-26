@@ -13,8 +13,8 @@ const LegoHeader = () => {
         </Typography>
 
         <Link
-          href="/Firstlego"
-          className="bg-black flex items-center justify-center text-white rounded-3xl p-3 gap-x-3 text-sm font-medium"
+          href="/Couch"
+          className="bg-black flex items-center justify-center text-white rounded-3xl py-3 px-5 gap-x-3 text-sm font-medium"
         >
           {" "}
           Get Started
