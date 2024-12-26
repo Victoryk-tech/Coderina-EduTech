@@ -16,6 +16,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import LikeAndComment from "../component/Likes";
 import CommentPopup from "../component/Commentpopup";
 import CommentInput from "../component/CommentInpute";
+import { Footer } from "antd/es/layout/layout";
 export default function BlogDetails() {
   const pathname = usePathname();
   const id = pathname.split("/").pop(); // Extract blog ID from URL
@@ -201,47 +202,48 @@ export default function BlogDetails() {
   const likesCount = blog.likes ? blog.likes.length : 0;
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-24 font-Geist">
-      <Toaster />
-      <div className="max-w-4xl mx-auto">
-        {blog && (
-          <>
-            {/* Blog Title */}
-            <h1 className="text-3xl font-bold mb-6">{blog.title}</h1>
+    <div>
+      <div className="container mx-auto px-4 py-8 md:py-24 font-Geist">
+        <Toaster />
+        <div className="max-w-4xl mx-auto">
+          {blog && (
+            <>
+              {/* Blog Title */}
+              <h1 className="text-3xl font-bold mb-6">{blog.title}</h1>
 
-            {/* Blog Image */}
-            {blog.images?.length > 0 && (
-              <Image
-                src={blog.images[0]}
-                alt={blog.title}
-                width={800}
-                height={400}
-                className="rounded-lg object-cover mb-6"
+              {/* Blog Image */}
+              {blog.images?.length > 0 && (
+                <Image
+                  src={blog.images[0]}
+                  alt={blog.title}
+                  width={800}
+                  height={400}
+                  className="rounded-lg object-cover mb-6"
+                />
+              )}
+
+              {/* Like and Comments Count */}
+              {/* <IoTrashBin onClick={() => setShowPopup(true)} /> */}
+              <LikeAndComment
+                likes={blog?.likes?.length || 0}
+                comments={blog?.comments?.length || 0}
+                liked={liked}
+                toggleLike={toggleLike}
               />
-            )}
 
-            {/* Like and Comments Count */}
-            {/* <IoTrashBin onClick={() => setShowPopup(true)} /> */}
-            <LikeAndComment
-              likes={blog?.likes?.length || 0}
-              comments={blog?.comments?.length || 0}
-              liked={liked}
-              toggleLike={toggleLike}
-            />
+              {/* Blog Description */}
+              <p className="text-lg font-medium text-gray-600 mb-4">
+                {blog.description}
+              </p>
 
-            {/* Blog Description */}
-            <p className="text-lg font-medium text-gray-600 mb-4">
-              {blog.description}
-            </p>
+              {/* Blog Body */}
+              <div className="text-gray-800 leading-relaxed">
+                <div dangerouslySetInnerHTML={{ __html: blog.body }} />
+              </div>
 
-            {/* Blog Body */}
-            <div className="text-gray-800 leading-relaxed">
-              <div dangerouslySetInnerHTML={{ __html: blog.body }} />
-            </div>
-
-            {/* Add New Comment */}
-            <div className="mt-16 border-t-[0.8px] border-gray-300 py-4">
-              {/* <div className="flex items-center justify-center border-[0.6px] rounded-2xl border-black p-2">
+              {/* Add New Comment */}
+              <div className="mt-16 border-t-[0.8px] border-gray-300 py-4">
+                {/* <div className="flex items-center justify-center border-[0.6px] rounded-2xl border-black p-2">
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
@@ -275,121 +277,125 @@ export default function BlogDetails() {
                 </button>
               </div> */}
 
-              <CommentInput
-                email={email}
-                setEmailModal={setEmailModal}
-                handleAction={handleAction}
-                isSubmitting={isSubmitting}
-                newComment={newComment}
-                setNewComment={setNewComment}
-              />
-            </div>
+                <CommentInput
+                  email={email}
+                  setEmailModal={setEmailModal}
+                  handleAction={handleAction}
+                  isSubmitting={isSubmitting}
+                  newComment={newComment}
+                  setNewComment={setNewComment}
+                />
+              </div>
 
-            {/* Comments Section */}
-            <div className="mt-4">
-              {blog.comments.slice(0, visibleComments).map((comment) => (
-                <div
-                  key={comment._id}
-                  className="border-t-[0.8px] border-gray-300 py-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold">{comment.email}</p>
-                      <p className="text-sm">{formatTime(comment.createdAt)}</p>
-                    </div>
-                    <div className="flex items-center">
-                      <CiEdit
-                        size={18}
-                        onClick={() => {
-                          setEditCommentId(comment._id);
-                          setReply(comment.comment);
-                        }}
-                      />
-                      {loading === comment._id ? (
-                        <AiOutlineLoading3Quarters
-                          size={18}
-                          className="animate-spin text-red-500"
-                        />
-                      ) : (
-                        <IoTrash
-                          size={18}
-                          onClick={() => handleDelete(comment._id)}
-                          className="cursor-pointer text-red-500"
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <p>{comment.comment}</p>
-
-                  {/* Replies Section */}
-                  {visibleReplies[comment._id] && (
-                    <div className="ml-4">
-                      {comment.replies.map((reply, index) => (
-                        <div key={index} className="flex flex-col space-y-1">
-                          <div className="flex items-center space-x-2">
-                            <p className="font-semibold">{reply.email}</p>
-                            <p className="text-sm">
-                              {formatTime(reply.createdAt)}
-                            </p>
-                          </div>
-                          <p>{reply.comment}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  <button
-                    className="text-blue-500 flex items-center"
-                    onClick={() => toggleReplies(comment._id)}
+              {/* Comments Section */}
+              <div className="mt-4">
+                {blog.comments.slice(0, visibleComments).map((comment) => (
+                  <div
+                    key={comment._id}
+                    className="border-t-[0.8px] border-gray-300 py-4"
                   >
-                    <VscReply size={18} /> Reply {comment.replies.length}
-                  </button>
-
-                  {visibleReplies[comment._id] && (
-                    <div className="mt-2 flex items-center space-x-2">
-                      <textarea
-                        value={reply}
-                        onChange={(e) => setReply(e.target.value)}
-                        className="border-[0.8px] rounded-2xl p-2 text-sm outline-none"
-                        placeholder="Reply to this comment"
-                      />
-                      <button
-                        onClick={() => handleReply(comment._id)}
-                        disabled={!reply.trim()}
-                        className="text-blue-500"
-                      >
-                        <FiSend size={18} />
-                      </button>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold">{comment.email}</p>
+                        <p className="text-sm">
+                          {formatTime(comment.createdAt)}
+                        </p>
+                      </div>
+                      <div className="flex items-center">
+                        <CiEdit
+                          size={18}
+                          onClick={() => {
+                            setEditCommentId(comment._id);
+                            setReply(comment.comment);
+                          }}
+                        />
+                        {loading === comment._id ? (
+                          <AiOutlineLoading3Quarters
+                            size={18}
+                            className="animate-spin text-red-500"
+                          />
+                        ) : (
+                          <IoTrash
+                            size={18}
+                            onClick={() => handleDelete(comment._id)}
+                            className="cursor-pointer text-red-500"
+                          />
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
-              ))}
+                    <p>{comment.comment}</p>
 
-              {/* Load More Comments */}
-              {blog.comments.length > visibleComments && (
-                <button
-                  className="mt-4 text-blue-500"
-                  onClick={loadMoreComments}
-                >
-                  Load More
-                </button>
-              )}
-            </div>
-          </>
+                    {/* Replies Section */}
+                    {visibleReplies[comment._id] && (
+                      <div className="ml-4">
+                        {comment.replies.map((reply, index) => (
+                          <div key={index} className="flex flex-col space-y-1">
+                            <div className="flex items-center space-x-2">
+                              <p className="font-semibold">{reply.email}</p>
+                              <p className="text-sm">
+                                {formatTime(reply.createdAt)}
+                              </p>
+                            </div>
+                            <p>{reply.comment}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <button
+                      className="text-blue-500 flex items-center"
+                      onClick={() => toggleReplies(comment._id)}
+                    >
+                      <VscReply size={18} /> Reply {comment.replies.length}
+                    </button>
+
+                    {visibleReplies[comment._id] && (
+                      <div className="mt-2 flex items-center space-x-2">
+                        <textarea
+                          value={reply}
+                          onChange={(e) => setReply(e.target.value)}
+                          className="border-[0.8px] rounded-2xl p-2 text-sm outline-none"
+                          placeholder="Reply to this comment"
+                        />
+                        <button
+                          onClick={() => handleReply(comment._id)}
+                          disabled={!reply.trim()}
+                          className="text-blue-500"
+                        >
+                          <FiSend size={18} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {/* Load More Comments */}
+                {blog.comments.length > visibleComments && (
+                  <button
+                    className="mt-4 text-blue-500"
+                    onClick={loadMoreComments}
+                  >
+                    Load More
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Email Modal */}
+        {emailModal && (
+          <EmailModal
+            email={email}
+            setEmail={setEmail}
+            setEmailModal={setEmailModal}
+            onSubmit={(email) => {
+              setEmail(email);
+              setEmailModal(false);
+            }}
+          />
         )}
       </div>
-
-      {/* Email Modal */}
-      {emailModal && (
-        <EmailModal
-          email={email}
-          setEmail={setEmail}
-          setEmailModal={setEmailModal}
-          onSubmit={(email) => {
-            setEmail(email);
-            setEmailModal(false);
-          }}
-        />
-      )}
+      <Footer />
     </div>
   );
 }

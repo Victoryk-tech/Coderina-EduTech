@@ -63,7 +63,7 @@ const Overview = ({ writer }) => {
         </div>
         <div className="border cursor-pointer border-gray-200 p-4 rounded-lg w-[420px] hover:bg-gray-100 ">
           <div className="flex justify-between mb-4">
-            <p> subscribers from app</p>
+            <p> Couch</p>
             <AiOutlineExclamationCircle />
           </div>
           <div className="flex justify-between items-center">
@@ -77,7 +77,7 @@ const Overview = ({ writer }) => {
         </div>
         <div className="border cursor-pointer border-gray-200 p-4 rounded-lg w-[420px] hover:bg-gray-100 ">
           <div className="flex justify-between mb-4">
-            <p>30 day views</p>
+            <p>Posts</p>
             <AiOutlineExclamationCircle />
           </div>
           <div className="flex justify-between items-center">

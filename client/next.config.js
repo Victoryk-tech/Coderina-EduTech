@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
 
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
@@ -24,6 +24,10 @@ const nextConfig = {
       {
         source: "/Media/:path*",
         destination: "/Media/:path*", // Keep media routes functional
+      },
+      {
+        source: "/dashboard/posts#*",
+        destination: "/dashboard/posts#", // Keep post routes functional
       },
     ];
   },

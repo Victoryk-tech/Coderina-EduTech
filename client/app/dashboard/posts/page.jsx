@@ -12,6 +12,7 @@ import { MdCheck } from "react-icons/md";
 import { BsToggles2 } from "react-icons/bs";
 import DropdownButton from "../component/DropdownButton";
 import Pagination from "../component/PostPagnation";
+import ImageModal from "@/app/Media/component/ImageModal";
 
 const Posts = () => {
   const [activeNav, setActiveNav] = useState("Published");
@@ -33,6 +34,21 @@ const Posts = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [ModalOpen, setModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // handle modal for pictures
+
+  const [modalOpen, setmodalOpen] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  const handleOpenModals = (images) => {
+    setSelectedImages(images);
+    setmodalOpen(true);
+  };
+
+  const handlecloseModals = () => {
+    setmodalOpen(false);
+    setSelectedImages([]);
+  };
   const navItems = [
     { category: "Published", total: "1" },
     { category: "Categories", total: "3" },
@@ -247,7 +263,7 @@ const Posts = () => {
                   width={70}
                   height={70}
                   className="object-cover rounded-md"
-                  onClick={() => openModal(0)} // Open the first image of gallery
+                  onClick={() => handleOpenModals(post.images)} // Open the first image of gallery
                 />
               </div>
               <div className="text-xs flex flex-col gap-2">
@@ -274,11 +290,16 @@ const Posts = () => {
                 <p>posted</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p className="font-bold">{post.likes}</p>
+                <p className="font-bold">
+                  {" "}
+                  {Array.isArray(post.likes) ? post.likes.length : 0}
+                </p>
                 <p>likes</p>
               </div>
               <div className="flex flex-col gap-2">
-                <p className="font-bold">{post.comments}</p>
+                <p className="font-bold">
+                  {Array.isArray(post.comments) ? post.comments.length : 0}
+                </p>
                 <p>comments</p>
               </div>
               <div className="p-3 border border-gray-200 rounded-lg hover:bg-[#dc7d7dee]">
@@ -333,7 +354,7 @@ const Posts = () => {
       )}
 
       {/* Modal for Viewing Gallery Images */}
-      {ModalOpen && (
+      {/* {ModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-4 rounded relative max-w-lg">
             <button
@@ -366,7 +387,13 @@ const Posts = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+
+      <ImageModal
+        images={selectedImages}
+        isOpen={handleOpenModals}
+        onClose={handlecloseModals}
+      />
     </div>
   );
 };
