@@ -19,7 +19,7 @@ const Upcoming = () => {
     <div className="flex flex-col gap-[5rem] text-white sec__container bg-black px-2 md:px-4 lg:px-16">
       <div className="flex flex-row items-center justify-between px-2">
         <h5 className="text-[22px] md:text-[32px]">Upcoming Events</h5>
-        <div className="space-y-2">
+        <div className="space-x-4 flex items-center justify-center">
           <div
             className="bg-white p-3 text-black rounded-2xl"
             onClick={previous}

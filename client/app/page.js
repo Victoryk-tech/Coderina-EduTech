@@ -24,6 +24,7 @@ import {
   pinkBg,
   whiteColor,
 } from "./utils/constants";
+import MediaBlog from "./Media/component/MediaBlog";
 
 const page = () => {
   const homeContents1 = [
@@ -52,6 +53,7 @@ const page = () => {
       color: whiteColor,
       section: <News />,
     },
+
     {
       color: whiteColor,
       section: <Experience />,

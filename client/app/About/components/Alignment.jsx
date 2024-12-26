@@ -25,7 +25,7 @@ const Alignment = () => {
     },
   ];
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 py-10 md:py-14">
       <div>
         <h1 className="font-bold text-[32px] leading-[41.1px]">
           Alignment with the SDGs

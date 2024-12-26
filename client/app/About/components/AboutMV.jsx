@@ -85,7 +85,7 @@ const AboutMV = () => {
                 {m.details.map((detail, index) => {
                   return (
                     <div
-                      className="bg-[#fff5e5] p-5 rounded-2xl lg:w-[265px] h-[200px] md:h-[246px] space-y-4"
+                      className="bg-[#fff5e5] p-4 rounded-2xl lg:w-[265px] h-[200px] md:h-[246px] space-y-4"
                       key={index}
                     >
                       <div className="">
@@ -121,7 +121,7 @@ const AboutMV = () => {
                 {v.details.map((detail, indo) => {
                   return (
                     <div
-                      className="bg-[#fff5e5] p-5 rounded-2xl lg:w-[265px] h-[220px] md:h-[250px] space-y-4"
+                      className="bg-[#fff5e5] p-4 rounded-2xl lg:w-[265px] h-[220px] md:h-[250px] space-y-4"
                       key={indo}
                     >
                       <div className="">

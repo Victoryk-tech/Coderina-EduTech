@@ -46,29 +46,6 @@ const Testimonial = ({ lego }) => {
     },
   ];
 
-  const legoImpact = [
-    {
-      number: "5,600",
-      text: "Teachers trained",
-      img: personStar,
-    },
-    {
-      number: "12,749",
-      text: "Students Impacted",
-      img: smile,
-    },
-    {
-      number: "1,185",
-      text: "Robots Built",
-      img: robot,
-    },
-    {
-      number: "26",
-      text: "Projects Incubated",
-      img: plant,
-    },
-  ];
-
   let settings = {
     dots: true,
     infinite: true,
@@ -94,81 +71,34 @@ const Testimonial = ({ lego }) => {
     ],
   };
 
-  if (lego)
-    return (
-      <Container maxWidth="lg">
-        <Box overflow={"hidden"} className="impact__carousel">
-          <Slider {...settings} slidesToShow={4}>
-            {legoImpact.map((slide, index) => (
-              <CardContent
-                key={index}
-                className="impact__card"
-                sx={{
-                  bgcolor: "#FFF9F0",
-                  borderRight: "1px solid #E69F22",
-                  height: { xs: "26vh", md: "34vh" },
-                }}
-              >
-                <Image src={slide.img} alt="slide" />
-                <Stack>
-                  <Typography
-                    variant="h4"
-                    fontSize={{ xs: "40px", md: "50px" }}
-                  >
-                    {slide.number}
-                  </Typography>
-                  <Typography fontSize={{ xs: "14px", md: "16px" }}>
-                    {slide.text}
-                  </Typography>
-                </Stack>
-              </CardContent>
-            ))}
-          </Slider>
-        </Box>
-      </Container>
-    );
   return (
-    <Box
-      overflow={"hidden"}
-      className="impact__carousel bg-white font-Geist"
-      border={"1px solid #3D3D3D"}
-    >
+    <div className="impact__carousel bg-transparent font-Geist overflow-hidden ">
       <Slider {...settings} slidesToShow={5}>
         {impactNums.map((slide, index) => (
-          <CardContent
+          <div
             key={index}
-            className="impact__card "
-            sx={{
-              bgcolor: "fff",
-              borderRight: "1px solid #3D3D3D",
-              height: { xs: "26vh", md: "50vh" },
-            }}
+            className="h-[26vh] md:h-[50vh] bg-[#FFF5E5] p-1 w-[400px]"
           >
-            <Stack>
-              <Typography className="text-13px md:text-16px">
-                {slide.text}
-              </Typography>
-            </Stack>
-            <div className="flex items-start justify-start space-x-2 mt-5">
-              <Image
-                width={{ xs: "16px", md: "24px" }}
-                className="w-[20px] h-[24px]"
-                src={slide.img}
-                alt="slider"
-              />
-              <Stack>
-                <Typography fontSize={{ xs: "13px", md: "16px" }}>
-                  {slide.name}
-                </Typography>
-                <Typography fontSize={{ xs: "13px", md: "16px" }}>
-                  {slide.job}
-                </Typography>
-              </Stack>
+            <div className="bg-white p-3 rounded-lg">
+              <p className="text-[13px] md:text-[12.4px]">{slide.text}</p>
+
+              <div className="flex items-center justify-start space-x-2 mt-12">
+                <Image
+                  width={{ xs: "16px", md: "24px" }}
+                  className="w-[20px] h-[24px]"
+                  src={slide.img}
+                  alt="slider"
+                />
+                <div>
+                  <p className="text-[13px] md:text-sm">{slide.name}</p>
+                  <p className="text-[13px] md:text-sm">{slide.job}</p>
+                </div>
+              </div>
             </div>
-          </CardContent>
+          </div>
         ))}
       </Slider>
-    </Box>
+    </div>
   );
 };
 

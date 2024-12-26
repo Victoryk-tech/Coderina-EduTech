@@ -43,7 +43,7 @@ const ImgSlider = () => {
     <div>
       <Slider className="" {...settings}>
         {slideImg.map((slide, index) => (
-          <div key={index} className="w-full flex gap-x-4 md:w-[98%]">
+          <div key={index} className="w-full flex md:w-[98%]">
             <Image
               src={slide}
               alt="slideImage"

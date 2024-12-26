@@ -12,6 +12,7 @@ import SideBar from "./SideBar";
 import { usePathname, useRouter } from "next/navigation";
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname(false);
   const id = pathname.startsWith("/Media/")
     ? pathname.split("/Media/")[1]
@@ -24,8 +25,10 @@ const Navbar = () => {
     { label: "Events", path: "/Events" },
     { label: "Media", path: "/Media" },
   ];
-
-  const [isScrolled, setIsScrolled] = useState(false);
+  const activeLink =
+    "text-[#FBB12F] flex items-center justify-center space-x-1 text-[16px] font-normal relative after:content-[''] after:bg-[#FBB12F] after:h-[4px] after:w-[100%] after:left-0 after:bottom-[-12px] after:rounded-xl after:absolute";
+  const normalLink =
+    "relative flex items-center justify-center space-x-1 tracking-[1px] text-[16px] font-normal leading-[20px] hover:text-[#6b4343] after:content-[''] after:bg-[#FBB12F] after:h-[4px] after:w-[0%] after:left-0 after:bottom-[-12px] after:rounded-xl after:absolute after:duration-300 hover:after:w-[100%]";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,9 +83,13 @@ const Navbar = () => {
           <Link href="/Events">Events</Link>
           <Link href="/Media">Media</Link>
         </nav> */}
-        <nav className="hidden md:flex items-center justify-center space-x-8 text-[16px] font-normal">
+        <nav className="hidden md:flex items-center justify-center space-x-8 ">
           {links.map(({ label, path }, index) => (
-            <Link key={`${label}-${index}`} href={path}>
+            <Link
+              key={`${label}-${index}`}
+              href={path}
+              className={`${pathname === path ? activeLink : normalLink}`}
+            >
               {label}
             </Link>
           ))}

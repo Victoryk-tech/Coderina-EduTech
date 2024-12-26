@@ -928,6 +928,41 @@ button {
   }
 }
 
+/* empowerment */
+
+.en__container {
+  border: 2px solid #4c4c4c;
+  border-radius: 1em !important;
+
+  margin: 2em 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h3 {
+    font-weight: 600;
+    color: #ffffff;
+    font-family: var(--fontStyle);
+    text-align: center;
+  }
+
+  p {
+    white-space: nowrap;
+  }
+
+  div {
+    justify-content: center;
+    align-items: center;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2em;
+  }
+}
 .core__values {
   gap: 1em;
 

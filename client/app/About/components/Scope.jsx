@@ -35,7 +35,7 @@ const Scope = () => {
   ];
 
   return (
-    <div className="w-full  px-2 md:px-4 lg:px-10 py-10 ">
+    <div className="w-full  px-2 md:px-4 lg:px-8 py-10 ">
       <div className="py-5 font-bold text-[30px] leading-10">
         <h4> Our Services</h4>
       </div>

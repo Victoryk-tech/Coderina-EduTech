@@ -17,8 +17,8 @@ const Header = () => {
   };
   return (
     <div className="font-Geist py-10 bg-[#FFF5E5] ">
-      <div className="relative flex flex-col items-center justify-center space-y-10 max-h-[550px]">
-        <div className="mt-36">
+      <div className="w-full relative flex flex-col items-center justify-center space-y-10 max-h-[550px]">
+        <div className="mt-36 w-full h-full">
           <Image src={BG} alt="bgImage" className="w-full h-full" />
         </div>
         <div className="absolute top-10 space-y-10 md:space-y-16 flex flex-col items-center justify-center">

@@ -14,6 +14,7 @@ import Foote from "../Home/Foote";
 import SubscribeForm from "../Home/SubscribeForm";
 import Testimonial from "./components/Testimonial";
 import Space from "../Home/Space";
+import Sponsors from "../Home/Sponsors";
 
 const page = () => {
   return (
@@ -23,7 +24,8 @@ const page = () => {
 
       <Impact />
       <Team />
-      <div className="px-2 md:px-4 lg:px-16 py-8">
+      <Sponsors />
+      <div className="px-2 md:px-4 lg:px-16 py-8 mt-6 md:mt-10">
         <Testimonial />
         <Space />
         <SubscribeForm />

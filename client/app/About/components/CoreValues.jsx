@@ -19,7 +19,7 @@ const CoreValues = () => {
   ];
 
   return (
-    <Box>
+    <Box className="pt-12">
       <Card className="cv__container">
         {coreValues.map((cv, i) => (
           <CardContent key={i}>
