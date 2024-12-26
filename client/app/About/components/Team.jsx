@@ -71,14 +71,14 @@ const Team = () => {
           })}
         </div> */}
 
-        <div className="w-full grid md:grid-cols-3 items-start md:items-center justify-between md:justify-center space-y-[5rem] md:space-y-[1rem]">
+        <div className="w-full grid md:grid-cols-3 items-start md:items-center justify-between md:justify-center space-y-3 md:space-y-[1rem]">
           {ourTeamCard.map((teamCard, i) => {
             return (
               <div
-                className="w-full md:w-[280px] h-[400px]  md:space-y-8"
+                className="w-full md:w-[280px] h-[400px]  md:space-y-5"
                 key={i}
               >
-                <div className="w-full h-[300px]">
+                <div className="w-full h-[330px] md:h-[300px]">
                   <Image
                     src={teamCard.img}
                     alt="image"
@@ -102,7 +102,7 @@ const Team = () => {
           <Image
             src={group}
             alt="groupPicture"
-            className="w-full h-full object-cover rounded-[3rem]"
+            className="w-full h-full object-cover rounded-[2rem]"
           />
         </div>
       </div>

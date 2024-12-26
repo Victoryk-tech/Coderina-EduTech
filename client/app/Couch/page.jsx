@@ -101,10 +101,10 @@ const Couch = () => {
           ))}
 
           <Box>
-            <div className="w-full bg-[#00a859] font-Geist py-8 px-3 md:px-6 text-[#fff] flex flex-col md:flex-row items-center justify-between mb-8 rounded-2xl gap-y-4 md:gap-y-0 md:gap-x-8 mt-4">
-              <h4 className="text-[20px] md:text-[20px] text-[#fff]">
+            <div className="space-y-2 md:space-y-0 w-full bg-[#00a859] font-Geist py-8 px-3 md:px-6 text-[#fff] flex flex-col md:flex-row items-center justify-center md:justify-between mb-8 rounded-2xl gap-y-4 md:gap-y-0 md:gap-x-8 mt-4">
+              <h3 className="text-[20px] md:text-[20px] text-[#fff] text-center md:text-start">
                 Fill out the form to register
-              </h4>
+              </h3>
 
               <Link
                 href="/Form"
