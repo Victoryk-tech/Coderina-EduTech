@@ -7,6 +7,7 @@ import CustomButton from "../Home/CustomButton";
 import Subscribers from "../Home/Subscribers";
 import Footer from "../Home/Footer";
 import SubscribeForm from "../Home/SubscribeForm";
+import Link from "next/link";
 
 const Couch = () => {
   const couchInfos = [
@@ -60,7 +61,14 @@ const Couch = () => {
               background and skill set come together to solve “indigenous”
               problems using technology or modern business approaches.{" "}
             </Typography>
-            <CustomButton isLarge>Get Started</CustomButton>
+
+            <Link
+              href="/Form"
+              className="bg-black flex items-center justify-between text-white rounded-3xl p-3 gap-x-3 text-sm font-medium"
+            >
+              {" "}
+              Get Started
+            </Link>
           </Stack>
         </Container>
       </Box>

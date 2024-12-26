@@ -2,6 +2,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import CustomButton from "../../Home/CustomButton";
 import ReactPlayer from "react-player";
+import Link from "next/link";
 
 const LegoHeader = () => {
   return (
@@ -10,7 +11,14 @@ const LegoHeader = () => {
         <Typography variant="h4" width={{ xs: "100%", md: "60%" }}>
           Engaging Youth in STEM Exploration with FIRST® LEGO® League
         </Typography>
-        <CustomButton isLarge>Get Started</CustomButton>
+
+        <Link
+          href="/Firstlego"
+          className="bg-black flex items-center justify-center text-white rounded-3xl p-3 gap-x-3 text-sm font-medium"
+        >
+          {" "}
+          Get Started
+        </Link>
       </Stack>
       <Stack>
         <ReactPlayer
