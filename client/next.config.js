@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   env: {
     MONGODB_URI: process.env.MONGODB_URI,
   },
@@ -36,4 +36,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

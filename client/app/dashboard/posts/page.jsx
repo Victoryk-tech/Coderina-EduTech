@@ -389,11 +389,11 @@ const Posts = () => {
         </div>
       )} */}
 
-      <ImageModal
+      {/* <ImageModal
         images={selectedImages}
         isOpen={handleOpenModals}
         onClose={handlecloseModals}
-      />
+      /> */}
     </div>
   );
 };
