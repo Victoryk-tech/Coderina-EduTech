@@ -6,7 +6,7 @@ import legoCard from "../../../public/lego-card3.png";
 import Image from "next/image";
 const LegoCard3 = () => {
   return (
-    <Grid container className="lego__card">
+    <Grid container className="lego__card px-2 md:px-4 lg:px-16">
       <Grid size={{ xs: 12, md: 5.6 }}>
         <Typography variant="h4" fontSize={{ xs: "24px", md: "36px" }}>
           Code, Design, and Compete with Robots!

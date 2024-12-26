@@ -13,6 +13,7 @@ import LegoImpact from "./components/LegoImpact";
 import LegoCard3 from "./components/LegoCard3";
 import Resources from "./components/Resources";
 import Footer from "../Home/Footer";
+import Sponsors from "../Home/Sponsors";
 
 const FirstLego = () => {
   const legoContent = [
@@ -43,13 +44,14 @@ const FirstLego = () => {
 
   return (
     <>
-      <div className="px-2 md:px-4 lg:px-16">
+      <div className="">
         {legoContent.map(({ color, section }, index) => (
           <div p={4} key={`${section}-${index}`} bgcolor={color}>
             <div>{section}</div>
           </div>
         ))}
       </div>
+      <Sponsors />
       <Footer />
     </>
   );

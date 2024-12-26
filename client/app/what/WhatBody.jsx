@@ -72,9 +72,14 @@ const WhatBody = () => {
             STEM skills while developing confidence, teamwork, and lifelong
             learning habits.
           </Typography>
-          <CustomButton>
+
+          <Link
+            href="/Firstlego"
+            className="bg-black flex items-center justify-between text-white rounded-3xl p-3 gap-x-3 text-sm font-medium"
+          >
+            {" "}
             Get Started <FaArrowRightLong />
-          </CustomButton>
+          </Link>
         </Stack>
         <Image src={leagueImg} alt="leaqueimg" />
       </Stack>

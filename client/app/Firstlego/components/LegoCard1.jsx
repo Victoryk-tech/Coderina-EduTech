@@ -7,7 +7,7 @@ import Image from "next/image";
 
 const LegoCard1 = () => {
   return (
-    <Grid container className="lego__card">
+    <Grid container className="lego__card py-6 md:py-10 px-2 md:px-4 lg:px-16">
       <Grid size={{ xs: 12, md: 5.6 }}>
         <Typography variant="h4" fontSize={{ xs: "24px", md: "36px" }}>
           FIRST® LEGO® League guides youth through STEM learning and exploration

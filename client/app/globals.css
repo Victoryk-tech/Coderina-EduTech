@@ -1297,7 +1297,7 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 5em 0;
+
   background: var(--pinkBg);
   padding: 1.5em;
   text-align: center;

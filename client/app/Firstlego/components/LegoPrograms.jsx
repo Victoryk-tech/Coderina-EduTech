@@ -31,7 +31,7 @@ const LegoPrograms = () => {
   ];
 
   return (
-    <Box className="lego__program">
+    <Box className="lego__program py-6 md:py-12 px-2 md:px-4 lg:px-16">
       <Typography variant="h4" fontSize={{ xs: "24px", md: "36px" }}>
         FIRST LEGO League Programs
       </Typography>

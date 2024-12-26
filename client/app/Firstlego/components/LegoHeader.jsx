@@ -5,7 +5,7 @@ import ReactPlayer from "react-player";
 
 const LegoHeader = () => {
   return (
-    <Box className="lego__header">
+    <Box className="lego__header px-2 md:px-4 lg:px-16 md:pt-20">
       <Stack>
         <Typography variant="h4" width={{ xs: "100%", md: "60%" }}>
           Engaging Youth in STEM Exploration with FIRST® LEGO® League
