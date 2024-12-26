@@ -127,17 +127,10 @@ function LineChart() {
 
   return (
     <div>
-      <h1 className="font-bold text-3xl text-center mt-6">
+      <h1 className="font-bold text-lg md:text-3xl text-center mt-6 max-w-[330px]">
         Subscribers Growth Over Time
       </h1>
-      <div
-        style={{
-          width: "900px",
-          height: "550px",
-          padding: "10px",
-          cursor: "pointer",
-        }}
-      >
+      <div className="  md:w-[900px] h-[320px] md:h-[550px] md:p-2 cursor-pointer">
         {chartData && <Line data={chartData} options={options} />}
       </div>
     </div>

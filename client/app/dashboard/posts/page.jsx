@@ -53,7 +53,6 @@ const Posts = () => {
   const navItems = [
     { category: "Published", total: "1" },
     { category: "Categories", total: "3" },
-    { category: "Scheduled", total: "3" },
   ];
 
   const items = [
@@ -164,16 +163,16 @@ const Posts = () => {
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
   return (
-    <div className="mx-[5.7rem] h-full bg-white mt-8 text-gray-700">
+    <div className="lg:mx-[5.7rem] h-full md:max-w-full max-w-md bg-white mt-8 text-gray-700">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold">Posts</h1>
         <div className="relative inline-block text-left">
           <DropdownButton buttonText="New post" />
         </div>
       </div>
-      <div className="flex justify-between border-b border-gray-300 mt-[5rem] pb-5 items-center">
-        <div className="flex justify-between gap-7 items-center">
-          <nav className="flex gap-6 mt-5">
+      <div className="flex flex-row items-start justify-between border-b border-gray-300 mt-[5rem] pb-5 md:items-center">
+        <div className="flex justify-between  items-center">
+          <nav className="flex gap-x-3 md:gap-x-6 mt-5">
             {navItems.map((item) => (
               <div
                 key={item.category}
@@ -199,7 +198,7 @@ const Posts = () => {
             ))}
           </nav>
         </div>
-        <div className="flex justify-between gap-5 items-center">
+        <div className=" flex justify-between gap-5  items-center">
           <div className="relative inline-block text-left" ref={dropdownRef}>
             <button
               onClick={toggleDropdown}
@@ -320,7 +319,7 @@ const Posts = () => {
 
       {/* Modal for Post Actions */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+        <div className="mt-12 md:mt-2 fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
           <div className="bg-white p-5 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold">Post Details</h2>
             <p>{selectedPost.title}</p>

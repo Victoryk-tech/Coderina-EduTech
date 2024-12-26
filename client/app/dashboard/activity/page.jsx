@@ -47,7 +47,7 @@ const Activity = () => {
   return (
     <div className="min-h-screen text-gray-200 p-4 my-12">
       <div className="max-w-2xl mx-auto">
-        <div className="-4 rounded-full bg-gray-200 gap-8 inline-flex justify-center p-2 sticky top-0 z-10">
+        <div className=" rounded-full bg-gray-200 gap-8 inline-flex justify-center p-2 sticky top-0 z-10">
           <button
             className={`textlg px-3 shadow-full  ${
               filter === "All" && "bg-white text-gray-900 rounded-full"
@@ -57,7 +57,7 @@ const Activity = () => {
             All
           </button>
           <button
-            className={`text-lg px-3 ${
+            className={`text-lg px-3 text ${
               filter === "Replies & mentions" &&
               "bg-white text-gray-900 rounded-full"
             } focus:bg-white focus:rounded-full focus:text-gray-900 text-gray-500`}

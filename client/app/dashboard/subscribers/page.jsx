@@ -93,7 +93,7 @@ const SubscribersTable = () => {
   }, []);
 
   return (
-    <div className="w-full px-4 py-10 h-full bg-white">
+    <div className="w-full md:px-4 py-10 h-full bg-white">
       <Toaster />
 
       <h1 className="text-2xl font-bold mb-4">Subscribers</h1>
@@ -174,7 +174,7 @@ const SubscribersTable = () => {
       {loading ? (
         <p className="text-center">Loading...</p>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-hidden">
           <table className="table-auto w-full border-collapse border border-gray-300 text-sm">
             <thead>
               <tr className="bg-gray-200">
