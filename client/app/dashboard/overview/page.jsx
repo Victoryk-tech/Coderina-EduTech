@@ -29,7 +29,7 @@ const Overview = ({ writer }) => {
   ];
 
   return (
-    <div className="mx-[2.7rem]  bg-white mt-8  text-gray-700 ">
+    <div className=" lg:mx-[2.6rem] h-full bg-white mt-9  text-gray-700  md:max-w-full max-w--md">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold text-gray-700">Home</h1>
         <div className="flex gap-3">

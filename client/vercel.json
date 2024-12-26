@@ -11,10 +11,6 @@
     {
       "source": "/dashboard/posts#",
       "destination": "/dashboard/posts#"
-    },
-    {
-      "source": "/dashboard/",
-      "destination": "/dashboard/"
     }
   ]
 }

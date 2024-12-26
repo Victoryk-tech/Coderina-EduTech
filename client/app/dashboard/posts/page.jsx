@@ -13,6 +13,7 @@ import { BsToggles2 } from "react-icons/bs";
 import DropdownButton from "../component/DropdownButton";
 import Pagination from "../component/PostPagnation";
 import ImageModal from "@/app/Media/component/ImageModal";
+import Spinner from "@/app/shared/Spinner";
 
 const Posts = () => {
   const [activeNav, setActiveNav] = useState("Published");
@@ -34,19 +35,19 @@ const Posts = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [ModalOpen, setModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  const [loading, setLoading] = useState(true);
   // handle modal for pictures
 
-  const [modalOpen, setmodalOpen] = useState(false);
+  const [imageOpen, setImageOpen] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
 
   const handleOpenModals = (images) => {
     setSelectedImages(images);
-    setmodalOpen(true);
+    setImageOpen(true);
   };
 
   const handlecloseModals = () => {
-    setmodalOpen(false);
+    setImageOpen(false);
     setSelectedImages([]);
   };
   const navItems = [
@@ -78,6 +79,7 @@ const Posts = () => {
   // Fetch posts with selected category filter
   const fetchPosts = async () => {
     try {
+      setLoading(true);
       const response = await axios.get("/api/blog", {
         params: {
           category: selectedCategory || "", // Use selectedCategory for filtering
@@ -89,8 +91,13 @@ const Posts = () => {
     } catch (error) {
       toast.error("Failed to fetch posts");
       console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
     }
   };
+  useEffect(() => {
+    setSelectedCategory("New Articles");
+  }, []);
 
   // Open modal for post content, edit, and delete options
   const handleModalOpen = (post) => {
@@ -153,27 +160,9 @@ const Posts = () => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return postDate.toLocaleDateString(undefined, options);
   };
+  const capitalizeFirstLetter = (str) =>
+    str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
-  const openModal = (index) => {
-    setCurrentImageIndex(index);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) =>
-      prev === formData.images.length - 1 ? 0 : prev + 1
-    );
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? formData.images.length - 1 : prev - 1
-    );
-  };
   return (
     <div className="mx-[5.7rem] h-full bg-white mt-8 text-gray-700">
       <div className="flex justify-between">
@@ -214,9 +203,9 @@ const Posts = () => {
           <div className="relative inline-block text-left" ref={dropdownRef}>
             <button
               onClick={toggleDropdown}
-              className="py-2 px-3 gap-1 hover:bg-[#EEEE] rounded-md flex items-center"
+              className="py-2 px-3 gap-1 hover:bg-[#EEEE] text-sm font-medium rounded-md flex items-center"
             >
-              {selectedCategory || "Select category"}
+              {capitalizeFirstLetter(selectedCategory || "Select category")}
               <MdKeyboardArrowDown color="gray" size={18} className="mt-1" />
             </button>
 
@@ -238,7 +227,7 @@ const Posts = () => {
                       }}
                       className="flex items-center px-4 py-2 font-semibold text-[0.95rem] text-gray-800 hover:rounded-lg hover:bg-gray-100"
                     >
-                      {category}
+                      {capitalizeFirstLetter(category)}
                     </a>
                   ))}
                 </div>
@@ -249,72 +238,80 @@ const Posts = () => {
       </div>
 
       {/* Posts List */}
-      {posts.map((post) => (
-        <div
-          key={post._id}
-          className="p-7 border-b border-gray-300 mb-[5rem] hover:bg-[#f8f8f8ee]"
-        >
-          <div className="flex sm:flex-row flex-col sm:justify-between gap-10">
-            <div className="flex gap-4 items-center w-full sm:w-[50%]">
-              <div className="p-1 bg-[#EEEE] rounded-md">
-                <Image
-                  src={post.images[0] || "/default-image.jpg"}
-                  alt={post.title}
-                  width={70}
-                  height={70}
-                  className="object-cover rounded-md"
-                  onClick={() => handleOpenModals(post.images)} // Open the first image of gallery
-                />
-              </div>
-              <div className="text-xs flex flex-col gap-2">
-                <h3 className="font-bold text-sm">{post.title}</h3>
-                <p>{post.author}</p>
-                <div className="flex items-center gap-3">
-                  <p className="uppercase font-semibold">{post.category}</p>
-                  {/* <CiHeart size={18} />
-                  <span className="font-semibold">{post.likes}</span>
-                  <LuMessageCircle size={15} />
-                  <span className="font-semibold">{post.comments}</span> */}
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-between items-center w-full sm:w-[50%] uppercase text-xs">
-              <div className="flex flex-col gap-2">
-                <p className="font-bold">
-                  {/* {new Date(post.createdAt).toLocaleString("en-US", {
+      <div>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <div>
+            {posts.map((post) => (
+              <div
+                key={post._id}
+                className="p-7 border-b border-gray-300 mb-[5rem] hover:bg-[#f8f8f8ee]"
+              >
+                <div className="flex sm:flex-row flex-col sm:justify-between gap-10">
+                  <div className="flex gap-4 items-center w-full sm:w-[50%]">
+                    <div className="p-1 bg-[#EEEE] rounded-md">
+                      <Image
+                        src={post.images[0] || "/default-image.jpg"}
+                        alt={post.title}
+                        width={70}
+                        height={70}
+                        className="object-cover rounded-md"
+                        onClick={() => handleOpenModals(post.images)} // Open the first image of gallery
+                      />
+                    </div>
+                    <div className="text-xs flex flex-col gap-2">
+                      <h3 className="font-bold text-sm">{post.title}</h3>
+                      <p>{post.author}</p>
+                      <div className="flex items-center gap-3">
+                        <p className="uppercase font-semibold">
+                          {post.category}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center w-full sm:w-[50%] uppercase text-xs">
+                    <div className="flex flex-col gap-2">
+                      <p className="font-bold">
+                        {/* {new Date(post.createdAt).toLocaleString("en-US", {
                     month: "short",
                     day: "numeric",
                   })} */}
-                  {formatTime(post.createdAt)}
-                </p>
-                <p>posted</p>
+                        {formatTime(post.createdAt)}
+                      </p>
+                      <p>posted</p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <p className="font-bold">
+                        {" "}
+                        {Array.isArray(post.likes) ? post.likes.length : 0}
+                      </p>
+                      <p>likes</p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <p className="font-bold">
+                        {Array.isArray(post.comments)
+                          ? post.comments.length
+                          : 0}
+                      </p>
+                      <p>comments</p>
+                    </div>
+                    <div className="p-3 border border-gray-200 rounded-lg hover:bg-[#dc7d7dee]">
+                      <MdArrowOutward />
+                    </div>
+                    <div
+                      className="p-3 hover:bg-[#EEEE] hover:rounded-md"
+                      onClick={() => handleModalOpen(post)}
+                    >
+                      <IoEllipsisHorizontal />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <p className="font-bold">
-                  {" "}
-                  {Array.isArray(post.likes) ? post.likes.length : 0}
-                </p>
-                <p>likes</p>
-              </div>
-              <div className="flex flex-col gap-2">
-                <p className="font-bold">
-                  {Array.isArray(post.comments) ? post.comments.length : 0}
-                </p>
-                <p>comments</p>
-              </div>
-              <div className="p-3 border border-gray-200 rounded-lg hover:bg-[#dc7d7dee]">
-                <MdArrowOutward />
-              </div>
-              <div
-                className="p-3 hover:bg-[#EEEE] hover:rounded-md"
-                onClick={() => handleModalOpen(post)}
-              >
-                <IoEllipsisHorizontal />
-              </div>
-            </div>
+            ))}
           </div>
-        </div>
-      ))}
+        )}
+      </div>
 
       {/* Pagination */}
       <div className="flex justify-end mt-5">
@@ -353,47 +350,13 @@ const Posts = () => {
         </div>
       )}
 
-      {/* Modal for Viewing Gallery Images */}
-      {/* {ModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-4 rounded relative max-w-lg">
-            <button
-              className="absolute top-2 right-2 text-xl text-gray-600"
-              onClick={closeModal}
-            >
-              &times;
-            </button>
-            <div className="flex justify-between items-center">
-              <button
-                onClick={prevImage}
-                className="text-xl hover:bg-black hover:text-white hover:px-3 hover:py-1 hover:rounded-2xl"
-              >
-                &#8249;
-              </button>
-              <Image
-                src={formData.images[currentImageIndex]}
-                alt="gallery image"
-                width={400}
-                height={400}
-                className="object-contain"
-                unoptimized={true} // Allow base64 images to load properly
-              />
-              <button
-                onClick={nextImage}
-                className="text-xl hover:bg-black hover:text-white hover:px-3 hover:py-1 hover:rounded-2xl"
-              >
-                &#8250;
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
+      {/* Modal for Viewing  Images */}
 
-      {/* <ImageModal
+      <ImageModal
         images={selectedImages}
-        isOpen={handleOpenModals}
+        isOpen={imageOpen}
         onClose={handlecloseModals}
-      /> */}
+      />
     </div>
   );
 };
