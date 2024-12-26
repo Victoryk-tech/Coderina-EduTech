@@ -118,14 +118,16 @@ export default function MediaBody() {
   };
   return (
     <div className="container mx-auto px-4 py-8 font-Geist">
-      <div className="flex items-center justify-between py-4">
+      <div className="mb-6 md:mb-2 flex flex-col space-y-5 md:space-y-0 justify-start md:flex-row items-center md:justify-between py-4">
         <h1 className="text-3xl font-bold mb-6">Media</h1>
-        <div className="flex space-x-4 mb-6">
+        <div className="flex space-x-2 text-nowrap bg-gray-200 rounded-full mb-6">
           {categories.map((cat) => (
             <button
               key={cat}
               className={`px-4 py-2 rounded text-[14px] ${
-                cat === category ? "bg-blue-500 text-white" : "bg-gray-200"
+                cat === category
+                  ? "bg-blue-500 text-white rounded-3xl"
+                  : "bg-gray-200"
               }`}
               onClick={() => setCategory(cat)}
             >
