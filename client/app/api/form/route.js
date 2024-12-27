@@ -21,11 +21,17 @@ export async function POST(req) {
       gender,
       link1,
       link2,
-
-      // Default to empty object if not provided
     } = await req.json();
 
-    // Prepare registration data, only include fields if they have values
+    // Validate the gender field
+    if (!["male", "female", "other"].includes(gender.toLowerCase())) {
+      return NextResponse.json(
+        { success: false, message: "Invalid gender value" },
+        { status: 400 }
+      );
+    }
+
+    // Prepare registration data
     const formData = {
       firstName,
       lastName,
@@ -44,12 +50,11 @@ export async function POST(req) {
     const newRegistration = new Form(formData);
     await newRegistration.save();
     console.log("Registration successful");
-    if (!["male", "female", "other"].includes(gender)) {
-      return NextResponse.json(
-        { success: true, message: "Registration successful" },
-        { status: 201 }
-      );
-    }
+
+    return NextResponse.json(
+      { success: true, message: "Registration successful" },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Registration Error:", error);
     return NextResponse.json(

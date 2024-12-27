@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import LikeAndComment from "./Likes";
 import ImageModal from "./ImageModal";
+import { LoadingSkeleton } from "../../shared/Spinner";
 
 export default function MediaBody() {
   const [category, setCategory] = useState("new Articles");
@@ -137,7 +138,11 @@ export default function MediaBody() {
         </div>
       </div>
 
-      {loading && <p>Loading...</p>}
+      {loading && (
+        <p className="mt-10">
+          <LoadingSkeleton />
+        </p>
+      )}
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

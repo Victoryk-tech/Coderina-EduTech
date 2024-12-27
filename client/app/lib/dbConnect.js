@@ -22,7 +22,7 @@ export default async function connectDB() {
     const db = await mongoose.connect(uri, {
       // useNewUrlParser: true,
       // useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000,
+      serverSelectionTimeoutMS: 40000,
     });
 
     isConnected = db.connections[0].readyState === 1; // Check if the connection is successful

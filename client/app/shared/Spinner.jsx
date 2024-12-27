@@ -55,3 +55,20 @@ const Spinner = () => {
 };
 
 export default Spinner;
+
+export const LoadingSkeleton = ({
+  height = "20px",
+  width = "100%",
+  borderRadius = "4px",
+}) => {
+  return (
+    <div
+      className="animate-pulse bg-gray-200"
+      style={{
+        height,
+        width,
+        borderRadius,
+      }}
+    />
+  );
+};

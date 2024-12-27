@@ -1,12 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import CustomButton from "../Home/CustomButton";
+
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 
 const Page = () => {
-  const [formData, setFormData] = useState({
+  // const [formData, setFormData] = useState({
+  //   firstName: "",
+  //   lastName: "",
+  //   school: "",
+  //   email: "",
+  //   phone: "",
+  //   address: "",
+  //   ideaDescription: "",
+  //   idea: "",
+  //   gender: "Male",
+  //   link1: "",
+  //   link2: "",
+  // });
+  const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
     school: "",
@@ -21,38 +34,37 @@ const Page = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+  // const [isSubmit, setIsSubmit] = useState(false);
+  // const [errors, setErrors] = useState({});
 
-  const [isSubmit, setIsSubmit] = useState(false);
-  const [errors, setErrors] = useState({});
-
-  const handleValidation = (formData) => {
-    const newErrors = {};
+  const handleValidation = (values) => {
+    const errors = {};
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     const phonePattern = /^[0-9]{11,12}$/;
 
-    if (!formData.firstName) newErrors.firstName = "First name is required";
-    if (!formData.lastName) newErrors.lastName = "Last name is required";
-    if (!formData.email || !emailPattern.test(formData.email))
-      newErrors.email = "Valid email is required";
-    if (!formData.school) newErrors.school = "School is required";
-    if (!formData.phone || !phonePattern.test(formData.phone))
-      newErrors.phone = "Valid phone number is required";
-    if (!formData.address) newErrors.address = "Address is required";
-    if (!formData.idea) newErrors.idea = "Idea name is required";
-    if (!formData.ideaDescription)
-      newErrors.ideaDescription = "Idea description is required";
-    if (!formData.link1) newErrors.link1 = "Link to website is required";
-    if (!formData.link2) newErrors.link2 = "Link to documents is required";
+    if (!values.firstName) errors.firstName = "First name is required";
+    if (!values.lastName) errors.lastName = "Last name is required";
+    if (!values.email || !emailPattern.test(formValues.email))
+      errors.email = "Valid email is required";
+    if (!values.school) errors.school = "School is required";
+    if (!values.phone || !phonePattern.test(formValues.phone))
+      errors.phone = "Valid phone number is required";
+    if (!values.address) errors.address = "Address is required";
+    if (!values.idea) errors.idea = "Idea name is required";
+    if (!values.ideaDescription)
+      errors.ideaDescription = "Idea description is required";
+    if (!values.link1) errors.link1 = "Link to website is required";
+    if (!values.link2) errors.link2 = "Link to documents is required";
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return errors;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-
-    setErrors((prevErrors) => {
+    setFormValues({ ...formValues, [name]: value });
+    console.log(formValues);
+    setFormErrors((prevErrors) => {
       const updatedErrors = { ...prevErrors };
       delete updatedErrors[name]; // Clear the error for the current field
       return updatedErrors;
@@ -61,16 +73,34 @@ const Page = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!handleValidation()) return;
+    const errors = handleValidation(formValues);
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length > 0) return;
 
     setLoading(true);
     toast.dismiss();
+    //Ensure gender value matches expected format (capitalize first letter)
+
+    const payload = {
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
+      school: formValues.school,
+      email: formValues.email,
+      phone: formValues.phone,
+      address: formValues.address,
+      ideaDescription: formValues.ideaDescription,
+      idea: formValues.idea,
+      gender: formValues.gender,
+      link1: formValues.link1,
+      link2: formValues.link2,
+    };
 
     try {
       const res = await fetch("/api/form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -79,7 +109,7 @@ const Page = () => {
 
       if (data.success) {
         toast.success("Form submitted successfully!");
-        setFormData({
+        setFormValues({
           firstName: "",
           lastName: "",
           school: "",
@@ -92,12 +122,14 @@ const Page = () => {
           link1: "",
           link2: "",
         });
+        setFormErrors({});
       } else {
-        toast.error(data.error || "Submission failed!");
+        throw new Error("Registration failed");
       }
     } catch (error) {
+      toast.error(error.message);
+    } finally {
       setLoading(false);
-      toast.error("An error occurred. Please try again.");
     }
   };
 
@@ -119,18 +151,19 @@ const Page = () => {
               <input
                 type="text"
                 name="firstName"
-                value={formData.firstName}
+                value={formValues.firstName}
                 onChange={handleChange}
                 required
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.firstName
+                  formErrors.firstName
                     ? "border-red-500 text-red-500 text-[12px]"
                     : ""
                 }`}
                 placeholder="Enter your first name"
               />
-
-              <p className=" text-red-500 text-[12px]">{errors.firstName}</p>
+              <p className="text-sm text-red-600 pl-1 font-medium">
+                {formErrors.firstName}
+              </p>
             </div>
 
             <div>
@@ -138,14 +171,17 @@ const Page = () => {
               <input
                 type="text"
                 name="lastName"
-                value={formData.lastName}
+                value={formValues.lastName}
                 onChange={handleChange}
                 required
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.lastName ? "border-red-500" : ""
+                  formErrors.lastName ? "border-red-500" : ""
                 }`}
                 placeholder="Enter your last name"
               />
+              <p className="text-sm text-red-600 pl-1 font-medium">
+                {formErrors.lastName}
+              </p>
             </div>
 
             <div>
@@ -153,11 +189,11 @@ const Page = () => {
               <input
                 type="text"
                 name="school"
-                value={formData.school}
+                value={formValues.school}
                 onChange={handleChange}
                 required
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.school ? "border-red-500" : ""
+                  formErrors.school ? "border-red-500" : ""
                 }`}
                 placeholder="Enter your school"
               />
@@ -168,11 +204,11 @@ const Page = () => {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
+                value={formValues.email}
                 onChange={handleChange}
                 required
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.email ? "border-red-500" : ""
+                  formErrors.email ? "border-red-500" : ""
                 }`}
                 placeholder="Enter your email"
               />
@@ -183,11 +219,11 @@ const Page = () => {
               <input
                 type="tel"
                 name="phone"
-                value={formData.phone}
+                value={formValues.phone}
                 onChange={handleChange}
                 required
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.phone ? "border-red-500" : ""
+                  formErrors.phone ? "border-red-500" : ""
                 }`}
                 placeholder="Enter your phone number"
               />
@@ -198,11 +234,11 @@ const Page = () => {
               <input
                 type="text"
                 name="address"
-                value={formData.address}
+                value={formValues.address}
                 onChange={handleChange}
                 required
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.address ? "border-red-500" : ""
+                  formErrors.address ? "border-red-500" : ""
                 }`}
                 placeholder="Enter your address"
               />
@@ -211,13 +247,13 @@ const Page = () => {
             <div>
               <label className="block mb-1">Gender</label>
               <div className="flex items-center space-x-4">
-                {["Male", "Female", "Other"].map((gender) => (
+                {["Male", "female", "other"].map((gender) => (
                   <label key={gender} className="flex items-center space-x-2">
                     <input
                       type="radio"
                       name="gender"
                       value={gender}
-                      checked={formData.gender === gender}
+                      checked={formValues.gender === gender}
                       onChange={handleChange}
                     />
                     <span>
@@ -233,11 +269,11 @@ const Page = () => {
               <input
                 type="text"
                 name="idea"
-                value={formData.idea}
+                value={formValues.idea}
                 onChange={handleChange}
                 required
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.idea ? "border-red-500" : ""
+                  formErrors.idea ? "border-red-500" : ""
                 }`}
                 placeholder="What's your idea?"
               />
@@ -247,11 +283,11 @@ const Page = () => {
               <label className="block mb-1">Idea Description</label>
               <textarea
                 name="ideaDescription"
-                value={formData.ideaDescription}
+                value={formValues.ideaDescription}
                 onChange={handleChange}
                 required
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.ideaDescription ? "border-red-500" : ""
+                  formErrors.ideaDescription ? "border-red-500" : ""
                 }`}
                 rows={4}
                 placeholder="What's your idea about?"
@@ -263,12 +299,12 @@ const Page = () => {
               <input
                 type="url"
                 name="link1"
-                value={formData.link1}
+                value={formValues.link1}
                 onChange={handleChange}
                 className="w-full p-2 rounded-lg outline-none "
                 placeholder="Add URL (optional)"
               />
-              <p className="border-red-500 text-[11px]">{errors.link1}</p>
+              <p className="border-red-500 text-[11px]">{formErrors.link1}</p>
             </div>
 
             <div>
@@ -276,10 +312,10 @@ const Page = () => {
               <input
                 type="url"
                 name="link2"
-                value={formData.link2}
+                value={formValues.link2}
                 onChange={handleChange}
                 className={`w-full p-2 rounded-lg outline-none ${
-                  errors.link2 ? "border-red-500" : ""
+                  formErrors.link2 ? "border-red-500" : ""
                 }`}
                 placeholder="Add URL (optional)"
               />
@@ -288,8 +324,9 @@ const Page = () => {
 
           <div className="mt-6">
             <button
+              type="submit"
               disabled={loading}
-              className="bg-black text-white rounded-3xl py-2 cursor-pointer px-4 text-[16px]"
+              className="bg-black text-white rounded-3xl py-2 cursor-pointer px-4 text-[16px] hover:text-black hover:bg-white"
             >
               {loading ? "Submitting..." : "Register"}
             </button>
