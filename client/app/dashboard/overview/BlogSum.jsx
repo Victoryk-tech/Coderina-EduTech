@@ -63,11 +63,11 @@ const BlogSum = () => {
       {/* <p>Total Blogs: {totalBlogs}</p> */}
       <div className="flex flex-col gap-y-4">
         {firstFourBlogs.map((blog, index) => (
-          <div className="md:p-7 border-b border-gray-300 hover:text-white hover:bg-[rgba(72,70,70,0.93)]">
-            <div
-              className="flex sm:flex-row flex-col sm:justify-between gap-10"
-              key={index}
-            >
+          <div
+            className="md:p-7 border-b border-gray-300 hover:text-white hover:bg-[rgba(72,70,70,0.93)]"
+            key={index}
+          >
+            <div className="flex sm:flex-row flex-col sm:justify-between gap-10">
               <div className="flex gap-4 items-center w-full ">
                 <div className="p-1 bg-[#EEEE] rounded-md">
                   <Image
