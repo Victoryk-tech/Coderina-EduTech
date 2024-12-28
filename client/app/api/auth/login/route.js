@@ -3,6 +3,7 @@ import connectDB from "../../../lib/dbConnect";
 import users from "../../../models/user";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+import { cookies } from "next/headers";
 
 // Connect to the database
 
@@ -36,6 +37,14 @@ export async function POST(req) {
       { expiresIn: "1h" }
     );
 
+    const cookieStore = await cookies(); // Await the cookies() API
+    cookieStore.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    });
     return NextResponse.json(
       {
         message: "User signed in successfully",

@@ -8,6 +8,7 @@ import LineChart from "../component/LineChart";
 
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import SendMessage from "./SendMessage";
+import { LoadingSkeleton } from "../../shared/Spinner";
 
 const SubscribersTable = () => {
   const [subscribers, setSubscribers] = useState([]);
@@ -172,9 +173,11 @@ const SubscribersTable = () => {
       )}
 
       {loading ? (
-        <p className="text-center">Loading...</p>
+        <p className="text-center">
+          <LoadingSkeleton />
+        </p>
       ) : (
-        <div className="overflow-x-hidden">
+        <div className="overflow-x-auto max-w-sm sm:max-w-full">
           <table className="table-auto w-full border-collapse border border-gray-300 text-sm">
             <thead>
               <tr className="bg-gray-200">

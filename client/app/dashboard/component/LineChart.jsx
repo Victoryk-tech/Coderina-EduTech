@@ -12,6 +12,7 @@ import {
   Tooltip,
   Filler,
 } from "chart.js";
+import { LoadingSkeleton } from "../../shared/Spinner";
 
 ChartJS.register(
   LineElement,
@@ -122,15 +123,20 @@ function LineChart() {
     },
   };
 
-  if (loading) return <p>Loading Chart...</p>;
+  if (loading)
+    return (
+      <p>
+        <LoadingSkeleton />
+      </p>
+    );
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <h1 className="font-bold text-lg md:text-3xl text-center mt-6 max-w-[330px]">
         Subscribers Growth Over Time
       </h1>
-      <div className="  md:w-[900px] h-[320px] md:h-[550px] md:p-2 cursor-pointer">
+      <div className=" w-[900px] h-[550px] md:p-2 cursor-pointer">
         {chartData && <Line data={chartData} options={options} />}
       </div>
     </div>

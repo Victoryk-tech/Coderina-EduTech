@@ -17,26 +17,33 @@ import { IoPerson } from "react-icons/io5";
 import { GoHome, GoPeople } from "react-icons/go";
 import { BsActivity } from "react-icons/bs";
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
+import { deleteCookies } from "@/app/lib/logout";
 
 const Layout = ({ children }) => {
   const pathname = usePathname();
   const [showSidebar, setShowSidebar] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
-  // const searchParams = useSearchParams();
-  //const greeting = searchParams.get("greeting"); // Get query param
+
   const [username, setUsername] = useState("");
-  // const [greeting, setGreeting] = useState("");
+
   const [greeting, setGreeting] = useState("");
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      await axios.post("/api/auth/logout"); // Implement logout API on the server side
+      const response = await deleteCookies("token");
       toast.success("Logged out successfully!");
-      router.push("/login"); // Redirect to the login page
+      router.push("/"); // Redirect to the login page or homepage
+      // const response = await axios.delete("/api/auth/logout");
+      // if (response.data.success) {
+      //   toast.success("Logged out successfully!");
+      //   router.push("/"); // Redirect to the login page or homepage
+      // }
     } catch (error) {
-      toast.error("Failed to log out.");
+      toast.error("Failed to log out. Please try again.");
+      console.error("Logout error:", error);
     }
   };
 
@@ -71,7 +78,7 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     // Check if the user is logged in by verifying if the greeting exists in localStorage
-    const storedGreeting = localStorage.getItem("greeting");
+    const storedGreeting = sessionStorage.getItem("greeting");
     if (storedGreeting) {
       setGreeting(storedGreeting); // Set the greeting if found
     } else {

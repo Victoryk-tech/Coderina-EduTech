@@ -67,7 +67,7 @@ const BlogSum = () => {
             className="md:p-7 border-b border-gray-300 hover:text-white hover:bg-[rgba(72,70,70,0.93)]"
             key={index}
           >
-            <div className="flex sm:flex-row flex-col sm:justify-between gap-10">
+            <div className="py-5 md:py-2 flex sm:flex-row flex-col sm:justify-between gap-10">
               <div className="flex gap-4 items-center w-full ">
                 <div className="p-1 bg-[#EEEE] rounded-md">
                   <Image

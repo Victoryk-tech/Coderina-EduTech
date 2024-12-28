@@ -27,9 +27,12 @@ const Log = () => {
       const { user, message, token } = response.data;
 
       // Store username and token locally
-      localStorage.setItem("username", user?.username || "");
-      localStorage.setItem("greeting", `Welcome back ${user?.username || ""}`);
-      localStorage.setItem("token", token || "");
+      sessionStorage.setItem("username", user?.username || "");
+      sessionStorage.setItem(
+        "greeting",
+        `Welcome back ${user?.username || ""}`
+      );
+      sessionStorage.setItem("token", token || "");
 
       toast.success(message || "Welcome! You have successfully logged in");
 

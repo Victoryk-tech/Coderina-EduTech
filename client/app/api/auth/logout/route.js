@@ -1,12 +1,15 @@
-// In /api/auth/logout.js
-
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function POST() {
-  const response = NextResponse.json({ message: "Logged out successfully" });
+export async function DELETE() {
+  // Create a response object
+  const response = NextResponse.json({
+    success: true,
+    message: "Logged out successfully",
+  });
 
-  // Clear the token from cookies
-  response.cookies.delete("token", { path: "/" });
+  // Delete the token cookie
+  //response.cookies.delete("token");
 
-  return response;
+  return (await cookies()).delete("token");
 }
