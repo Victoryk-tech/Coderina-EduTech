@@ -96,7 +96,7 @@ const Navbar = () => {
         </nav>
         <Link
           href="/Form"
-          className="bg-[#FBB12F] text-black rounded-3xl py-2 px-3 text-[14px] hidden md:flex font-medium"
+          className="bg-[#FBB12F] cursor-pointer text-black hover:bg-white hover:text-[#fbb12f] transition-all ease-in-out duration-700 rounded-3xl py-2 px-3 text-[14px] hidden md:flex font-medium"
         >
           Get Involved
         </Link>

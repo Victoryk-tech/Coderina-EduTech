@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import newsImg1 from "../../public/newsImg1.png";
 import newsImg2 from "../../public/newsImg2.png";
 import newsImg3 from "../../public/newsImg3.png";
 import newsImg4 from "../../public/newsImg4.png";
 import Image from "next/image";
+import Link from "next/link";
+import { LoadingSkeleton } from "../shared/Spinner";
 
 const News = () => {
   const newsCard = [
@@ -30,6 +32,59 @@ const News = () => {
     },
   ];
 
+  const [totalBlogs, setTotalBlogs] = useState(0);
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [firstFourBlogs, setFirstFourBlogs] = useState([]);
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch(`/api/allBlogs`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setBlogs(data.data);
+          setFirstFourBlogs(data.data.slice(0, 4));
+          setTotalBlogs(data.totalBlogs);
+        } else {
+          console.error("Failed to fetch blogs:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching blogs:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  const formatTime = (timestamp) => {
+    const now = new Date();
+    const postDate = new Date(timestamp);
+    const seconds = Math.floor((now - postDate) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (seconds < 60) return `${seconds} seconds ago`;
+    if (minutes < 60) return `${minutes} minutes ago`;
+    if (hours < 24) return `${hours} hours ago`;
+    if (days < 30) return `${days} days ago`;
+
+    // If it's more than a month old, show the full date
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return postDate.toLocaleDateString(undefined, options);
+  };
+
+  if (loading) {
+    return (
+      <div className="my-7">
+        <LoadingSkeleton />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full px-2 md:px-4 lg:px-16 py-10 font-Geist">
       <div>
@@ -37,34 +92,37 @@ const News = () => {
           <h5 className="font-semibold text-[20px] md:text-[32px] text-center md:text-start">
             News & Updates
           </h5>
-          <button className="hidden md:flex space-x-2 rounded-3xl p-3 bg-[#FBB12F] text-black text-[16px]">
-            <p> View all</p> <HiOutlineArrowNarrowRight size={18} />
-          </button>
+          <Link
+            href="/Media"
+            className="hidden md:flex space-x-2 rounded-3xl p-3 bg-[#FBB12F] hover:text-[#fbb12f] hover:bg-white text-black text-[16px] text-center"
+          >
+            <p> View all</p> <HiOutlineArrowNarrowRight size={20} />
+          </Link>
         </div>
 
         <div className="w-full grid md:grid-cols-4 items-start justify-between gap-y-6 md:gap-y-0 mt-10">
-          {newsCard.map((cardInfo, i) => {
-            return (
-              <div
-                key={i}
-                className="space-y-2 w-full md:w-[270px] h-full md:h-[330px]"
-              >
-                <div className="w-full">
-                  <Image
-                    src={cardInfo.img}
-                    alt={`Image for news: ${cardInfo.text}`}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <p className="text-[14px]">{cardInfo.date}</p>
-                  <h3 className="font-normal text-[15px] md:text-[16px] leading-6">
-                    {cardInfo.text}
-                  </h3>
-                </div>
+          {firstFourBlogs.map((blog, index) => (
+            <div
+              key={index}
+              className="space-y-2 w-full md:w-[270px] h-full md:h-[330px]"
+            >
+              <div className="w-full">
+                <Image
+                  src={blog.images[0] || "/default-image.jpg"}
+                  alt={blog.title}
+                  width={360}
+                  height={360}
+                  className="w-full h-full object-contain"
+                />
               </div>
-            );
-          })}
+              <div className="space-y-2">
+                <p className="text-[14px]">{formatTime(blog.createdAt)}</p>
+                <h3 className="font-normal text-[15px] md:text-[16px] leading-6">
+                  {blog.title}
+                </h3>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
