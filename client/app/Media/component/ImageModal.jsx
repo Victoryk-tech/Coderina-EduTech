@@ -22,7 +22,7 @@ export default function ImageModal({ images, isOpen, onClose }) {
       <div className="relative max-w-3xl w-full">
         {/* Close Icon */}
         <button
-          className="absolute top-4 right-4 text-white text-2xl"
+          className="absolute font-bold rounded-3xl bg-white px-3 py-2 -top-10 md:top-4 right-4 text-black text-2xl"
           onClick={onClose}
         >
           <AiOutlineClose />

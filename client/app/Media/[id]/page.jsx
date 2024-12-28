@@ -243,40 +243,6 @@ export default function BlogDetails() {
 
               {/* Add New Comment */}
               <div className="mt-16 border-t-[0.8px] border-gray-300 py-4">
-                {/* <div className="flex items-center justify-center border-[0.6px] rounded-2xl border-black p-2">
-                <textarea
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Add a comment..."
-                  className="w-full outline-none bg-transparent"
-                />
-                <button
-                  onClick={() => {
-                    if (!email.trim()) {
-                      setEmailModal(true); // Trigger email modal if no email is set
-                      return;
-                    }
-                    handleAction("comment", {
-                      email: email.trim(), // Use dynamic email from state
-                      comment: newComment,
-                    });
-                  }}
-                  disabled={!newComment.trim() || isSubmitting} // Enable only if there's a comment and not submitting
-                  className={`text-blue-500 flex items-center ${
-                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                >
-                  {isSubmitting ? (
-                    <AiOutlineLoading3Quarters
-                      size={22}
-                      className="animate-spin"
-                    />
-                  ) : (
-                    <FiSend size={22} />
-                  )}
-                </button>
-              </div> */}
-
                 <CommentInput
                   email={email}
                   setEmailModal={setEmailModal}
@@ -292,16 +258,16 @@ export default function BlogDetails() {
                 {blog.comments.slice(0, visibleComments).map((comment) => (
                   <div
                     key={comment._id}
-                    className="border-t-[0.8px] border-gray-300 py-4"
+                    className="border-t-[0.8px] border-gray-300 py-5"
                   >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold">{comment.email}</p>
-                        <p className="text-sm">
+                        <p className="text-[13px]">
                           {formatTime(comment.createdAt)}
                         </p>
                       </div>
-                      <div className="flex items-center">
+                      {/* <div className="flex items-center">
                         <CiEdit
                           size={18}
                           onClick={() => {
@@ -321,13 +287,13 @@ export default function BlogDetails() {
                             className="cursor-pointer text-red-500"
                           />
                         )}
-                      </div>
+                      </div> */}
                     </div>
                     <p>{comment.comment}</p>
 
                     {/* Replies Section */}
                     {visibleReplies[comment._id] && (
-                      <div className="ml-4">
+                      <div className="ml-4 pt-2">
                         {comment.replies.map((reply, index) => (
                           <div key={index} className="flex flex-col space-y-1">
                             <div className="flex items-center space-x-2">
@@ -342,10 +308,10 @@ export default function BlogDetails() {
                       </div>
                     )}
                     <button
-                      className="text-blue-500 flex items-center"
+                      className="text-blue-500 flex items-center text-sm pt-2"
                       onClick={() => toggleReplies(comment._id)}
                     >
-                      <VscReply size={18} /> Reply {comment.replies.length}
+                      <VscReply size={16} /> Reply {comment.replies.length}
                     </button>
 
                     {visibleReplies[comment._id] && (

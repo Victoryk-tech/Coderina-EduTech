@@ -91,11 +91,11 @@ const Footer = () => {
         </div>
         <div className="space-y-3 text-[14px] md:text-[17px]">
           <h3>Email & Phone Number</h3>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 items-center">
             <FaPhoneAlt color={darkGreenColor} />
             <p> +234 9093307353 (Call and WhatsApp)</p>
           </div>
-          <div className="flex space-x-2">
+          <div className="flex items-center space-x-2">
             <RiMailFill color={blueColor} />
             <p> Planning@coderina.org</p>
           </div>

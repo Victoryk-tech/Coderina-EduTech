@@ -125,7 +125,7 @@ export default function MediaBody() {
           {categories.map((cat) => (
             <button
               key={cat}
-              className={`px-4 py-2 rounded text-[14px] ${
+              className={`px-2 md:px-4 py-2 rounded text-[13px] md:text-[14px] ${
                 cat === category
                   ? "bg-blue-500 text-white rounded-3xl"
                   : "bg-gray-200"

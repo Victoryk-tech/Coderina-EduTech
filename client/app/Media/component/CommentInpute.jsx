@@ -34,9 +34,9 @@ export default function CommentInput({
         }`}
       >
         {isSubmitting ? (
-          <AiOutlineLoading3Quarters size={22} className="animate-spin" />
+          <AiOutlineLoading3Quarters size={26} className="animate-spin" />
         ) : (
-          <FiSend size={22} />
+          <FiSend size={26} />
         )}
       </button>
     </div>
