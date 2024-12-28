@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import logo from "../../../public/coderinaLogo.png";
+import logo1 from "../../../public/codelogo.png";
 import { RiMenu2Fill, RiHome2Fill, RiSettings2Line } from "react-icons/ri";
 import Image from "next/image";
 import { IoPerson } from "react-icons/io5";
@@ -88,7 +89,7 @@ const Layout = ({ children }) => {
   }, []);
 
   return (
-    <div className="h-screen flex font-Inter">
+    <div className="h-screen flex font-Inter w-full">
       <Toaster />
       {/* Sidebar */}
       <aside
@@ -96,8 +97,11 @@ const Layout = ({ children }) => {
           showSidebar ? "absolute top-0 left-0 h-screen z-50" : "hidden md:flex"
         } md:sticky md:top-0 md:h-screen`}
       >
-        <Link href="/" className="flex items-center mb-6">
+        <Link href="/" className="flex md:hidden lg:flex items-center mb-6">
           <Image src={logo} alt="Coderina Logo" className=" h-8 w-32" />
+        </Link>
+        <Link href="/" className="hidden md:flex items-center mb-6  lg:hidden">
+          <Image src={logo1} alt="Coderina Logo" className=" h-6 w-32" />
         </Link>
         <ul className="space-y-4 md:pt-14">
           {links.map((link) => (
@@ -114,7 +118,7 @@ const Layout = ({ children }) => {
                 className="flex items-center text-lg space-x-4"
               >
                 <p>{link.icon}</p>
-                <p>{link.name}</p>
+                <p className=" md:hidden lg:block">{link.name}</p>
               </Link>
             </li>
           ))}

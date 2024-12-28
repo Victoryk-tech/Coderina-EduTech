@@ -2,16 +2,17 @@
 
 import React, { Suspense, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { IoTrash } from "react-icons/io5";
+import { IoPerson, IoSchool, IoTrash } from "react-icons/io5";
 import { IoIosSync } from "react-icons/io"; // For loader icon
 import { CiMenuKebab } from "react-icons/ci";
 import { HiDownload } from "react-icons/hi";
+import { FiClock, FiDatabase } from "react-icons/fi";
 
 const RegistrationsTable = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loadingId, setLoadingId] = useState(null); // Track the ID being deleted
   const [selectedRegistration, setSelectedRegistration] = useState(null); // Modal state
-
+  const [showMenu, setShowMenu] = useState(false);
   const handleOpenModal = (registration) => {
     setSelectedRegistration(registration);
   };
@@ -152,7 +153,7 @@ const RegistrationsTable = () => {
   }, []);
 
   return (
-    <div className="w-full px-4 py-6 overflow-hidden h-full">
+    <div className="w-full  md:px-2 lg:px-4 py-6 overflow-hidden h-full">
       <Toaster />
 
       <div>
@@ -169,9 +170,9 @@ const RegistrationsTable = () => {
             Download CSV
           </button>
         </div>
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full border-collapse border border-gray-300 text-[14px]">
-            <thead>
+        <div className="">
+          <table className="hidden md:block table-auto w-full border-collapse border border-gray-300 text-[14px]">
+            <thead className="">
               <tr className="bg-gray-200">
                 <th className="border border-gray-300 p-2">#</th>
                 <th className="border border-gray-300 p-2">First Name</th>
@@ -185,7 +186,7 @@ const RegistrationsTable = () => {
             </thead>
             <tbody>
               {registrations.map((registration, index) => (
-                <tr key={registration._id}>
+                <tr key={registration._id} className="text-[13px]">
                   <td className="border border-gray-300 p-2 text-center">
                     {index + 1}
                   </td>
@@ -207,29 +208,67 @@ const RegistrationsTable = () => {
                   <td className="border border-gray-300 p-2">
                     {new Date(registration.createdAt).toLocaleString()}
                   </td>
-                  <td className="border border-gray-300 p-2 text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      {loadingId === registration._id ? (
-                        <IoIosSync className="animate-spin text-gray-500 text-xl" />
-                      ) : (
-                        <IoTrash
-                          onClick={() => deleteRegistration(registration._id)}
-                          className="text-red-600 hover:text-red-800 cursor-pointer text-xl"
-                        />
-                      )}
-                      <HiDownload
-                        onClick={() => downloadDetails(registration)}
-                        className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl"
-                        title="Download Details"
-                      />
-                    </div>
-                  </td>
+
                   <td
-                    onClick={() => handleOpenModal(registration)}
                     aria-label="View Registration Details"
                     className="border border-gray-300 p-2 cursor-pointer"
                   >
-                    <CiMenuKebab className="hover:text-green-600" />
+                    <span className="">
+                      <CiMenuKebab
+                        className="hover:text-green-600"
+                        onClick={() => setShowMenu(!showMenu)}
+                      />
+                    </span>
+
+                    {/* three icons option */}
+
+                    {showMenu && (
+                      <div className="px-3 absolute bottom-16 right-3  w-32 bg-white shadow rounded-md py-2">
+                        <div className="flex flex-col items-start justify-start gap-y-2 pb-2">
+                          {loadingId === registration._id ? (
+                            <IoIosSync className="animate-spin text-gray-500 text-xl" />
+                          ) : (
+                            <div
+                              className="flex items-center space-x-1 text-red-600 "
+                              onClick={() =>
+                                deleteRegistration(registration._id)
+                              }
+                            >
+                              <p className="text-[15px] font-semibold  hover:text-red-800 cursor-pointer">
+                                Delete
+                              </p>
+                              <IoTrash className="text-red-600 hover:text-red-800 cursor-pointer text-lg" />
+                            </div>
+                          )}
+
+                          <div
+                            onClick={() => downloadDetails(registration)}
+                            className="flex items-center space-x-1 text-blue-500 "
+                          >
+                            <p className="text-[15px] font-semibold  hover:text-blue-800 cursor-pointer">
+                              Download
+                            </p>
+                            <HiDownload
+                              className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl"
+                              title="Download Details"
+                            />
+                          </div>
+                        </div>
+
+                        <div
+                          onClick={() => handleOpenModal(registration)}
+                          className="flex items-center space-x-1 text-green-500 "
+                        >
+                          <p className="text-[15px] font-semibold  hover:text-green-800 cursor-pointer">
+                            Details
+                          </p>
+                          <HiDownload
+                            className="text-green-500 hover:text-green-700 cursor-pointer text-xl"
+                            title="Download Details"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -245,6 +284,78 @@ const RegistrationsTable = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* cards for small screen */}
+        <div className="block md:hidden space-y-3">
+          {registrations.map((registration, index) => (
+            <div
+              key={registration._id}
+              className="border cursor-pointer border-gray-200 p-2 rounded-lg w-[320px]"
+            >
+              <div className="border cursor-pointer border-gray-200 p-2 space-y-1 rounded-lg w-[300px] hover:bg-gray-100 ">
+                <div className="flex items-center justify-start space-x-1">
+                  <IoPerson />
+                  <p className="">{registration.firstName}</p>
+                </div>
+                <div className="flex items-center justify-start space-x-1">
+                  <IoPerson />
+                  <p>{registration.lastName}</p>
+                </div>
+                <div className="flex items-center justify-start space-x-1">
+                  <IoSchool />
+                  <p>{registration.school}</p>
+                </div>
+                <div className="flex items-center justify-start space-x-1">
+                  <FiClock />
+                  <p> {new Date(registration.createdAt).toLocaleString()}</p>
+                </div>
+
+                <div className="flex  items-center justify-start gap-x-3 py-3">
+                  {loadingId === registration._id ? (
+                    <IoIosSync className="animate-spin text-gray-500 text-xl" />
+                  ) : (
+                    <div
+                      className="flex items-center space-x-1 text-red-600 "
+                      onClick={() => deleteRegistration(registration._id)}
+                    >
+                      <IoTrash className="text-red-600 hover:text-red-800 cursor-pointer text-lg" />
+                    </div>
+                  )}
+
+                  <div
+                    onClick={() => downloadDetails(registration)}
+                    className="flex items-center space-x-1 text-blue-500 "
+                  >
+                    <HiDownload
+                      className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl"
+                      title="Download Details"
+                    />
+                  </div>
+
+                  <div
+                    onClick={() => handleOpenModal(registration)}
+                    className="flex items-center space-x-1 text-green-500 "
+                  >
+                    <FiDatabase
+                      className="text-green-500 hover:text-green-700 cursor-pointer text-xl"
+                      title="Download Details"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}{" "}
+          {registrations.length === 0 && (
+            <div>
+              <h2
+                colSpan={8}
+                className="text-center border border-gray-300 p-2"
+              >
+                No registrations found
+              </h2>
+            </div>
+          )}
         </div>
 
         {/* Modal */}
@@ -308,3 +419,81 @@ const RegistrationsTable = () => {
 };
 
 export default RegistrationsTable;
+
+{
+  /* <td
+onClick={() => setShowMenu(!showMenu)}
+aria-label="View Registration Details"
+className="border border-gray-300 p-2 cursor-pointer relative"
+>
+<CiMenuKebab className="hover:text-green-600" />
+
+{/* Menu Options */
+}
+// {showMenu && (
+//   <div className="absolute right-8 top-6 mt-2 w-36 bg-white shadow-lg rounded-lg py-2 z-10">
+//     <div className="flex flex-col items-start justify-start gap-y-2 pb-2">
+//       {loadingId === registration._id ? (
+//         <IoIosSync className="animate-spin text-gray-500 text-xl" />
+//       ) : (
+//         <div
+//           className="flex items-center space-x-1 text-red-600"
+//           onClick={() =>
+//             deleteRegistration(registration._id)
+//           }
+//         >
+//           <p className="text-[15px] font-semibold hover:text-red-800 cursor-pointer">
+//             Delete
+//           </p>
+//           <IoTrash className="text-red-600 hover:text-red-800 cursor-pointer text-lg" />
+//         </div>
+//       )}
+
+//       <div
+//         onClick={() => downloadDetails(registration)}
+//         className="flex items-center space-x-1 text-blue-500"
+//       >
+//         <p className="text-[15px] font-semibold hover:text-blue-800 cursor-pointer">
+//           Download
+//         </p>
+//         <HiDownload
+//           className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl"
+//           title="Download Details"
+//         />
+//       </div>
+//     </div>
+
+//     <div
+//       onClick={() => handleOpenModal(registration)}
+//       className="flex items-center space-x-1 text-green-500"
+//     >
+//       <p className="text-[15px] font-semibold hover:text-green-800 cursor-pointer">
+//         Details
+//       </p>
+//       <HiDownload
+//         className="text-green-500 hover:text-green-700 cursor-pointer text-xl"
+//         title="Details"
+//       />
+//     </div>
+//   </div>
+// )}
+
+// {/* Modal */}
+// {showModal && (
+//   <div className="absolute right-[10rem] top-6 bg-white shadow-xl rounded-lg w-96 p-4 z-20">
+//     <h3 className="text-lg font-bold">
+//       Registration Details
+//     </h3>
+//     <p className="text-sm text-gray-600">
+//       Here are the details for this registration:
+//     </p>
+//     {/* Add your registration details here */}
+//     <button
+//       onClick={() => setShowModal(false)}
+//       className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+//     >
+//       Close
+//     </button>
+//   </div>
+// )}
+//</td>
