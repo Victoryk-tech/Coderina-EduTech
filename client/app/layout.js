@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 const metadata = {
   title: "Coderina",
   description:
-    "First Lego League Nigeria is a STEM-focused program that encourages young students to explore science, technology, engineering, and math through hands-on learning and robotics. Part of the global First Lego League initiative, it inspires innovation and teamwork among children aged 9-16 in Nigeria, helping them develop critical thinking, problem-solving, and coding skills by tackling real-world challenges. The program fosters a spirit of collaboration and creativity, preparing the next generation of leaders and innovators.",
+    "Coderina Educational Technology (Coderina EduTech) is a dynamic organization dedicated to advancing education through innovative technology solutions. With a mission to empower individuals and communities, Coderina specializes in providing digital skills training, fostering STEM education, and promoting coding literacy among students and educators. By leveraging technology, the organization seeks to bridge the digital divide and equip learners with the tools needed to thrive in a rapidly evolving world.",
 };
 
 export default function RootLayout({ children }) {
